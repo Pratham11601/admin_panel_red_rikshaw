@@ -7,7 +7,7 @@ class ApiConfig {
     // API Endpoints
     static getDriversEndpoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/drivers-getAll`;
+      return `${this.BASE_URL}/api/adminpanel/drivers-getAll?page=1&limit=15`;
     }
     static getAllRidesEndpoint() {
       

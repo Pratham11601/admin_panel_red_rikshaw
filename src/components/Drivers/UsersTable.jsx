@@ -7,6 +7,7 @@ import ApiConfig from '../../Consants/ApiConfig'
 
 const UsersTable = () => {
   const [driverData,setDriverData] = useState([]);
+  const [totalDriver,setTotalDriver] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc'); 
@@ -16,11 +17,14 @@ const UsersTable = () => {
 
   useEffect(() => {
     const fetchDrivers = async () => {
+  
+      
         try {
           fetch(ApiConfig.getDriversEndpoint())
             .then((response) => response.json())
             .then((data) => {
-
+              setTotalDriver(data.totalUsers);
+            
             const Drivers = data.data; 
 
             if (Array.isArray(Drivers)) {
