@@ -12,11 +12,11 @@ const PassengerProfile = ()=>{
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const location = useLocation();
-    const { driver } = location.state || {};
-    if (!driver) {
-        return <div>No Driver Information Available</div>;
-      }
+    // const location = useLocation();
+    // const { driver } = location.state || {};
+    // if (!driver) {
+    //     return <div>No Driver Information Available</div>;
+    //   }
     const handleViewDocument = () => {
       setPopupOpen(true);
     };

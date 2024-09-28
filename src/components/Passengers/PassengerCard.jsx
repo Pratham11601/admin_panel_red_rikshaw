@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ProfilePopup from "./ProfilePopup";
 
 
 const PassengerCard= ({ name, phoneNumber, vehicleNo, status })=>{
   const navigate = useNavigate();
-  
+  const [isPopupOpen, setPopupOpen] = useState(false);
   const handleViewProfile = () => {
     navigate('/Home/passengerProfile'); 
   };
@@ -43,6 +44,11 @@ const PassengerCard= ({ name, phoneNumber, vehicleNo, status })=>{
             </p>
           </div>
         </div>
+        {/* <ProfilePopup
+          isOpen={isPopupOpen}
+          onClose={handleClosePopup}
+                          
+        /> */}
       </div>
 
 

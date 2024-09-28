@@ -92,7 +92,7 @@ const handleSortChange = (e) => {
       transition={{ delay: 0.2 }}
     >
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-        <h2 className="text-xl font-semibold text-black">Riders</h2>
+        <h2 className="text-xl font-semibold text-black">Passengers</h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"

@@ -6,14 +6,15 @@ import { Link,useLocation,useNavigate } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import RidesTable from '../components/Rides/RidesTable';
-const DriverProfile = ({driver})=>{
+
+const DriverProfile = ()=>{
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
   
-    if (!driver) {
-        return <div>No Driver Selected</div>;
-      }
+    // if (!driver) {
+    //     return <div>No Driver Selected</div>;
+    //   }
     const handleViewDocument = () => {
       setPopupOpen(true);
     };
@@ -56,7 +57,7 @@ const DriverProfile = ({driver})=>{
 
                 {/* 2nd Div: Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
-                <h1 className="text-2xl font-semibold text-gray-800">{driver.name}</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">john doe</h1>
                 <p className="text-gray-600">📞 9922867393</p>
                 <p className="text-gray-600">✉️ demo@gmail.com</p>
                 <p className="text-gray-600">📍 Katraj,pune</p>

@@ -20,9 +20,9 @@ const UsersTable = () => {
           fetch(ApiConfig.getDriversEndpoint())
             .then((response) => response.json())
             .then((data) => {
-              
-              
+
             const Drivers = data.data; 
+
             if (Array.isArray(Drivers)) {
               setDriverData(Drivers);
             } else {
@@ -37,7 +37,7 @@ const UsersTable = () => {
     fetchDrivers();
         
 
-}, []);
+}, [searchTerm,sortField]);
 
   const filteredData = driverData
   .filter((record) => {
@@ -57,6 +57,10 @@ const UsersTable = () => {
           return a[sortField] < b[sortField] ? 1 : -1;
       }
 });
+const toggleSortOrder = () => {
+  setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+};
+
 const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page when search changes
@@ -92,7 +96,7 @@ const handleSortChange = (e) => {
       transition={{ delay: 0.2 }}
     >
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
-        <h2 className="text-xl font-semibold text-black">Riders</h2>
+        <h2 className="text-xl font-semibold text-black">Drivers</h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
@@ -114,11 +118,13 @@ const handleSortChange = (e) => {
           onChange={handleSortChange}
           className="bg-white text-black rounded-lg px-4 py-2 border"
         >
-          <option value="recent">Recent</option>
           <option value="name">Name</option>
           <option value="vehicleNo">Vehicle Number</option>
           {/* <option value="rating">Rating</option> */}
         </select>
+        <button onClick={toggleSortOrder} className="text-black">
+            {sortOrder === 'asc' ? ' Ascending' : ' Descending'}
+        </button>
       </div>
 
       {/* Table */}
@@ -131,10 +137,12 @@ const handleSortChange = (e) => {
           {filteredData.map((driver,index) => (
           <UserCard 
             key={driver.id}
+            img={driver.profile_img}
             name={driver.name}
             phoneNumber={driver.phoneNumber}
             vehicleNo={driver.vehicle_number}
             status={driver.status}
+            rating={driver.rating}
             // role={driver.role}
           />
         ))}

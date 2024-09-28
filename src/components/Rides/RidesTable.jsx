@@ -10,19 +10,22 @@ import RIDE_DATA from "../Rides/RideData"; // Adjust the path as needed
 const RideTable = () => {
   const [ridesData, setRidesData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortField, setSortField] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc'); 
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added"); // Default sort
   const itemsPerPage = 10;
+  const totalPages = Math.ceil(ridesData.length / itemsPerPage);
+
 
   // Search functionality
-  const handleSearch = (e) => {
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
     setCurrentPage(1); // Reset to first page on new search
   };
 
   // Sort functionality
   const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+    setSortField(e.target.value);
     setCurrentPage(1); // Reset to first page on sort change
   };
 
@@ -54,35 +57,31 @@ const RideTable = () => {
         
 
 }, []);
-  // const filteredRides = ridesData.filter(
-  //   (ride) =>
-  //     ride.passengerID.toLowerCase().includes(searchTerm) ||
-  //     ride.driverId.toLowerCase().includes(searchTerm)
-  //     // ride.rideNo.toLowerCase().includes(searchTerm)
-  // );
+const filteredData = ridesData
+.filter((record) => {
+  const status = record.status ? record.status.toLowerCase() : '';
+  const driver =  record.driverId ? record.driverId.toLowerCase():'';
+  const passenger =  record.passengerID ? record.passengerID.toLowerCase():'';
 
-  // Sort rides by selected option
-  const sortedRides = [...ridesData].sort((a, b) => {
-    if (sortBy === "total-cost") {
-      return b.totalCost - a.totalCost; // Sort by total cost (descending)
-    }
-    if (sortBy === "status-completed") {
-      return a.status === "Completed" ? -1 : 1; // Completed first
-    }
-    if (sortBy === "status-pending") {
-      return a.status === "Pending" ? -1 : 1; // Pending first
-    }
-    if (sortBy === "status-cancelled") {
-      return a.status === "Cancelled" ? -1 : 1; // Cancelled first
-    }
-    // Default sort: Newly Added (id descending)
-    return b.id - a.id;
-  });
 
-  const totalPages = Math.ceil(sortedRides.length / itemsPerPage);
+    return (
+        status.includes(searchTerm.toLowerCase()) ||
+        driver.includes(searchTerm.toLowerCase()) ||
+        passenger.includes(searchTerm.toLowerCase())
+    );
+})
+.sort((a, b) => {
+    // Sort by selected field and order
+    if (sortOrder === 'asc') {
+        return a[sortField] > b[sortField] ? 1 : -1;
+    } else {
+        return a[sortField] < b[sortField] ? 1 : -1;
+    }
+});
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems =ridesData.filter((_, index) => index >= startIndex && index < endIndex);
+  const currentItems =filteredData.filter((_, index) => index >= startIndex && index < endIndex);
 
  
 console.log(currentItems);
@@ -106,30 +105,31 @@ console.log(currentItems);
             type="text"
             placeholder="Search rides..."
             className="bg-white text-black placeholder-black rounded-lg pl-10 pr-4 py-2 focus:outline-none border w-full"
-            onChange={handleSearch}
             value={searchTerm}
+            onChange={handleSearchChange}
+            
           />
           <Search className="absolute left-3 top-2.5 text-black" size={18} />
         </div>
-      </div>
+        </div>
 
-      {/* Sort Dropdown */}
-      <div className="mb-4 flex items-center">
-        <label htmlFor="sort" className="text-black mr-2">
-          Sort By:
-        </label>
-        <select
-          id="sort"
-          value={sortBy}
-          onChange={handleSortChange}
-          className="bg-white text-black rounded-lg px-4 py-2 border"
-        >
-          
-          <option value="status-completed">Completed</option>
-          <option value="status-pending">Pending</option>
-          <option value="status-cancelled">Cancelled</option>
-        </select>
-      </div>
+        {/* Sort Dropdown */}
+        <div className="mb-4 flex items-center">
+          <label htmlFor="sort" className="text-black mr-2">
+            Sort By:
+          </label>
+          <select
+            id="sort"
+            value={sortField}
+            onChange={handleSortChange}
+            className="bg-white text-black rounded-lg px-4 py-2 border"
+          >
+            
+            <option value="status-completed">Completed</option>
+            <option value="status-pending">Pending</option>
+            <option value="status-cancelled">Cancelled</option>
+          </select>
+        </div>
 
       <div className="overflow-x-auto">
         <table className="min-w-full">
@@ -179,9 +179,7 @@ console.log(currentItems);
                   <button className="text-indigo-400 hover:text-indigo-300 mr-2">
                     View
                   </button>
-                  <button className="text-red-400 hover:text-red-300">
-                    <Trash2 size={18} />
-                  </button>
+
                 </td>
               </motion.tr>
             ))}
