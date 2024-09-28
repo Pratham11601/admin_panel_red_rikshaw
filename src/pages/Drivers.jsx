@@ -6,7 +6,7 @@ import ApiConfig from '../Consants/ApiConfig'
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import UsersTable from "../components/Drivers/UsersTable";
-import Demo from "../components/Drivers/Demo";
+
 // import UserGrowthChart from "../components/users/UserGrowthChart";
 // import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 // import UserDemographicsChart from "../components/users/UserDemographicsChart";
@@ -90,7 +90,7 @@ const Drivers = () => {
 						color='#EF4444' 
 					/>
 				</motion.div>
-				{/* <Demo/> */}
+				{/* <Demo/>	 */}
 
 
 				<UsersTable />
