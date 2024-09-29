@@ -33,16 +33,15 @@ const Drivers = () => {
 				.then((data) => {  
 				  setTotalDriver(data.totalUsers);
 
-				// const driverData=data.data
-				// if(driverData.isActive){
-				// 	 active=active + 1;
-				// }else{
-				// 	inactive=inactive+1;
+				  const active = data.data.filter(driver => driver.isActive === true);
+				  const inactive = data.data.filter(driver => driver.isActive === false);
 
-				// }
-
-				//   setActiveDriver();	
-				//   setInactiveDriver();
+				  
+				  setActiveDriver(active.length);
+				  setInactiveDriver(inactive.length);
+				  
+				  
+			
 			  })
 			} catch (error) {
 				console.error('Error fetching Rides Data', error);

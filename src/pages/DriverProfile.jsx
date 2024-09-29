@@ -57,7 +57,9 @@ const DriverProfile = ()=>{
 
                 {/* 2nd Div: Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
+
                 <h1 className="text-2xl font-semibold text-gray-800">john doe</h1>
+                
                 <p className="text-gray-600">📞 9922867393</p>
                 <p className="text-gray-600">✉️ demo@gmail.com</p>
                 <p className="text-gray-600">📍 Katraj,pune</p>
@@ -104,29 +106,12 @@ const DriverProfile = ()=>{
                 {/* Profile Summary Section */}
                     {activeTab === 'profileSummary' && (
                         <motion.div
-                        className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                        {/* Summary */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
-                            <h3 className="text-xl font-bold mb-3">Summary</h3>
-                            <div className="space-y-6 gap-4">
-                            <div>
-                                <h4 className="font-semibold text-gray-800">About </h4>
-                                <p className="text-gray-600">Lorem ipsum dolor sit amet...</p>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-gray-800">Languages Spoken</h4>
-                                <p className="text-gray-600">English, Spanish</p>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold text-gray-800">Verifications</h4>
-                                <p className="text-gray-600">Email Verified, Phone Verified</p>
-                            </div>
-                            </div>
-                        </div>
+
 
                         {/* Auto Details */}
                         <div className="p-4 bg-white shadow-lg rounded-lg">

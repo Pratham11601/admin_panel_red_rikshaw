@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import driverImage from '../../assets/driverimg.jpg';
-
+import { BadgeCheck } from 'lucide-react';
 const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
 
   const navigate = useNavigate();
   const handleViewProfile = () => {
-    navigate('/Home/driverProfile'); // Redirect to the profile page with the driver's ID
+    navigate('/Home/driverProfile'); 
   };
     return(
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
@@ -23,13 +23,21 @@ const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
           <div className="ml-4">
             <div className="flex items-center justify-between    max-w-sm">
               <h2 className="text-m font-bold text-gray-900 ">{name}</h2>
-              <p className={`text-sm font-bold  rounded-lg pl-3 ${status === 'Active' ? 'text-green-900' : 'text-red-900'}` }></p>
+              
+              <div
+                  className={` ml-27 relative rounded-full ${
+                    status ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                >
+                  <BadgeCheck className="h-6 w-6 text-white" />
+                </div>
+              
             </div>
             <p className="text-sm text-gray-500">{phoneNumber}</p>
             <p className="text-sm text-gray-500"> {vehicleNo}</p>
             
             <p className=" pt-3 text-sm text-gray-500">
-              {/* <Link to="/Home/driverProfile"> */}
+              
                   
                   <button 
                     onClick={handleViewProfile}
@@ -37,7 +45,7 @@ const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
                   >
                     View Profile
               </button>
-              {/* </Link>  */}
+              
             </p>
           </div>
         </div>

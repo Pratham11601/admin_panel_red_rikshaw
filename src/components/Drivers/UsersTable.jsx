@@ -11,8 +11,8 @@ const UsersTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc'); 
-  const itemsPerPage = 8;
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const totalPages = Math.ceil(driverData.length / itemsPerPage);
 
   useEffect(() => {
@@ -84,11 +84,10 @@ const handleSortChange = (e) => {
       setCurrentPage(currentPage - 1);
     }
   };
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData =filteredData.filter((_, index) => index >= startIndex && index < endIndex);
 
-  const currentData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
 
 
@@ -138,15 +137,17 @@ const handleSortChange = (e) => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-          {filteredData.map((driver,index) => (
+          {currentData.map((driver,index) => (
           <UserCard 
             key={driver.id}
             img={driver.profile_img}
             name={driver.name}
-            phoneNumber={driver.phoneNumber}
+            phoneNumber={driver.phone}
             vehicleNo={driver.vehicle_number}
-            status={driver.status}
+            status={driver.isActive}
             rating={driver.rating}
+            
+
             // role={driver.role}
           />
         ))}
@@ -168,9 +169,10 @@ const handleSortChange = (e) => {
                 Previous
               </button>
             </li>
-            {Array.from({ length: totalPages }, (_, index) => (
+            {[...Array(totalPages)].map((_, index) => (
               <li key={index}>
                 <button
+                  key={index}
                   className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
                   onClick={handleNextPage}
                 >
