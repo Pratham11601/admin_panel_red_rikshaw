@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, File, FileMinus } from "lucide-react";
+import { Search, ArrowDownUp } from "lucide-react";
 import UserCard from "./PassengerCard";
 import ApiConfig from '../../Consants/ApiConfig'
 
@@ -39,7 +39,7 @@ const PassengerTable = () => {
 
 }, []);
 
-  const filteredData = passengerData
+const filteredData = passengerData
   .filter((record) => {
       
       const name = record.name ? record.name.toLowerCase() : '';
@@ -56,6 +56,9 @@ const PassengerTable = () => {
           return a[sortField] < b[sortField] ? 1 : -1;
       }
 });
+const toggleSortOrder = () => {
+  setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+};
 const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page when search changes
@@ -103,7 +106,7 @@ const handleSortChange = (e) => {
       </div>
 
       {/* Sort Dropdown */}
-      <div className="mb-4">
+      <div className="mb-4 flex item-center justify-left">
         <label htmlFor="sort" className="text-black mr-2">Sort By:</label>
         <select
           id="sort"
@@ -113,9 +116,13 @@ const handleSortChange = (e) => {
         >
           <option value="recent">Recent</option>
           <option value="name">Name</option>
-          <option value="vehicleNo">Vehicle Number</option>
+          {/* <option value="vehicleNo"></option> */}
           {/* <option value="rating">Rating</option> */}
         </select>
+        <button onClick={toggleSortOrder} className="flex items-center text-black">
+           
+           {sortOrder === 'asc' ? <ArrowDownUp /> : <ArrowDownUp />}
+       </button>
       </div>
 
       {/* Table */}
@@ -128,10 +135,7 @@ const handleSortChange = (e) => {
           {currentData.map((passenger,index) => (
           <UserCard 
             key={passenger.id}
-            name={passenger.name}
-            phoneNumber={passenger.phoneNumber}
-            vehicleNo={passenger.vehicle_number}
-            
+            passenger={passenger}
           />
         ))}
       </motion.div>

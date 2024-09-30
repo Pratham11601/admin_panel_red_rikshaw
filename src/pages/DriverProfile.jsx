@@ -12,10 +12,21 @@ const DriverProfile = ()=>{
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
-  
-    // if (!driver) {
-    //     return <div>No Driver Selected</div>;
-    //   }
+    const [status, setStatus] = useState('Active');
+
+    const toggleStatus = () => {
+        const newStatus = status === 'Active' ? 'Inactive' : 'Active';
+        setStatus(newStatus);
+
+        // Here, you can add an API call to update the status in your database
+        // Example:
+        // fetch(`/api/drivers/update-status`, {
+        //     method: 'POST',
+        //     body: JSON.stringify({ status: newStatus }),
+        //     headers: { 'Content-Type': 'application/json' }
+        // });
+    };
+
     const handleViewDocument = () => {
       setPopupOpen(true);
     };
@@ -23,6 +34,7 @@ const DriverProfile = ()=>{
     const handleClosePopup = () => {
       setPopupOpen(false);
     };
+
 
     const handleBackClick = () => {
         navigate('/Home/drivers'); 
@@ -56,7 +68,7 @@ const DriverProfile = ()=>{
                 />
                 </motion.div>
 
-                {/* 2nd Div: Name, Phone, Email, Address */}
+                {/*  Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
 
                 <h1 className="text-2xl font-semibold text-gray-800">john doe</h1>
@@ -66,16 +78,21 @@ const DriverProfile = ()=>{
                 <p className="text-gray-600">📍 Katraj,pune</p>
                 </motion.div>
 
-                {/* 3rd Div: Status, Total Trips, Reviews */}
+                {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-2">
                 <div className="flex items-center justify-center md:justify-start">
                     <span
-                    className={`px-4 py-1 rounded-full text-white ${
-                        status === 'Active' ? 'bg-green-500' : 'bg-red-500'
-                    }`}
+                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Active' ? 'bg-green-600' : 'bg-red-600'}`}
+                       // Add click handler to toggle status
                     >
-                    Active
+                        {status}
                     </span>
+                    <button
+                            onClick={toggleStatus}
+                            className="ml-4 px-3 py-1 bg-red-400 text-white font-sb rounded "
+                        >
+                            Change Status
+                    </button>
                 </div>
                 <p className="text-center md:text-left">
                     🚗 <span className="font-semibold">227</span> Total Trips
