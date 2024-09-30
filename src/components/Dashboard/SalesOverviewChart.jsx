@@ -28,26 +28,26 @@ const SalesOverviewChart = () => {
 
 			<div className='h-80'>
 				<ResponsiveContainer width={"90%"} height={"90%"}>
-					<LineChart data={salesData}>
-						<CartesianGrid vertical={false} strokeDasharray="3 3" /> {/* Horizontal grid lines */}
-						<XAxis dataKey={"name"} stroke='black' />
-						<YAxis stroke='black' />
-						<Tooltip
-							contentStyle={{
-								backgroundColor: "rgba(31, 41, 55, 0.8)",
-								borderColor: "black",
-							}}
-							itemStyle={{ color: "#E5E7EB" }}
-						/>
-						<Line
-							type='monotone'
-							dataKey='sales'
-							stroke='purple'
-							strokeWidth={2}
-							dot={{ fill: "#575551", strokeWidth: 1, r: 3 }}
-							activeDot={{ r: 8, strokeWidth: 1 }}
-						/>
-					</LineChart>
+						<LineChart data={salesData}>
+							<CartesianGrid vertical={false} strokeDasharray="3 3" /> {/* Horizontal grid lines */}
+							<XAxis dataKey={"name"} stroke='black' />
+							<YAxis stroke='black' />
+							<Tooltip
+								contentStyle={{
+									backgroundColor: "rgba(31, 41, 55, 0.8)",
+									borderColor: "black",
+								}}
+								itemStyle={{ color: "#E5E7EB" }}
+							/>
+							<Line
+								type='monotone'
+								dataKey='sales'
+								stroke='purple'
+								strokeWidth={2}
+								dot={{ fill: "#575551", strokeWidth: 1, r: 3 }}
+								activeDot={{ r: 8, strokeWidth: 1 }}
+							/>
+						</LineChart>
 				</ResponsiveContainer>
 			</div>
 		</motion.div>

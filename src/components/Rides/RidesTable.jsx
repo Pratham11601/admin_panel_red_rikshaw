@@ -1,21 +1,16 @@
-// src/components/RideTable.jsx
-
 import React, { useState, useEffect } from 'react';
-import ApiConfig from '../../Consants/ApiConfig'
+import ApiConfig from '../../Consants/ApiConfig';
 import { motion } from "framer-motion";
-import { Search, Trash2 } from "lucide-react";
-
-import RIDE_DATA from "../Rides/RideData"; // Adjust the path as needed
+import { Search, Trash2, ArrowDownUp } from "lucide-react";
 
 const RideTable = () => {
   const [ridesData, setRidesData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortField, setSortField] = useState('');
-  const [sortOrder, setSortOrder] = useState('asc'); 
+  const [sortField, setSortField] = useState('status');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' for ascending, 'desc' for descending
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(ridesData.length / itemsPerPage);
-
 
   // Search functionality
   const handleSearchChange = (e) => {
@@ -23,68 +18,72 @@ const RideTable = () => {
     setCurrentPage(1); // Reset to first page on new search
   };
 
-  // Sort functionality
+  // Sort field change
   const handleSortChange = (e) => {
     setSortField(e.target.value);
     setCurrentPage(1); // Reset to first page on sort change
   };
 
-  // Filter and sort the ride data based on search and sort conditions
+  // Toggle sort order (asc/desc)
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
 
+  // Fetch ride data
   useEffect(() => {
     const fetchRides = async () => {
-        try {
-          fetch(ApiConfig.getAllRidesEndpoint())
-            .then((response) => response.json())
-            .then((data) => {
-              console.log(data);
-              
-            const Rides = data.data; 
+      try {
+        const response = await fetch(ApiConfig.getAllRidesEndpoint());
+        const data = await response.json();
+        const Rides = data.data;
 
-            if (Array.isArray(Rides)) {
-                
-              setRidesData(Rides);
-            } else {
-                console.error('Failed to fetch Rides Data');
-            }
-          })
-        } catch (error) {
-            console.error('Error fetching privacy policies:', error);
+        if (Array.isArray(Rides)) {
+          setRidesData(Rides);
+        } else {
+          console.error('Failed to fetch Rides Data');
         }
+      } catch (error) {
+        console.error('Error fetching privacy policies:', error);
+      }
     };
 
     fetchRides();
-        
+  }, [sortField,searchTerm]);
 
-}, []);
-const filteredData = ridesData
-.filter((record) => {
-  const status = record.status ? record.status.toLowerCase() : '';
-  const driver =  record.driverId ? record.driverId.toLowerCase():'';
-  const passenger =  record.passengerID ? record.passengerID.toLowerCase():'';
+  // Filter and sort ride data based on search and sort conditions
+  const filteredData = ridesData
+    .filter((record) => {
+      const status = record.status ? record.status.toLowerCase() : '';
+      const driver = record.driverId ? record.driverId.toLowerCase() : '';
+      const passenger = record.passengerID ? record.passengerID.toLowerCase() : '';
 
-
-    return (
+      return (
         status.includes(searchTerm.toLowerCase()) ||
         driver.includes(searchTerm.toLowerCase()) ||
         passenger.includes(searchTerm.toLowerCase())
-    );
-})
-.sort((a, b) => {
-    // Sort by selected field and order
-    if (sortOrder === 'asc') {
-        return a[sortField] > b[sortField] ? 1 : -1;
-    } else {
-        return a[sortField] < b[sortField] ? 1 : -1;
-    }
-});
+      );
+    })
+    .sort((a, b) => {
+      
+        
+        if (sortField === "status-completed") {
+          return b.status - a.status; // Completed first
+        }
+        if (sortField === "status-pending") {
+          return a.status === "Pending" ? -1 : 1; // Pending first
+        }
+        if (sortField === "status-ongoing") {
+          return a.status === "Ongoing" ? -1 : 1; // Cancelled first
+        }
+        return b[field].localeCompare(a[field]);
+    
+
+
+    });
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentItems =filteredData.filter((_, index) => index >= startIndex && index < endIndex);
-
- 
-console.log(currentItems);
+  const currentItems = filteredData.slice(startIndex, endIndex);
 
   // Page change handler
   const handlePageChange = (page) => {
@@ -107,29 +106,30 @@ console.log(currentItems);
             className="bg-white text-black placeholder-black rounded-lg pl-10 pr-4 py-2 focus:outline-none border w-full"
             value={searchTerm}
             onChange={handleSearchChange}
-            
           />
           <Search className="absolute left-3 top-2.5 text-black" size={18} />
         </div>
-        </div>
+      </div>
 
-        {/* Sort Dropdown */}
-        <div className="mb-4 flex items-center">
-          <label htmlFor="sort" className="text-black mr-2">
-            Sort By:
-          </label>
-          <select
-            id="sort"
-            value={sortField}
-            onChange={handleSortChange}
-            className="bg-white text-black rounded-lg px-4 py-2 border"
-          >
-            
-            <option value="status-completed">Completed</option>
-            <option value="status-pending">Pending</option>
-            <option value="status-cancelled">Cancelled</option>
-          </select>
-        </div>
+      {/* Sort Dropdown */}
+      <div className="mb-4 flex items-center">
+        <label htmlFor="sort" className="text-black mr-2">
+          Sort By:
+        </label>
+        <select
+          id="sort"
+          value={sortField}
+          onChange={handleSortChange}
+          className="bg-white text-black rounded-lg px-4 py-2 border"
+        >
+          <option value="status-completed"> Completed</option>
+          <option value="status-pending"> Pending</option>
+          <option value="status-ongoing"> Ongoing</option>
+        </select>
+        <button onClick={toggleSortOrder} className="ml-4 p-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+          <ArrowDownUp className="text-black" size={18} />
+        </button>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="min-w-full">
@@ -143,25 +143,12 @@ console.log(currentItems);
             </tr>
           </thead>
           <tbody className="divide-y divide-black">
-            {currentItems.map((ride,index) => (
-              <motion.tr
-                key={ride.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
-                  {ride._id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                  {ride.passengerID}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                {ride.driverId}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                  {/* ${ride.totalCost.toFixed(2)} */}
-                </td>
+            {currentItems.map((ride) => (
+              <motion.tr key={ride._id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">{ride._id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{ride.passengerID}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{ride.driverId}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{ride.totalCost && `$${ride.totalCost.toFixed(2)}`}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -176,10 +163,7 @@ console.log(currentItems);
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-black">
-                  <button className="text-indigo-400 hover:text-indigo-300 mr-2">
-                    View
-                  </button>
-
+                  <button className="text-indigo-400 hover:text-indigo-300 mr-2">View</button>
                 </td>
               </motion.tr>
             ))}
@@ -192,7 +176,9 @@ console.log(currentItems);
         <ul className="flex space-x-2">
           <li>
             <button
-              className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+              }`}
               onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Previous Page"
@@ -203,7 +189,9 @@ console.log(currentItems);
           {Array.from({ length: totalPages }, (_, index) => (
             <li key={index}>
               <button
-                className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
+                className={`px-3 py-1 rounded-md text-sm font-medium ${
+                  currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
+                }`}
                 onClick={() => handlePageChange(index + 1)}
               >
                 {index + 1}
@@ -212,7 +200,9 @@ console.log(currentItems);
           ))}
           <li>
             <button
-              className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+              }`}
               onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               aria-label="Next Page"

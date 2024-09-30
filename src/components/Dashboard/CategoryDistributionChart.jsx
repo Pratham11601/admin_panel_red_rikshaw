@@ -9,7 +9,7 @@ const categoryData = [
 
 const COLORS = ["#00AC07", "#DC8400", "#F10000"];
 
-const CategoryDistributionChart = () => {
+const CategoryDistributionChart = ({data}) => {
     return (
         <motion.div
             className='bg-white bg-opacity-20 backdrop-blur-md shadow-xl rounded-xl p-6 border-l border-red-400'
@@ -22,7 +22,7 @@ const CategoryDistributionChart = () => {
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
-                            data={categoryData}
+                            data={data}
                             cx={"50%"}
                             cy={"50%"}
                             labelLine={false}
@@ -30,7 +30,7 @@ const CategoryDistributionChart = () => {
                             dataKey='value'
                             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                         >
-                            {categoryData.map((entry, index) => (
+                            {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>

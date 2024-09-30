@@ -6,25 +6,25 @@ import ApiConfig from '../../Consants/ApiConfig'
 
 
 const PassengerTable = () => {
-  const [driverData,setDriverData] = useState([]);
+  const [passengerData,setPassengerData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc'); 
-  const itemsPerPage = 8;
+  const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(driverData.length / itemsPerPage);
+  const totalPages = Math.ceil(passengerData.length / itemsPerPage);
 
   useEffect(() => {
     const fetchDrivers = async () => {
         try {
-          fetch(ApiConfig.getDriversEndpoint())
+          fetch(ApiConfig.getPassengersEndpoint())
             .then((response) => response.json())
             .then((data) => {
               
               
-            const Drivers = data.data; 
-            if (Array.isArray(Drivers)) {
-              setDriverData(Drivers);
+            const passengers = data.passengers; 
+            if (Array.isArray(passengers)) {
+              setPassengerData(passengers);
             } else {
                 console.error('Failed to fetch Rides Data');
             }
@@ -39,14 +39,13 @@ const PassengerTable = () => {
 
 }, []);
 
-  const filteredData = driverData
+  const filteredData = passengerData
   .filter((record) => {
       
       const name = record.name ? record.name.toLowerCase() : '';
-      const vehicleNo = record.vehicleNo ? record.vehicle_number.toLowerCase() : '';
+
       return (
-          name.includes(searchTerm.toLowerCase()) ||
-          vehicleNo.includes(searchTerm.toLowerCase())
+          name.includes(searchTerm.toLowerCase()) 
       );
   })
   .sort((a, b) => {
@@ -76,11 +75,9 @@ const handleSortChange = (e) => {
       setCurrentPage(currentPage - 1);
     }
   };
-
-  const currentData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData =filteredData.filter((_, index) => index >= startIndex && index < endIndex);
 
 
 
@@ -128,7 +125,7 @@ const handleSortChange = (e) => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 1 }}
 				>
-          {filteredData.map((passenger,index) => (
+          {currentData.map((passenger,index) => (
           <UserCard 
             key={passenger.id}
             name={passenger.name}

@@ -6,6 +6,7 @@ import { Link,useLocation,useNavigate } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import RidesTable from '../components/Rides/RidesTable';
+import TransactionTable from '../components/Transaction/TransactionTable';
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
@@ -86,19 +87,25 @@ const DriverProfile = ()=>{
                 </motion.div>
 
             {/* Navbar Section */}
-                <div className="border-b border-gray-300 mb-6">
+                <div className="border-b border-gray-300 mb-6 mt-6">
                     <ul className="flex justify-around">
                     <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-500'}`}
+                        className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
                         onClick={() => setActiveTab('profileSummary')}
                     >
                         Profile Summary
                     </li>
                     <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'tripSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-500'}`}
+                        className={`cursor-pointer py-2 ${activeTab === 'tripSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
                         onClick={() => setActiveTab('tripSummary')}
                     >
                         Trip Summary
+                    </li>
+                    <li 
+                        className={`cursor-pointer py-2 ${activeTab === 'transactionHistory' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                        onClick={() => setActiveTab('transactionHistory')}
+                    >
+                        Transaction History
                     </li>
                     </ul>
                 </div>
@@ -158,7 +165,18 @@ const DriverProfile = ()=>{
                         <RidesTable/>
                         
                         </motion.div>
-                    )}
+                )}
+
+                {activeTab === 'transactionHistory' && (
+                        <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        >
+                        
+                        <TransactionTable/>
+                        </motion.div>
+                )}
             </main>
             
         </div>

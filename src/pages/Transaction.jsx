@@ -17,14 +17,7 @@ const TransactionPage = () => {
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 				<Card />
-				{/* <RevenueChart /> */}
 
-				{/* <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8'>
-					<ChannelPerformance />
-					<ProductPerformance />
-					<UserRetention />
-					<CustomerSegmentation />
-				</div> */}
 
 					<Transactions />
 			</main>

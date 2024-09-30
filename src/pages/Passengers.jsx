@@ -1,12 +1,7 @@
 import { motion } from "framer-motion";
-
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
-
 import { Users, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
-
-// import CategoryDistributionChart from "../components/overview/CategoryDistributionChart";
-// import SalesTrendChart from "../components/products/SalesTrendChart";
 import ProductsTable from "../components/Passengers/PassengerTable";
 
 const Passengers = () => {
@@ -23,9 +18,9 @@ const Passengers = () => {
 					transition={{ duration: 1 }}
 				>
 					<StatCard name='Total Passengers' icon={Users} value={1234} color='#6366F1' />
-<StatCard name='New Passengers' icon={PlusCircle} value={89} color='#10B981' />
-<StatCard name='Active Passengers' icon={CheckCircle} value={230} color='#F59E0B' />
-<StatCard name='Inactive Passengers' icon={XCircle} value={210} color='#EF4444' />
+					<StatCard name='New Passengers' icon={PlusCircle} value={89} color='#10B981' />
+					<StatCard name='Active Passengers' icon={CheckCircle} value={230} color='#F59E0B' />
+					<StatCard name='Inactive Passengers' icon={XCircle} value={210} color='#EF4444' />
 
 				</motion.div>
 

@@ -7,12 +7,7 @@ import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png'; 
 
 const SIDEBAR_ITEMS = [
-	{
-		name: "Dashboard",
-		icon: BarChart2,
-		color: "black",
-		href: "/Home/Dashboard",
-	},
+	{ name: "Dashboard", icon: BarChart2, color: "black", href: "/Home/Dashboard",},
 	{ name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
 	{ name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
 	{ name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
@@ -23,7 +18,11 @@ const SIDEBAR_ITEMS = [
 
 const Sidebar = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [selectedItem, setSelectedItem] = useState(null);
 
+	const handleItemClick = (href) => {
+	  setSelectedItem(href);
+	};
 	return (
 		<motion.div
 			className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-20"}`}
@@ -57,8 +56,10 @@ const Sidebar = () => {
 
 				<nav className='mt-8 flex-grow'>
 					{SIDEBAR_ITEMS.map((item) => (
-						<Link key={item.href} to={item.href}>
-							<motion.div className='flex items-center p-4 text-sm font-medium rounded-lg hover:bg-[#ffffff] transition-colors mb-2 text-black'>
+						<Link key={item.href} to={item.href} onClick={() => handleItemClick(item.href)}>
+							<motion.div className={`flex items-center p-4 text-sm font-medium  rounded-lg  mb-2 text-black
+								 ${selectedItem === item.href ? 'bg-red-300 ' : 'hover:bg-[#ffffff]'}
+								`}>
 								<item.icon size={20} style={{ color: item.color, minWidth: "20px" }} />
 								<AnimatePresence>
 									{isSidebarOpen && (

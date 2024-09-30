@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, File, FileMinus } from "lucide-react";
+import { Search, ArrowDownUp } from "lucide-react";
 import UserCard from "./UserCard";
 import ApiConfig from '../../Consants/ApiConfig'
 
@@ -113,7 +113,7 @@ const handleSortChange = (e) => {
       </div>
 
       {/* Sort Dropdown */}
-      <div className="mb-4">
+      <div className="mb-4 flex item-center justify-left">
         <label htmlFor="sort" className="text-black mr-2">Sort By:</label>
         <select
           id="sort"
@@ -123,10 +123,11 @@ const handleSortChange = (e) => {
         >
           <option value="name">Name</option>
           <option value="vehicleNo">Vehicle Number</option>
-          {/* <option value="rating">Rating</option> */}
+          <option value="rating">Rating</option>
         </select>
-        <button onClick={toggleSortOrder} className="text-black">
-            {sortOrder === 'asc' ? ' Ascending' : ' Descending'}
+        <button onClick={toggleSortOrder} className="flex items-center text-black">
+           
+            {sortOrder === 'asc' ? <ArrowDownUp /> : <ArrowDownUp />}
         </button>
       </div>
 

@@ -5,6 +5,14 @@ class ApiConfig {
     static BASE_URL = "http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/";
   
     // API Endpoints
+    static getDashboardData() {
+      
+      return `${this.BASE_URL}/api/adminpanel/dashboard`;
+    }
+    static getPassengersEndpoint() {
+      
+      return `${this.BASE_URL}/api/adminpanel/passengers?page=1&limit=10`;
+    }
     static getDriversEndpoint() {
       
       return `${this.BASE_URL}/api/adminpanel/drivers-getAll?page=1&limit=15`;
