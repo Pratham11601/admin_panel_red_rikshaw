@@ -83,7 +83,7 @@ const PassengerProfile = ()=>{
                         </button>
                     </div>
                     <div className="flex items-center justify-center md:justify-start pt-3 ">
-                        <p className="items-center text-grey-600 mr-8">
+                        <p className=" text-grey-600 mr-8">
                             <h1 className='text-grey-600 mb-2'>Wallet Price</h1>
                             <span className="pt-8">100</span>
                         </p>
