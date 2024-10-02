@@ -13,6 +13,7 @@ import TermsPage from "./pages/Terms";
 import PrivacyPage from "./pages/Privacy";
 import DriverProfile from "./pages/DriverProfile";
 import PassengerProfile from "./pages/PassengerProfile";
+import TransactionRequest from "./pages/TransactionRequest";
 
 
 function Home() {
@@ -30,8 +31,8 @@ function Home() {
 				<Route path='passengers' element={<Passengers />} />
 				<Route path='drivers' element={<Drivers />} />
 				<Route path='rides' element={<Rides />} />
-				
 				<Route path='transaction' element={<Transaction />} />
+				<Route path='transactionrequest' element={<TransactionRequest />} />
 				<Route path='settings' element={<SettingsPage />} />
 				<Route path='terms' element={<TermsPage />} />
 				<Route path='privacy' element={<PrivacyPage />} />

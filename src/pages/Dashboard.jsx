@@ -27,6 +27,7 @@ const Dashboard = () => {
               setRunningRides(data.rides.ongoing);
               setCompletedRides(data.rides.completed);
               setCancelledRides(data.rides.canceled);
+              console.log(data.rides);
               
               const ridesArray = Object.entries(data.rides).map(([name, value]) => ({ name, value }));
 
@@ -42,7 +43,7 @@ const Dashboard = () => {
     fetchRides();
         
 }, []);
-console.log(pieChartData);
+
 
 
     return (
