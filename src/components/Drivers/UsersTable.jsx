@@ -4,7 +4,7 @@ import { Search, ArrowDownUp } from "lucide-react";
 import UserCard from "./UserCard";
 import ApiConfig from '../../Consants/ApiConfig'
 import { FadeLoader } from "react-spinners";
-import { ShimmerCategoryItem, ShimmerSimpleGallery, ShimmerThumbnail } from "react-shimmer-effects";
+import { ShimmerCategoryItem } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 
 const UsersTable = () => {

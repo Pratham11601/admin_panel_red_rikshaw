@@ -112,7 +112,7 @@ const SidebarContent = ({
       </motion.button>
     </div>
 
-    <nav className="mt-8 flex-grow">
+    <nav className="mt-8 flex-grow overflow-y-auto"> {/* Enable scrolling here */}
       {SIDEBAR_ITEMS.map((item) =>
         item.name === "Advertisement" ? (
           <div key={item.name}>
