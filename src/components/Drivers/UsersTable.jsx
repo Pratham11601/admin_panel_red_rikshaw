@@ -4,8 +4,8 @@ import { Search, ArrowDownUp } from "lucide-react";
 import UserCard from "./UserCard";
 import ApiConfig from '../../Consants/ApiConfig'
 import { FadeLoader } from "react-spinners";
-import { ShimmerSimpleGallery, ShimmerThumbnail } from "react-shimmer-effects";
-
+import { ShimmerCategoryItem, ShimmerSimpleGallery, ShimmerThumbnail } from "react-shimmer-effects";
+import usernotfound from '../../assets/usernotfound2.jpg';
 
 const UsersTable = () => {
   const [driverData,setDriverData] = useState([]);
@@ -17,9 +17,9 @@ const UsersTable = () => {
   const itemsPerPage = 12;
   const totalPages = Math.ceil(driverData.length / itemsPerPage);
 
+  useEffect(() => {
   const fetchDrivers = async () => {
-  
-      
+
     try {
       fetch(ApiConfig.getDriversEndpoint())
         .then((response) => response.json())
@@ -27,10 +27,10 @@ const UsersTable = () => {
           
         
         const Drivers = data.data; 
-
+        setIsLoading(false)
         if (Array.isArray(Drivers)) {
           setDriverData(Drivers);
-          setIsLoading(false)
+         
         } else {
             console.error('Failed to fetch Rides Data');
         }
@@ -41,13 +41,13 @@ const UsersTable = () => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(()=>{
-      fetchDrivers();
-    },1000)
+  fetchDrivers();
+}, []);
+ 
    
         
-  }, [searchTerm,sortField]);
+  
+
 
   const filteredData = driverData
   .filter((record) => {
@@ -105,7 +105,7 @@ const handleSortChange = (e) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-                    <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
                 <h2 className="text-xl font-semibold text-black">Drivers</h2>
                 
                 <div className="relative w-full md:w-1/3">
@@ -150,16 +150,28 @@ const handleSortChange = (e) => {
           >
             {  Array.from({length:12}).map(()=>(
               <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
-                <ShimmerThumbnail height={150}  rounded />
+                <ShimmerCategoryItem height={150}  rounded  hasImage
+                    imageType="circular"
+                    imageWidth={60}
+                    imageHeight={60}
+                    text
+                    cta
+                />
               </div>
             ))
             }
-                
-
+              
           </motion.div>
         ) :
         (
-          <div className="Drivercards">
+          <>
+          {filteredData.length === 0 ? (
+            <div className="text-black flex flex-col justify-center items-center ">
+              <img src={usernotfound} alt="" className="w-80 h-80" />
+              <h1 className="text-lg font-semibold text-gray-600">User Not Found...</h1>
+            </div>
+          ) : (
+            <div className="Drivercards">
 
 
               
@@ -224,7 +236,11 @@ const handleSortChange = (e) => {
                   </ul>
                   </nav>
                   </div>
-                </div>
+            </div>
+          )}
+          </>
+
+          
         )
       }
 

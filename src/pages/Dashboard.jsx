@@ -6,6 +6,7 @@ import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import SalesOverviewChart from "../components/Dashboard/SalesOverviewChart";
 import CategoryDistributionChart from "../components/Dashboard/CategoryDistributionChart";
+import BarGraph from "../components/Dashboard/Bargaph";
 
 const Dashboard = () => {
     const [totalRides,setTotalRides] = useState(0);
@@ -66,7 +67,7 @@ const Dashboard = () => {
             {/* CHARTS */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mx-3'>
                 <div className="h-full">
-                    <SalesOverviewChart />
+                    <BarGraph />
                 </div>
                 <div className="h-full">
                     <CategoryDistributionChart data={pieChartData} />

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Home from "./Home";
 import { useState } from "react";
+import PageNotFound from "./pages/PageNotFound";
 
 // import Sidebar from "./components/common/Sidebar";
 
@@ -41,6 +42,7 @@ function App() {
 		  <Route path="/Home" element={<Navigate to="/Home/Passengers" />} />
 		  <Route path="/Home" element={<Navigate to="/Home/Drivers" />} />
 		  <Route path="/Home" element={<Navigate to="/Home/Rides" />} />
+		  <Route path="*" element={<PageNotFound/>} />
 		</Routes>
 	  
 	);

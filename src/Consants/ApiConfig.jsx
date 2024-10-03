@@ -11,7 +11,7 @@ class ApiConfig {
     }
     static getPassengersEndpoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/passengers`;
+      return `${this.BASE_URL}/api/adminpanel/passengers-getAll`;
     }
     static getDriversEndpoint() {
       

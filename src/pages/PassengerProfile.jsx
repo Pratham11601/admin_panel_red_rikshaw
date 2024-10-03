@@ -105,17 +105,12 @@ const PassengerProfile = ()=>{
                     >
                         Profile Summary
                     </li>
+                  
                     <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'reviews' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('reviews')}
+                        className={`cursor-pointer py-2 ${activeTab === 'Rides' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
+                        onClick={() => setActiveTab('Rides')}
                     >
-                       Reviews
-                    </li>
-                    <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'TransactionHistory' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
-                        onClick={() => setActiveTab('TransactionHistory')}
-                    >
-                       Transaction History
+                       Rides
                     </li>
                     </ul>
                 </div>
@@ -168,20 +163,10 @@ const PassengerProfile = ()=>{
                             documentUrl="https://example.com/document.pdf" // Replace with actual document URL
                          />
 
-                {/* Reviews Section */}
-                    {activeTab === 'reviews' && (
-                        <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        >
-                        <h2 className="text-xl font-bold">Reviews</h2>
-                        {/* Trip Summary content can be added here */}
-                        </motion.div>
-                    )}
+               
 
                     {/* TransactionHistory Section */}
-                    {activeTab === 'TransactionHistory' && (
+                    {activeTab === 'Rides' && (
                         <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

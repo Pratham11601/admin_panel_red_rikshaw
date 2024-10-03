@@ -3,9 +3,8 @@ import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import UserCard from "./PassengerCard";
 import ApiConfig from '../../Consants/ApiConfig'
-import { FadeLoader } from "react-spinners";
-import { ShimmerThumbnail } from "react-shimmer-effects";
-
+import { ShimmerCategoryItem } from "react-shimmer-effects";
+import usernotfound from '../../assets/usernotfound2.jpg';
 const PassengerTable = () => {
   const [passengerData,setPassengerData] = useState([]);
   const [isLoading,setIsLoading] = useState(true);
@@ -25,9 +24,10 @@ const PassengerTable = () => {
               
               
             const passengers = data.passengers; 
+            setIsLoading(false);
             if (Array.isArray(passengers)) {
               setPassengerData(passengers);
-              setIsLoading(false);
+              
             } else {
                 console.error('Failed to fetch Rides Data');
             }
@@ -130,26 +130,38 @@ const handleSortChange = (e) => {
 {
         isLoading ?
         (
-            <motion.div
-              className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-10'
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
-                {  Array.from({length:12}).map(()=>(
-                  <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
-                    <ShimmerThumbnail height={130}  rounded />
-                  </div>
-                ))
-                }
+          <motion.div
+            className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-10'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            {  Array.from({length:12}).map(()=>(
+              <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
+                <ShimmerCategoryItem height={150}  rounded  hasImage
+                    imageType="circular"
+                    imageWidth={60}
+                    imageHeight={60}
+                    text
+                    cta
+                />
+              </div>
+            ))
+            }
                 
-              
 
-            </motion.div>
+          </motion.div>
+            
         ) :
         (
-          
-            <div className="passengersCard">
+          <>
+          {filteredData.length === 0 ? (
+            <div className="text-black flex flex-col justify-center items-center ">
+              <img src={usernotfound} alt="" className="w-80 h-80" />
+              <h1 className="text-lg font-semibold text-gray-600">User Not Found...</h1>
+            </div>
+          ) : (
+              <div className="passengersCard">
 
               {/* Table */}
               <motion.div
@@ -206,10 +218,10 @@ const handleSortChange = (e) => {
                 </nav>
               </div>
 
-            </div>
-
-
-               
+              </div>
+          )}
+          </>
+       
         )
       }
 

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
-import Rides from "../components/Rides/RidesTable";
+import Rides from "../components/Rides/RideTable";
 
 
 

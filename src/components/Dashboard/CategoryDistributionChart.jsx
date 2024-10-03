@@ -17,7 +17,7 @@ const CategoryDistributionChart = ({data}) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
         >
-            <h2 className='text-lg font-medium mb-4 text-black'>Trip Statistics</h2>
+            <h2 className='text-lg font-medium  text-black'>Trip Statistics</h2>
             <div className='h-80 w-full'> {/* Set a specific height and full width */}
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>

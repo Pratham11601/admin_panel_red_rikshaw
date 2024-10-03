@@ -14,6 +14,7 @@ import PrivacyPage from "./pages/Privacy";
 import DriverProfile from "./pages/DriverProfile";
 import PassengerProfile from "./pages/PassengerProfile";
 import TransactionRequest from "./pages/TransactionRequest";
+import PageNotFound from "./pages/PageNotFound";
 
 
 function Home() {
@@ -38,7 +39,7 @@ function Home() {
 				<Route path='privacy' element={<PrivacyPage />} />
 				<Route path="driverProfile" element={<DriverProfile />} />
 				<Route path="passengerProfile" element={<PassengerProfile />} />
-				
+				<Route path="*" element={<PageNotFound/>} />
 				
 			</Routes>
 		</div>
