@@ -14,7 +14,7 @@ const Header = ({ title, isSidebarOpen, onLogout }) => {
   };
 
   return (
-    <header className="bg-[#ffffff] bg-opacity-100 backdrop-blur-md shadow-lg border-b border-[#F8F9EC]">
+    <header className="bg-[#ffffff] bg-opacity-100 backdrop-blur-md shadow-lg border-b border-[#F8F9EC] ">
       <div className="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Title */}
         <h1 className="text-xl font-semibold text-black">{title}</h1>

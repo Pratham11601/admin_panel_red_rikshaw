@@ -14,7 +14,8 @@ import PrivacyPage from "./pages/Privacy";
 import DriverProfile from "./pages/DriverProfile";
 import PassengerProfile from "./pages/PassengerProfile";
 import TransactionRequest from "./pages/TransactionRequest";
-
+import PassangerAd from "./pages/Advertisement/Passengers";
+import DriverAd from "./pages/Advertisement/Driver";
 
 function Home() {
 	return (
@@ -38,9 +39,12 @@ function Home() {
 				<Route path='privacy' element={<PrivacyPage />} />
 				<Route path="driverProfile" element={<DriverProfile />} />
 				<Route path="passengerProfile" element={<PassengerProfile />} />
+				<Route path="passangerAd" element={<PassangerAd />} />
+				<Route path="driverAd" element={< DriverAd />} />
 				
 				
 			</Routes>
+
 		</div>
 	);
 }
