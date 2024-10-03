@@ -14,8 +14,13 @@ import PrivacyPage from "./pages/Privacy";
 import DriverProfile from "./pages/DriverProfile";
 import PassengerProfile from "./pages/PassengerProfile";
 import TransactionRequest from "./pages/TransactionRequest";
+<<<<<<< HEAD
 import PageNotFound from "./pages/PageNotFound";
 
+=======
+import PassangerAd from "./pages/Advertisement/Passengers";
+import DriverAd from "./pages/Advertisement/Driver";
+>>>>>>> 3c283d242aadc184752d47b63a2e1817e9688fc4
 
 function Home() {
 	return (
@@ -39,9 +44,16 @@ function Home() {
 				<Route path='privacy' element={<PrivacyPage />} />
 				<Route path="driverProfile" element={<DriverProfile />} />
 				<Route path="passengerProfile" element={<PassengerProfile />} />
+<<<<<<< HEAD
 				<Route path="*" element={<PageNotFound/>} />
+=======
+				<Route path="passangerAd" element={<PassangerAd />} />
+				<Route path="driverAd" element={< DriverAd />} />
+				
+>>>>>>> 3c283d242aadc184752d47b63a2e1817e9688fc4
 				
 			</Routes>
+
 		</div>
 	);
 }
