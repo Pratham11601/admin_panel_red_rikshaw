@@ -1,17 +1,18 @@
-import { BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X } from "lucide-react";
+import { BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
-  { name: "Dashboard", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
+  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
   { name: "Transaction History", icon: DollarSign, color: "black", href: "/Home/transaction" },
   { name: "Transaction request", icon: ArrowRightLeft, color: "black", href: "/Home/transactionrequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
+  { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },
 ];

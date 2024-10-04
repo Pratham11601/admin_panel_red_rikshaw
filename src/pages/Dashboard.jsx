@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import ApiConfig from '../Consants/ApiConfig'
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
-import SalesOverviewChart from "../components/Dashboard/SalesOverviewChart";
+//import SalesOverviewChart from "../components/Dashboard/SalesOverviewChart";
 import CategoryDistributionChart from "../components/Dashboard/CategoryDistributionChart";
 import BarGraph from "../components/Dashboard/Bargaph";
 
@@ -49,7 +49,7 @@ const Dashboard = () => {
 
     return (
         <main className='flex-1 overflow-auto relative z-10 bg-[#ffffff]'>
-            <Header title='Dashboard' />
+            <Header title='Statistics' />
 
             {/* STATS */}
             <motion.div

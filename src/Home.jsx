@@ -16,6 +16,7 @@ import PassengerProfile from "./pages/PassengerProfile";
 import TransactionRequest from "./pages/TransactionRequest";
 import PassangerAd from "./pages/Advertisement/Passengers";
 import DriverAd from "./pages/Advertisement/Driver";
+import Charges from "./pages/charges";
 
 function Home() {
 	return (
@@ -41,6 +42,7 @@ function Home() {
 				<Route path="passengerProfile" element={<PassengerProfile />} />
 				<Route path="passangerAd" element={<PassangerAd />} />
 				<Route path="driverAd" element={< DriverAd />} />
+				<Route path="charges" element={< Charges />} />
 				
 				
 			</Routes>

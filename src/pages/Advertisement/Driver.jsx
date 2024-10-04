@@ -187,7 +187,7 @@ function Driver() {
       {/* Advertisement Heading and Image Upload */}
       <div className="flex justify-between items-center mt-6 px-2 md:px-0 text-black mb-6">
         <h1 className="text-xl sm:text-2xl ml-5">Advertisement</h1> {/* Left side heading */}
-        <label className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer mr-4">
+        <label className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer mr-4">
           Upload File
           <input
             type="file"
