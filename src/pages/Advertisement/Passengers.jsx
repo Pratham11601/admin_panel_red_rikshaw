@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../components/common/Header";
 import ad1 from "../../assets/ad1.jpeg";
 import ad2 from "../../assets/ad2.jpeg";
@@ -38,16 +38,14 @@ function Passengers() {
       addedTime: "11:15 AM",
       status: "Active",
     },
-    // Add more data as needed
   ]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
   const [editBanner, setEditBanner] = useState(null);
-  
-  // Pagination states
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const bannersPerPage = 10;  // Number of banners per page
+  const bannersPerPage = 10;
 
   const indexOfLastBanner = currentPage * bannersPerPage;
   const indexOfFirstBanner = indexOfLastBanner - bannersPerPage;
@@ -64,15 +62,20 @@ function Passengers() {
     const reader = new FileReader();
 
     reader.onload = (e) => {
+      const fileName = file.name;
       const newBanner = {
         id: banners.length + 1,
         bannerImage: e.target.result,
-        name: "Uploaded Image",
+        name: fileName,
         addedDate: new Date().toLocaleDateString(),
         addedTime: new Date().toLocaleTimeString(),
         status: "Active",
       };
       setBanners([...banners, newBanner]);
+      setUploadSuccess(true);
+      setTimeout(() => {
+        setUploadSuccess(false);
+      }, 2000);
     };
 
     reader.readAsDataURL(file);
@@ -84,7 +87,7 @@ function Passengers() {
   };
 
   const handleSaveChanges = () => {
-    setBanners(banners.map(banner => 
+    setBanners(banners.map(banner =>
       banner.id === editBanner.id ? editBanner : banner
     ));
     setIsEditing(false);
@@ -127,9 +130,25 @@ function Passengers() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
+  // Automatically change the image every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextImage();
+    }, 3000);
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [currentIndex]);
+
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10">
       <Header title="Passengers Advertisement" />
+
+      {/* Success Popup */}
+      {uploadSuccess && (
+        <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-md">
+          Image successfully uploaded!
+        </div>
+      )}
 
       {/* Full-width card with inner carousel */}
       <div className="w-full h-auto sm:h-[50vh] bg-white flex items-center justify-center mb-4 mt-5 shadow-2xl rounded-2xl relative">
@@ -143,7 +162,7 @@ function Passengers() {
               <img
                 src={banners[currentIndex].bannerImage}
                 alt={banners[currentIndex].name}
-                className="w-full h-full object-contain" 
+                className="w-full h-full object-contain"
               />
             </div>
 
@@ -156,9 +175,7 @@ function Passengers() {
               {banners.map((_, index) => (
                 <div
                   key={index}
-                  className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${
-                    currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'
-                  } cursor-pointer`}
+                  className={`h-2 w-2 sm:h-3 sm:w-3 rounded-full ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-400'} cursor-pointer`}
                   onClick={() => goToImage(index)}
                 ></div>
               ))}
@@ -167,59 +184,54 @@ function Passengers() {
         )}
       </div>
 
-      {/* Image Upload */}
-      <div className="flex justify-center mt-4 px-2 md:px-0 text-black">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleUploadImage}
-          className="border border-gray-300 rounded-md p-2"
-        />
+      {/* Advertisement Heading and Image Upload */}
+      <div className="flex justify-between items-center mt-6 px-2 md:px-0 text-black mb-6">
+        <h1 className="text-xl sm:text-2xl ml-5">Advertisement</h1> {/* Left side heading */}
+        <label className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer mr-4">
+          Upload File
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleUploadImage}
+            className="hidden"
+          />
+        </label>
       </div>
 
-      {/* Table Container */}
-      <div className="p-4 overflow-x-auto">
-        <table className="min-w-full table-auto border-collapse border bg-white text-black">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border px-2 py-1 sm:px-4 sm:py-2">Banner Image</th>
-              <th className="border px-2 py-1 sm:px-4 sm:py-2">Name</th>
-              <th className="border px-2 py-1 sm:px-4 sm:py-2">Added Date</th>
-              <th className="border px-2 py-1 sm:px-4 sm:py-2">Added Time</th>
-              <th className="border px-2 py-1 sm:px-4 sm:py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentBanners.map((banner) => (
-              <tr key={banner.id} className="hover:bg-gray-50">
-                <td className="border px-2 py-1 sm:px-4 sm:py-2">
-                  <img
-                    src={banner.bannerImage}
-                    alt={banner.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-md"
-                  />
-                </td>
-                <td className="border px-2 py-1 sm:px-4 sm:py-2">{banner.name}</td>
-                <td className="border px-2 py-1 sm:px-4 sm:py-2">{banner.addedDate}</td>
-                <td className="border px-2 py-1 sm:px-4 sm:py-2">{banner.addedTime}</td>
-                <td className="border px-2 py-1 sm:px-4 sm:py-2 flex items-center justify-center">
+      {/* Cards layout */}
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-black">
+        {currentBanners.map((banner) => (
+          <div key={banner.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div className="flex flex-col">
+              <div className="h-48 flex justify-center items-center bg-gray-100">
+                <img
+                  src={banner.bannerImage}
+                  alt={banner.name}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2">{banner.name}</h3>
+                <p className="text-gray-600">Added Date: {banner.addedDate}</p>
+                <p className="text-gray-600">Added Time: {banner.addedTime}</p>
+                <div className="mt-4 flex justify-between">
                   <button
-                    className="bg-red-500 text-white px-2 sm:px-3 py-1 rounded mr-2"
+                    className="bg-red-500 text-white px-3 py-1 rounded"
                     onClick={() => handleDeleteBanner(banner.id)}
                   >
                     Delete
                   </button>
                   <button
-                    className="bg-blue-500 text-white px-2 sm:px-3 py-1 rounded"
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
                     onClick={() => handleEditBanner(banner)}
                   >
                     Edit
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Pagination Controls */}
@@ -227,7 +239,7 @@ function Passengers() {
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-l"
+          className=" hover:bg-blue-400 text-black px-4 py-2 rounded-l"
         >
           Previous
         </button>
@@ -237,48 +249,57 @@ function Passengers() {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-r"
+          className="hover:bg-blue-400 text-black px-4 py-2 rounded-r"
         >
           Next
         </button>
       </div>
 
-      {/* Edit Banner Modal */}
+      {/* Edit Modal */}
       {isEditing && editBanner && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center text-black">
-          <div className="bg-white p-6 rounded shadow-lg w-11/12 sm:w-1/2">
-            <h2 className="text-lg font-semibold mb-4 text-black">Edit Banner</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl mb-4">Edit Banner</h2>
             <div className="mb-4">
-              <label className="block mb-1">Name:</label>
+              <label className="block text-gray-700 mb-2">Banner Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUploadEdit}
+                className="w-full px-3 py-2 border rounded-lg"
+              />
+              {editBanner.bannerImage && (
+                <img
+                  src={editBanner.bannerImage}
+                  alt={editBanner.name}
+                  className="mt-2 h-24 object-contain"
+                />
+              )}
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Name</label>
               <input
                 type="text"
                 name="name"
                 value={editBanner.name}
                 onChange={handleInputChange}
-                className="border border-black rounded-md p-2 w-full text-black"
+                className="w-full px-3 py-2 border rounded-lg"
               />
             </div>
-            <div className="mb-4">
-              <label className="block mb-1">Upload New Image:</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUploadEdit}
-                className="border border-black text-black rounded-md p-2 w-full"
-              />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="bg-gray-400 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveChanges}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Save
+              </button>
             </div>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-              onClick={handleSaveChanges}
-            >
-              Save Changes
-            </button>
-            <button
-              className="bg-gray-500 text-white px-4 py-2 rounded"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
