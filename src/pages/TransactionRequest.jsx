@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
+import TransactionReqTable from "../components/TransactionRequest/TransactionReqTable";
 
 
 
@@ -10,7 +11,7 @@ const TransactionRequest = () => {
 			<Header title='Transaction Request' />
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-white'>
-				{/* <Rides /> */}
+				<TransactionReqTable/>
 				
 			</main>
 		</div>
