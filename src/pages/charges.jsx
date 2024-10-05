@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+
+
+
+import React, { useState, useEffect } from 'react';
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import { Car, User } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ApiConfig from '../Consants/ApiConfig';
+import axios from 'axios';  // Make sure Axios is installed and imported
 
 function Charges() {
   const [charges, setCharges] = useState({
@@ -13,7 +18,29 @@ function Charges() {
     passengerReferral: ''
   });
 
-  const [showPopup, setShowPopup] = useState(false); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch current charges when component mounts
+  useEffect(() => {
+    const fetchCharges = async () => {
+      try {
+        const response = await axios.get(ApiConfig.getChargesEndpont());
+        const data = response.data.data;
+        setCharges({
+          km_1_10: data.one_to_ten,
+          km_10_20: data.ten_to_twenty,
+          km_10_30: data.twenty_to_thirty,
+          driverReferral: data.driver_refferal,
+          passengerReferral: data.passenger_refferal
+        });
+      } catch (error) {
+        console.error("Error fetching charges: ", error);
+      }
+    };
+
+    fetchCharges();
+  }, []);
 
   const handleChange = (e) => {
     setCharges({
@@ -22,14 +49,31 @@ function Charges() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(charges);
-    setShowPopup(true); 
+    setLoading(true); // To show a loading state during API call
+    try {
+      // Sending the updated charges to the server via PUT request
+      const response = await axios.put(ApiConfig.putChargesEndpont(), {
+        one_to_ten: charges.km_1_10,
+        ten_to_twenty: charges.km_10_20,
+        twenty_to_thirty: charges.km_10_30,
+        driver_refferal: charges.driverReferral,
+        passenger_refferal: charges.passengerReferral
+      });
 
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000);
+      console.log(response.data); // Log response data if needed
+
+      // Show success popup
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Error updating charges: ", error);
+    } finally {
+      setLoading(false); // Remove loading state after API call
+    }
   };
 
   return (
@@ -50,7 +94,7 @@ function Charges() {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-9 space-y-6 bg-white p-6 rounded-lg shadow-2xl max-w-full mx-auto text-lg"
+        className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-lg"
       >
         <h2 className="text-xl font-bold mb-6 text-center">Travel Fair</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -86,7 +130,7 @@ function Charges() {
 
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              10-30 KM Charge
+              20-30 KM Charge
             </label>
             <input
               type="text"
@@ -137,8 +181,9 @@ function Charges() {
           <button
             type="submit"
             className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
+            disabled={loading}  // Disable button when loading
           >
-            Update Charges
+            {loading ? 'Updating...' : 'Update Charges'}
           </button>
         </div>
       </form>
