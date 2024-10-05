@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import driverImage from '../../assets/driverimg.jpg';
 import rikshawicon from '../../assets/rickshaw.png';
 import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
-const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
+const UserCard= ({driver})=>{
 
   const navigate = useNavigate();
   const handleViewProfile = () => {
@@ -21,14 +21,14 @@ const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
           <div className="flex items-center mb-4">
           <img src={driverImage} alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
             <div className="flex flex-col ">
-              <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{name}</h2>
+              <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{driver.name}</h2>
               <p className="text-sm flex font-medium text-gray-600 mt-2 ml-3">
                 <img src={rikshawicon} alt="" className="w-6 h-6 mr-2"/>
-                {vehicleNo}
+                {driver.vehicle_number}
               </p>
               <p className="text-sm  flex font-medium text-gray-600 ml-3">
                 <PhoneCall className="h-4 w-4 mr-4 color-black-900"/>
-                {phoneNumber}
+                {driver.phone}
               </p>
               {/* Add star icons or other rating visuals here if needed */}
             </div>
@@ -36,7 +36,7 @@ const UserCard= ({ img,name, phoneNumber, vehicleNo,status,rating})=>{
 
       {/* Vehicle number and phone number */}
           <div className="mb-4">
-          <span className=" text-yellow-500 ">{'★'.repeat(Math.floor(rating))}</span>
+          <span className=" text-yellow-500 ">{'★'.repeat(Math.floor(driver.rating))}</span>
             
           </div>
 

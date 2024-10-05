@@ -10,6 +10,14 @@ import TransactionTable from '../components/Transaction/TransactionTable';
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
+//     const location = useLocation();
+// //   const { driver } = location.state; 
+//   const driver = location.state ? location.state.driver : null;
+
+//   if (!driver) {
+//     return <div>No driver data available.</div>; // Handle the case where driver data is not available
+//   }
+  
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Active');
@@ -71,7 +79,7 @@ const DriverProfile = ()=>{
                 {/*  Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
 
-                <h1 className="text-2xl font-semibold text-gray-800">john doe</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">John Doe</h1>
                 
                 <p className="text-gray-600">📞 9922867393</p>
                 <p className="text-gray-600">✉️ demo@gmail.com</p>

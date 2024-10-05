@@ -6,9 +6,30 @@ import { FadeLoader } from "react-spinners";
 import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
-const RideTable = () => {
-  const [ridesData, setRidesData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+const transactionsData = [
+    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
+    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
+    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
+    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
+    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
+    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
+    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
+    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
+    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
+    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
+    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
+    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
+    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
+    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
+    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
+    // More data can be added here
+  ];
+  
+
+const TransactionReqTable = () => {
+const [transactions, setTransactions] = useState(transactionsData);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("newly-added"); // Default sort
@@ -23,67 +44,45 @@ const RideTable = () => {
   };
 
   // Sort functionality
-  const handleSortChange = (field) => {
-    if (sortBy === field) {
-      // Toggle between ascending and descending
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(field);
-      setSortOrder("asc"); // Default to ascending order
-    }
-    setCurrentPage(1); // Reset to first page on sort change
-  };
+//   const handleSortChange = (field) => {
+//     if (sortBy === field) {
+//       // Toggle between ascending and descending
+//       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+//     } else {
+//       setSortBy(field);
+//       setSortOrder("asc"); // Default to ascending order
+//     }
+//     setCurrentPage(1); // Reset to first page on sort change
+//   };
 
-  // Fetch ride data
-  useEffect(() => {
-    const fetchRides = async () => {
-      try {
-        const response = await fetch(ApiConfig.getAllRidesEndpoint());
-        const data = await response.json();
-        const Rides = data.data;
-
-        setIsLoading(false);
-
-        if (Array.isArray(Rides)) {
-          setRidesData(Rides);
-        } else {
-          console.error('Failed to fetch Rides Data');
-        }
-      } catch (error) {
-        console.error('Error fetching privacy policies:', error);
-      }
-    };
-
-      fetchRides();
- 
-  }, [sortBy, searchTerm]);
 
   // Filter and sort the ride data
-  const filteredRides = ridesData.filter(
-    (ride) =>
-      ride.driverId.name.toLowerCase().includes(searchTerm) ||
-      ride.passengerId.name.toLowerCase().includes(searchTerm) ||
-      ride.pickupLocation.place.toLowerCase().includes(searchTerm) ||
-      ride.dropoffLocation.place.toLowerCase().includes(searchTerm)
+  const filteredTransaction = transactions.filter(
+    (transaction) =>
+        transaction.name.toLowerCase().includes(searchTerm.toLowerCase())||
+        transaction.role.toLowerCase().includes(searchTerm.toLowerCase())||
+        transaction.status.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
 
   // Sort the rides based on selected field
-  const sortedRides = [...filteredRides].sort((a, b) => {
-    if (sortBy === "driver") {
+  const sortedTransactions = [...filteredTransaction].sort((a, b) => {
+    if (sortBy === "name") {
       return sortOrder === "asc"
-        ? a.driverId.name.localeCompare(b.driverId.name)
-        : b.driverId.name.localeCompare(a.driverId.name);
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
     }
-    if (sortBy === "passenger") {
+    if (sortBy === "role") {
       return sortOrder === "asc"
-        ? a.passengerId.name.localeCompare(b.passengerId.name)
-        : b.passengerId.name.localeCompare(a.passengerId.name);
+        ? a.role.localeCompare(b.role)
+        : b.role.localeCompare(a.role);
     }
-    if (sortBy === "rideNo") {
-      return sortOrder === "asc" ? a._id - b._id : b._id - a._id;
+    if (sortBy === "value") {
+      return sortOrder === "asc" ? a.value - b.value : b.value - a.value;
     }
-    if (sortBy === "fare") {
-      return sortOrder === "asc" ? a.totalCost - b.totalCost : b.totalCost - a.totalCost;
+    if (sortBy === "status") {
+      return sortOrder === "asc"
+        ? a.status.localeCompare(b.status)
+        : b.status.localeCompare(a.status);
     }
     return 0;
   });
@@ -91,8 +90,8 @@ const RideTable = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const totalPages = Math.ceil(sortedRides.length / itemsPerPage);
-  const currentItems = sortedRides.slice(
+  const totalPages = Math.ceil(sortedTransactions.length / itemsPerPage);
+  const currentItems = sortedTransactions.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -121,11 +120,11 @@ const RideTable = () => {
     >
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Rides List</h2>
+        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction Requests </h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
-            placeholder="Search Rides..."
+            placeholder="Search Transactions..."
             className="bg-white text-black placeholder-black rounded-lg pl-10 pr-4 py-2 w-full border"
             onChange={handleSearch}
             value={searchTerm}
@@ -143,59 +142,61 @@ const RideTable = () => {
       (
         <>
             {/* Check if filteredRides is empty */}
-          {filteredRides.length === 0 ? (
+          {filteredTransaction.length === 0 ? (
             <div className="text-black flex flex-col justify-center items-center ">
                 <img src={usernotfound} alt="" className="w-80 h-80" />
-                <h1 className="text-lg font-semibold text-gray-600">No rides found matching your search.</h1>
+                <h1 className="text-lg font-semibold text-gray-600">No transaction found..!</h1>
             </div>
 
           ) : (
-            <div className="RidesData">
+            <div className="TransactionRequestData">
                 <motion.div 
                      className="overflow-x-auto"
                 >
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
                     <tr className="h-12 bg-gray-200">
-                        {/* <th
-                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("rideNo")}
-                        >
-                        <span className="flex">Ride No<ArrowDownUp className="pl-2"/></span>
-                        </th> */}
+
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("passenger")}
+                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase  cursor-pointer"
+                        onClick={() => handleSortChange("name")}
                         >
-                        <span className="flex" >Passenger<ArrowDownUp className="pl-2"/></span>
+                            <span className="flex" >Name<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("driver")}
+                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase  cursor-pointer"
+                        onClick={() => handleSortChange("role")}
                         >
-                        <span className="flex">Driver<ArrowDownUp className="pl-2"/></span>
+                            <span className="flex">Role<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("fare")}
+                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer"
+                        onClick={() => handleSortChange("value")}
                         >
-                        <span className="flex">Fare<ArrowDownUp className="pl-2"/></span>
+                            <span className="flex">Value<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
-                        From Place
+                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                            onClick={() => handleSortChange("datetime")}
+                        >
+                            <span className="flex"> Date/Time<ArrowDownUp className="pl-2"/></span>
+                       
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
-                        To Place
+                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                            onClick={() => handleSortChange("status")}
+                        >
+                            <span className="flex"> Status<ArrowDownUp className="pl-2"/></span>
+                       
                         </th>
-                        <th className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
-                        View Invoice
+                        <th className="px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                        >
+                            Action
                         </th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {currentItems.map((ride) => (
+                    {currentItems.map((transaction) => (
                         <motion.tr
-                        key={ride._id}
+                        // key={ride._id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
@@ -204,27 +205,35 @@ const RideTable = () => {
                         {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black border-gray-700">
                             {ride._id}
                         </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black ">
-                            {ride.passengerId.name}
+                        <td className="px-3 py-4 text-left text-sm  text-black ">
+                            {transaction.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black">
-                            {ride.driverId.name}
+                        <td className="px-3 py-4  text-left text-sm  text-black">
+                            {transaction.role}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                            $15.00
+                        <td className="px-3 py-4  text-left text-sm text-black">
+                            {transaction.value}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black hidden sm:table-cell">
-                            {ride.pickupLocation.place}
+                        <td className="px-3 py-4 text-left text-sm  text-black  ">
+                            {transaction.datetime}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-black hidden sm:table-cell">
-                            {ride.dropoffLocation.place}
+                        <td className="px-3 py-4 text-left text-sm text-black  ">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              transaction.status === "completed"
+                                ? "bg-green-200 text-green-900"
+                                : transaction.status === "pending"
+                                ? "bg-yellow-200 text-yellow-900"
+                                : "bg-red-200 text-red-900"
+                            }`}>
+                                {transaction.status}
+                            </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black">
+                        <td className="px-3 py-4  text-center text-sm  text-black">
                             <button
                             className="text-indigo-400 hover:text-indigo-300 mr-2"
-                            onClick={() => handleViewInvoice(ride)}
+                            // onClick={() => handleViewInvoice}
                             >
-                            View
+                            Edit
                             </button>
                         </td>
                         </motion.tr>
@@ -262,7 +271,7 @@ const RideTable = () => {
                 
                 <button
                 onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === Math.ceil(filteredRides.length / itemsPerPage)}
+                disabled={currentPage === Math.ceil(filteredTransaction.length / itemsPerPage)}
                 className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
                 >
                 Next
@@ -272,7 +281,7 @@ const RideTable = () => {
             </div>
 
             {/* View Invoice Modal */}
-            {selectedRide && (
+            {/* {selectedRide && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                     <h2 className="text-xl font-semibold mb-4">Invoice for Ride</h2>
@@ -291,7 +300,7 @@ const RideTable = () => {
             
             
                 )
-            }
+            } */}
             </div>
           )
           }
@@ -302,4 +311,4 @@ const RideTable = () => {
   );
 };
 
-export default RideTable;
+export default TransactionReqTable;
