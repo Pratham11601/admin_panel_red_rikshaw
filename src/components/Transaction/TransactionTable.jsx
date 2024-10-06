@@ -372,7 +372,7 @@ const [transactions, setTransactions] = useState([]);
     >
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction Requests </h2>
+        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction History </h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
