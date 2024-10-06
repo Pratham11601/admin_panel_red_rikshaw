@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
+
+
+
+import React, { useState, useEffect } from 'react';
 import Header from "../components/common/Header";
+import StatCard from "../components/common/StatCard";
+import { Car, User } from 'lucide-react';
+import { motion } from 'framer-motion';
+import ApiConfig from '../Consants/ApiConfig';
+import axios from 'axios';  // Make sure Axios is installed and imported
 
 function Charges() {
   const [charges, setCharges] = useState({
@@ -10,7 +18,29 @@ function Charges() {
     passengerReferral: ''
   });
 
-  const [showPopup, setShowPopup] = useState(false); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch current charges when component mounts
+  useEffect(() => {
+    const fetchCharges = async () => {
+      try {
+        const response = await axios.get(ApiConfig.getChargesEndpont());
+        const data = response.data.data;
+        setCharges({
+          km_1_10: data.one_to_ten,
+          km_10_20: data.ten_to_twenty,
+          km_10_30: data.twenty_to_thirty,
+          driverReferral: data.driver_refferal,
+          passengerReferral: data.passenger_refferal
+        });
+      } catch (error) {
+        console.error("Error fetching charges: ", error);
+      }
+    };
+
+    fetchCharges();
+  }, []);
 
   const handleChange = (e) => {
     setCharges({
@@ -19,23 +49,52 @@ function Charges() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(charges);
-    setShowPopup(true); 
+    setLoading(true); // To show a loading state during API call
+    try {
+      // Sending the updated charges to the server via PUT request
+      const response = await axios.put(ApiConfig.putChargesEndpont(), {
+        one_to_ten: charges.km_1_10,
+        ten_to_twenty: charges.km_10_20,
+        twenty_to_thirty: charges.km_10_30,
+        driver_refferal: charges.driverReferral,
+        passenger_refferal: charges.passengerReferral
+      });
 
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000);  //3sec
+      console.log(response.data); // Log response data if needed
+
+      // Show success popup
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Error updating charges: ", error);
+    } finally {
+      setLoading(false); // Remove loading state after API call
+    }
   };
 
   return (
-    <div className="bg-white flex-1 overflow-auto relative z-10  text-black">
+    <div className="bg-white flex-1 overflow-auto relative z-10 text-black">
       <Header title="Charges Management" />
+      <motion.div
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-12 mt-10 mx-3"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <StatCard name="1-10 KM Charge" icon={Car} value={charges.km_1_10} color="#6366F1" />
+        <StatCard name="10-20 KM Charge" icon={Car} value={charges.km_10_20} color="#8B5CF6" />
+        <StatCard name="20-30 KM Charge" icon={Car} value={charges.km_10_30} color="#8B5CF6" />
+        <StatCard name="Driver Referral" icon={User} value={charges.driverReferral} color="#EF4444" />
+        <StatCard name="Passenger Referral" icon={User} value={charges.passengerReferral} color="#EF4444" />
+      </motion.div>
 
       <form
         onSubmit={handleSubmit}
-        className="mt-9 space-y-6 bg-white p-6 rounded-lg shadow-2xl max-w-2xl mx-auto text-lg"
+        className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-lg"
       >
         <h2 className="text-xl font-bold mb-6 text-center">Travel Fair</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -48,8 +107,8 @@ function Charges() {
               name="km_1_10"
               value={charges.km_1_10}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter charge for 1-10 KM"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter charge "
               required
             />
           </div>
@@ -63,8 +122,8 @@ function Charges() {
               name="km_10_20"
               value={charges.km_10_20}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter charge for 10-20 KM"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter charge "
               required
             />
           </div>
@@ -78,8 +137,8 @@ function Charges() {
               name="km_10_30"
               value={charges.km_10_30}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter charge for 20-30 KM"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter charge "
               required
             />
           </div>
@@ -96,8 +155,8 @@ function Charges() {
               name="driverReferral"
               value={charges.driverReferral}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter amount for driver referral"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter amount "
               required
             />
           </div>
@@ -111,8 +170,8 @@ function Charges() {
               name="passengerReferral"
               value={charges.passengerReferral}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="Enter amount for passenger referral"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter amount "
               required
             />
           </div>
@@ -122,13 +181,13 @@ function Charges() {
           <button
             type="submit"
             className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
+            disabled={loading}  // Disable button when loading
           >
-            Update Charges
+            {loading ? 'Updating...' : 'Update Charges'}
           </button>
         </div>
       </form>
 
-      {/* Popup Notification */}
       {showPopup && (
         <div className="fixed top-4 right-4 p-4 bg-green-500 text-white rounded-lg shadow-lg transition-opacity duration-500 ease-in-out">
           Charges updated successfully!

@@ -141,7 +141,7 @@ function Driver() {
 
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10">
-      <Header title="Passengers Advertisement" />
+      <Header title="Driver Advertisement" />
 
       {/* Success Popup */}
       {uploadSuccess && (

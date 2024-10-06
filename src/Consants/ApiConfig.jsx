@@ -35,10 +35,32 @@ class ApiConfig {
   }
 
     static getTermsAndConditionEndpont() {
-        return `${this.BASE_URL}/api/terms/getAll`
+        return `${this.BASE_URL}/api/terms/getAll`;
     }
 
+    //charges
+    static putChargesEndpont() {
+      return `${this.BASE_URL}/api/Charges`;
   }
+
+  static getChargesEndpont() {
+    return `${this.BASE_URL}/api/Charges`;
+}
+
+
+//Advertisement
+static getAdvertisementEndpont() {
+  return `${this.BASE_URL}/api/advertisement/getByCategory?category=driver`;
+  }
+
+static postAdvertisementEndpont() {
+    return `${this.BASE_URL}/api/advertisement/driver`;
+    }
+
+static deleteAdvertisementEndpont() {
+      return `${this.BASE_URL}/api/advertisement/delete`;
+      }
+}
   
   export default ApiConfig;
   
