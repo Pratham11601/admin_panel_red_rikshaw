@@ -13,7 +13,7 @@ const UserCard= ({driver})=>{
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
           <div className="relative bg-white  rounded-lg ">
       {/* Status at top-right corner */}
-          <div className={`absolute top-2 right-2 text-sm text-white  rounded-full ${ status ? 'bg-green-600' : 'bg-red-600'}`}>
+          <div className={`absolute top-2 right-2 text-sm text-white  rounded-full ${ driver.isActive ? 'bg-green-600' : 'bg-red-600'}`}>
                       <BadgeCheck className="h-6 w-6 text-white outline-none" />
           </div>
 

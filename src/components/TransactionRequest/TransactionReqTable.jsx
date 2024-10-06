@@ -43,18 +43,6 @@ const [transactions, setTransactions] = useState(transactionsData);
     setCurrentPage(1);
   };
 
-  // Sort functionality
-//   const handleSortChange = (field) => {
-//     if (sortBy === field) {
-//       // Toggle between ascending and descending
-//       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-//     } else {
-//       setSortBy(field);
-//       setSortOrder("asc"); // Default to ascending order
-//     }
-//     setCurrentPage(1); // Reset to first page on sort change
-//   };
-
 
   // Filter and sort the ride data
   const filteredTransaction = transactions.filter(

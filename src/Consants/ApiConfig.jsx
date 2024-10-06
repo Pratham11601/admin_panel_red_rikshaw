@@ -19,7 +19,7 @@ class ApiConfig {
     }
     static getAllRidesEndpoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/rides-getAll`;
+      return `${this.BASE_URL}/api/adminpanel/rides-getAll?page=1&limit=15`;
     }
     static getPrivacyPolicyEndpoint() {
       
