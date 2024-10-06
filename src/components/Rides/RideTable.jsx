@@ -50,7 +50,7 @@ const RideTable = () => {
           console.error('Failed to fetch Rides Data');
         }
       } catch (error) {
-        console.error('Error fetching privacy policies:', error);
+        console.error('Error fetching Rides Data:', error);
       }
     };
 
