@@ -50,7 +50,7 @@ const RideTable = () => {
           console.error('Failed to fetch Rides Data');
         }
       } catch (error) {
-        console.error('Error fetching privacy policies:', error);
+        console.error('Error fetching Rides Data:', error);
       }
     };
 
@@ -84,6 +84,16 @@ const RideTable = () => {
     }
     if (sortBy === "fare") {
       return sortOrder === "asc" ? a.totalCost - b.totalCost : b.totalCost - a.totalCost;
+    }
+    if (sortBy === "fromplace") {
+      return sortOrder === "asc"
+        ? a.passengerId.name.localeCompare(b.passengerId.name)
+        : b.passengerId.name.localeCompare(a.passengerId.name);
+    }
+    if (sortBy === "toplace") {
+      return sortOrder === "asc"
+        ? a.passengerId.name.localeCompare(b.passengerId.name)
+        : b.passengerId.name.localeCompare(a.passengerId.name);
     }
     return 0;
   });
@@ -157,37 +167,36 @@ const RideTable = () => {
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
                     <tr className="h-12 bg-gray-200">
-                        {/* <th
-                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("rideNo")}
-                        >
-                        <span className="flex">Ride No<ArrowDownUp className="pl-2"/></span>
-                        </th> */}
+                        
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("passenger")}
+                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                          onClick={() => handleSortChange("passenger")}
                         >
-                        <span className="flex" >Passenger<ArrowDownUp className="pl-2"/></span>
+                          <span className="flex" >Passenger<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("driver")}
+                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase  cursor-pointer"
+                          onClick={() => handleSortChange("driver")}
                         >
-                        <span className="flex">Driver<ArrowDownUp className="pl-2"/></span>
+                          <span className="flex">Driver<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange("fare")}
+                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                          onClick={() => handleSortChange("fare")}
                         >
-                        <span className="flex">Fare<ArrowDownUp className="pl-2"/></span>
+                          <span className="flex">Fare<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
-                        From Place
+                        <th className=" w-1/6 px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                          onClick={() => handleSortChange("fromplace")}
+                        >
+                          <span className="flex">From Place<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
-                        To Place
+                        <th className=" w-1/6 px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                          onClick={() => handleSortChange("toplace")}
+                        >
+                        <span className="flex">To Place<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className="px-6 py-3 text-center text-sm font-medium text-black uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer">
                         View Invoice
                         </th>
                     </tr>
@@ -213,10 +222,10 @@ const RideTable = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                             $15.00
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black hidden sm:table-cell">
+                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black hidden sm:table-cell">
                             {ride.pickupLocation.place}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-black hidden sm:table-cell">
+                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black hidden sm:table-cell">
                             {ride.dropoffLocation.place}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black">

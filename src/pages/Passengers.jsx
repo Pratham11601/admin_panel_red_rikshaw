@@ -18,7 +18,7 @@ const Passengers = () => {
 					transition={{ duration: 1 }}
 				>
 					<StatCard name='Total Passengers' icon={Users} value={20} color='#6366F1' />
-					<StatCard name='New Passengers' icon={CheckCircle} value={15} color='#F59E0B' />
+					<StatCard name='New Passengers' icon={CheckCircle} value={5} color='#F59E0B' />
 					<StatCard name='Active Passengers' icon={CheckCircle} value={15} color='#F59E0B' />
 					<StatCard name='Inactive Passengers' icon={XCircle} value={0} color='#EF4444' />
 

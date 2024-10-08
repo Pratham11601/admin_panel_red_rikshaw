@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Link,useLocation,useNavigate } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
-import RidesTable from '../components/Rides/RidesTable';
+import RidesTable from '../components/Rides/RideTable';
 import TransactionTable from '../components/Transaction/TransactionTable';
 
 const DriverProfile = ()=>{

@@ -7,34 +7,15 @@ import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 
-const transactionsData = [
-    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
-    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
-    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
-    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
-    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
-    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
-    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
-    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
-    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
-    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
-    { name: 'John Doe', role: 'driver', value: 100, datetime: '2024-09-01 10:00', status: 'completed' },
-    { name: 'Jane Smith', role: 'passenger', value: 50, datetime: '2024-09-02 12:30', status: 'pending' },
-    { name: 'Mike Johnson', role: 'driver', value: 120, datetime: '2024-09-03 14:15', status: 'failed' },
-    { name: 'Emily Davis', role: 'passenger', value: 75, datetime: '2024-09-04 16:45', status: 'completed' },
-    { name: 'Sarah Connor', role: 'driver', value: 90, datetime: '2024-09-05 18:00', status: 'pending' },
-    // More data can be added here
-  ];
-  
 
 const TransactionReqTable = () => {
-const [transactions, setTransactions] = useState(transactionsData);
-  const [isLoading, setIsLoading] = useState(false);
+const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("newly-added"); // Default sort
   const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
-  const [selectedRide, setSelectedRide] = useState(null);
+  const [selectedtransaction,setSelectedtransaction] = useState(null);
   const itemsPerPage = 10;
 
   // Search functionality
@@ -42,39 +23,64 @@ const [transactions, setTransactions] = useState(transactionsData);
     setSearchTerm(e.target.value.toLowerCase());
     setCurrentPage(1);
   };
+  // Handle sort change
+  const handleSortChange = (field) => {
+    if (sortBy === field) {
+      // Toggle the sort order if the same field is clicked again
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // Set the new field and default sort order to ascending
+      setSortBy(field);
+      setSortOrder("asc");
+    }
+  };
+  useEffect(() => {
+    const fetchTransactionRequest = async () => {
+      try {
+        const response = await fetch(ApiConfig.getTransactionRequestEndPoint());
+        const data = await response.json();
+        const transaction = data.items;
 
-  // Sort functionality
-//   const handleSortChange = (field) => {
-//     if (sortBy === field) {
-//       // Toggle between ascending and descending
-//       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-//     } else {
-//       setSortBy(field);
-//       setSortOrder("asc"); // Default to ascending order
-//     }
-//     setCurrentPage(1); // Reset to first page on sort change
-//   };
+        setIsLoading(false);
+
+        if (Array.isArray(transaction)) {
+          setTransactions(transaction);
+        } else {
+          console.error('Failed to fetch Rides Data');
+        }
+      } catch (error) {
+        console.error('Error fetching privacy policies:', error);
+      }
+    };
+
+    fetchTransactionRequest();
+ 
+  }, [sortBy, searchTerm]);
+
 
 
   // Filter and sort the ride data
   const filteredTransaction = transactions.filter(
     (transaction) =>
-        transaction.name.toLowerCase().includes(searchTerm.toLowerCase())||
-        transaction.role.toLowerCase().includes(searchTerm.toLowerCase())||
+        transaction.UserDetails.userName.toLowerCase().includes(searchTerm.toLowerCase())||
+        transaction.UserDetails.userRole.toLowerCase().includes(searchTerm.toLowerCase())||
+        String(transaction.value).includes(searchTerm) ||
+        String(transaction.createdAt).includes(searchTerm) ||  
         transaction.status.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
+
 
   // Sort the rides based on selected field
   const sortedTransactions = [...filteredTransaction].sort((a, b) => {
     if (sortBy === "name") {
       return sortOrder === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
+        ? a.UserDetails.userName.localeCompare(b.name)
+        : b.UserDetails.userName.localeCompare(a.name);
     }
     if (sortBy === "role") {
       return sortOrder === "asc"
-        ? a.role.localeCompare(b.role)
-        : b.role.localeCompare(a.role);
+        ? a.UserDetails.userRole.localeCompare(b.role)
+        : b.UserDetails.userRole.localeCompare(a.role);
     }
     if (sortBy === "value") {
       return sortOrder === "asc" ? a.value - b.value : b.value - a.value;
@@ -83,6 +89,11 @@ const [transactions, setTransactions] = useState(transactionsData);
       return sortOrder === "asc"
         ? a.status.localeCompare(b.status)
         : b.status.localeCompare(a.status);
+    }
+    if (sortBy === "datetime") {
+      return sortOrder === "asc"
+        ? a.createdAt.localeCompare(b.status)
+        : b.createdAt.localeCompare(a.status);
     }
     return 0;
   });
@@ -102,13 +113,13 @@ const [transactions, setTransactions] = useState(transactionsData);
   };
 
   // Handle View action
-  const handleViewInvoice = (ride) => {
-    setSelectedRide(ride);
+  const handleViewTransactionDetails = (transaction) => {
+    setSelectedtransaction(transaction);
   };
   
   // Close Modal
   const closeModal = () => {
-    setSelectedRide(null);
+    setSelectedtransaction(null);
   };
 
   return (
@@ -155,7 +166,8 @@ const [transactions, setTransactions] = useState(transactionsData);
                 >
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
-                    <tr className="h-12 bg-gray-200">
+                    <tr className="h-12 bg-gray-200">    
+
 
                         <th
                         className="px-6 py-3 text-center text-sm font-medium text-black uppercase  cursor-pointer"
@@ -175,13 +187,13 @@ const [transactions, setTransactions] = useState(transactionsData);
                         >
                             <span className="flex">Value<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer "
                             onClick={() => handleSortChange("datetime")}
                         >
                             <span className="flex"> Date/Time<ArrowDownUp className="pl-2"/></span>
                        
                         </th>
-                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer"
                             onClick={() => handleSortChange("status")}
                         >
                             <span className="flex"> Status<ArrowDownUp className="pl-2"/></span>
@@ -202,22 +214,20 @@ const [transactions, setTransactions] = useState(transactionsData);
                         transition={{ duration: 0.3 }}
                         className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg"
                         >
-                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black border-gray-700">
-                            {ride._id}
-                        </td> */}
-                        <td className="px-3 py-4 text-left text-sm  text-black ">
-                            {transaction.name}
+ 
+                        <td className="px-6 py-4 text-left text-sm  text-black ">
+                            {transaction.UserDetails.userName}
                         </td>
-                        <td className="px-3 py-4  text-left text-sm  text-black">
-                            {transaction.role}
+                        <td className="px-6 py-4  text-left text-sm  text-black">
+                            {transaction.UserDetails.userRole}
                         </td>
-                        <td className="px-3 py-4  text-left text-sm text-black">
+                        <td className="px-6 py-4  text-left text-sm text-black">
                             {transaction.value}
                         </td>
-                        <td className="px-3 py-4 text-left text-sm  text-black  ">
-                            {transaction.datetime}
+                        <td className="px-6 py-4 text-left text-sm  text-black  ">
+                            {transaction.createdAt}
                         </td>
-                        <td className="px-3 py-4 text-left text-sm text-black  ">
+                        <td className="px-6 py-4 text-left text-sm text-black  ">
                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               transaction.status === "completed"
                                 ? "bg-green-200 text-green-900"
@@ -231,7 +241,7 @@ const [transactions, setTransactions] = useState(transactionsData);
                         <td className="px-3 py-4  text-center text-sm  text-black">
                             <button
                             className="text-indigo-400 hover:text-indigo-300 mr-2"
-                            // onClick={() => handleViewInvoice}
+                            onClick={() => handleViewTransactionDetails(transaction)}
                             >
                             Edit
                             </button>
@@ -281,14 +291,14 @@ const [transactions, setTransactions] = useState(transactionsData);
             </div>
 
             {/* View Invoice Modal */}
-            {/* {selectedRide && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            {selectedtransaction && (
+                <div className="fixed inset-0 text-black bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg">
-                    <h2 className="text-xl font-semibold mb-4">Invoice for Ride</h2>
-                    <p>Ride ID: {selectedRide._id}</p>
-                    <p>Driver Name: {selectedRide.driverId.name}</p>
-                    <p>Passenger Name: {selectedRide.passengerId.name}</p>
-                    <p>Total Fare: ${selectedRide.totalCost}</p>
+                    <h2 className="text-xl font-semibold mb-4">Edit Transaction</h2>
+                    <p>Name : </p>
+                    <p>Role :</p>
+                    <p>Date/Time :</p>
+                    <p>Value :</p>
                     <button
                     className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
                     onClick={closeModal}
@@ -300,7 +310,7 @@ const [transactions, setTransactions] = useState(transactionsData);
             
             
                 )
-            } */}
+            }
             </div>
           )
           }
