@@ -21,11 +21,13 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/adminpanel/rides-getAll`;
     }
+  //PrivacyPolicy
+
     static getPrivacyPolicyEndpoint() {
       
       return `${this.BASE_URL}/api/privacypolicy/getAll`;
     }
-  
+  //T&C
     static postTermsAndConditionEndpoint() {
         return `${this.BASE_URL}/api/terms/post`;
     }
@@ -54,13 +56,19 @@ static getAdvertisementEndpont() {
   }
 
 static postAdvertisementEndpont() {
-    return `${this.BASE_URL}/api/advertisement/driver`;
+    return `${this.BASE_URL}api/advertisement/driver`;
     }
 
 static deleteAdvertisementEndpont() {
       return `${this.BASE_URL}/api/advertisement/delete`;
       }
+
+
+
+
+
+    
 }
-  
+
   export default ApiConfig;
   
