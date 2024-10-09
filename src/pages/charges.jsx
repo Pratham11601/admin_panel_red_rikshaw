@@ -1,46 +1,25 @@
-
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import { Car, User } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ApiConfig from '../Consants/ApiConfig';
-import axios from 'axios';  // Make sure Axios is installed and imported
 
 function Charges() {
   const [charges, setCharges] = useState({
-    km_1_10: '',
-    km_10_20: '',
-    km_10_30: '',
-    driverReferral: '',
-    passengerReferral: ''
+    km_1_5: '5',
+    km_1_10: '10',
+    km_10_plus: '15',
+    discount_1_5_10: '5',
+    discount_10_plus: '10',
+    per_ride_driver: '3',
+    per_ride_passenger: '2',
+    driverReferral: '50',
+    passengerReferral: '30'
   });
 
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Fetch current charges when component mounts
-  useEffect(() => {
-    const fetchCharges = async () => {
-      try {
-        const response = await axios.get(ApiConfig.getChargesEndpont());
-        const data = response.data.data;
-        setCharges({
-          km_1_10: data.one_to_ten,
-          km_10_20: data.ten_to_twenty,
-          km_10_30: data.twenty_to_thirty,
-          driverReferral: data.driver_refferal,
-          passengerReferral: data.passenger_refferal
-        });
-      } catch (error) {
-        console.error("Error fetching charges: ", error);
-      }
-    };
-
-    fetchCharges();
-  }, []);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleChange = (e) => {
     setCharges({
@@ -49,143 +28,192 @@ function Charges() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true); // To show a loading state during API call
-    try {
-      // Sending the updated charges to the server via PUT request
-      const response = await axios.put(ApiConfig.putChargesEndpont(), {
-        one_to_ten: charges.km_1_10,
-        ten_to_twenty: charges.km_10_20,
-        twenty_to_thirty: charges.km_10_30,
-        driver_refferal: charges.driverReferral,
-        passenger_refferal: charges.passengerReferral
-      });
-
-      console.log(response.data); // Log response data if needed
-
-      // Show success popup
+    setLoading(true);
+    setTimeout(() => {
+      console.log("Updated Charges: ", charges);
       setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
-    } catch (error) {
-      console.error("Error updating charges: ", error);
-    } finally {
-      setLoading(false); // Remove loading state after API call
-    }
+
+      setLoading(false);
+      setTimeout(() => setShowPopup(false), 3000);
+    }, 1000);
   };
 
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10 text-black">
       <Header title="Charges Management" />
       <motion.div
-        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 mb-12 mt-10 mx-3"
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-12 mt-10 mx-3"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <StatCard name="1-10 KM Charge" icon={Car} value={charges.km_1_10} color="#6366F1" />
-        <StatCard name="10-20 KM Charge" icon={Car} value={charges.km_10_20} color="#8B5CF6" />
-        <StatCard name="20-30 KM Charge" icon={Car} value={charges.km_10_30} color="#8B5CF6" />
-        <StatCard name="Driver Referral" icon={User} value={charges.driverReferral} color="#EF4444" />
-        <StatCard name="Passenger Referral" icon={User} value={charges.passengerReferral} color="#EF4444" />
+        {/* Stat Cards Displaying Updated Fields */}
+        <StatCard name="10+ KM Charge" icon={Car} value={charges.km_10_plus} color="#8B5CF6" />
+        <StatCard name="10+ KM Discount %" icon={Car} value={charges.discount_10_plus} color="#34D399" />
+        <StatCard name="Per Ride Driver Charge" icon={User} value={charges.per_ride_driver} color="#EF4444" />
+        <StatCard name="Per Ride Passenger Charge" icon={User} value={charges.per_ride_passenger} color="#EF4444" />
       </motion.div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-lg"
-      >
-        <h2 className="text-xl font-bold mb-6 text-center">Travel Fair</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Search Bar and Update Button */}
+      <div className="flex justify-between items-center mb-6 mx-3">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500 w-full md:w-1/2"
+          placeholder="Search..."
+        />
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className="ml-4 px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
+          disabled={loading}
+        >
+          {loading ? 'Updating...' : 'Update Charges'}
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-lg">
+      <h2 className="text-xl font-bold mb-6 text-center">Travel Fair Charges</h2>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  {/* Charge Fields */}
+  <div>
+    <label className="block text-gray-700 text-sm font-bold mb-2">1-5 KM Charge</label>
+    <input
+      type="text"
+      name="km_1_5"
+      value={charges.km_1_5}
+      onChange={handleChange}
+      className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+      placeholder="Enter charge"
+      required
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-bold mb-2">1-10 KM Charge</label>
+    <input
+      type="text"
+      name="km_1_10"
+      value={charges.km_1_10}
+      onChange={handleChange}
+      className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+      placeholder="Enter charge"
+      required
+    />
+  </div>
+
+  <div>
+    <label className="block text-gray-700 text-sm font-bold mb-2">10+ KM Charge</label>
+    <input
+      type="text"
+      name="km_10_plus"
+      value={charges.km_10_plus}
+      onChange={handleChange}
+      className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+      placeholder="Enter charge"
+      required
+    />
+  </div>
+</div>
+
+
+        <h2 className="text-xl font-bold mb-4 text-center mt-5">Discounts</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {/* Discount Fields */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              1-10 KM Charge
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">1.5-10 KM Discount %</label>
             <input
               type="text"
-              name="km_1_10"
-              value={charges.km_1_10}
+              name="discount_1_5_10"
+              value={charges.discount_1_5_10}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-              placeholder="Enter charge "
+              placeholder="Enter discount"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              10-20 KM Charge
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">10+ KM Discount %</label>
             <input
               type="text"
-              name="km_10_20"
-              value={charges.km_10_20}
+              name="discount_10_plus"
+              value={charges.discount_10_plus}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-              placeholder="Enter charge "
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              20-30 KM Charge
-            </label>
-            <input
-              type="text"
-              name="km_10_30"
-              value={charges.km_10_30}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-              placeholder="Enter charge "
+              placeholder="Enter discount"
               required
             />
           </div>
         </div>
 
-        <h2 className="text-xl font-bold mb-4 text-center mt-5">Referral Amount</h2>
+        <h2 className="text-xl font-bold mb-4 text-center mt-5">Per Ride Charges</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {/* Per Ride Charge Fields */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Driver Referral Amount
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Per Ride Driver Charge</label>
+            <input
+              type="text"
+              name="per_ride_driver"
+              value={charges.per_ride_driver}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter charge"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Per Ride Passenger Charge</label>
+            <input
+              type="text"
+              name="per_ride_passenger"
+              value={charges.per_ride_passenger}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+              placeholder="Enter charge"
+              required
+            />
+          </div>
+        </div>
+
+        <h2 className="text-xl font-bold mb-4 text-center mt-5">Referral Rewards</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {/* Referral Fields */}
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Driver Referral Reward</label>
             <input
               type="text"
               name="driverReferral"
               value={charges.driverReferral}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-              placeholder="Enter amount "
+              placeholder="Enter reward"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Passenger Referral Amount
-            </label>
+            <label className="block text-gray-700 text-sm font-bold mb-2">Passenger Referral Reward</label>
             <input
               type="text"
               name="passengerReferral"
               value={charges.passengerReferral}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-              placeholder="Enter amount "
+              placeholder="Enter reward"
               required
             />
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
-            disabled={loading}  // Disable button when loading
-          >
-            {loading ? 'Updating...' : 'Update Charges'}
-          </button>
-        </div>
       </form>
 
       {showPopup && (

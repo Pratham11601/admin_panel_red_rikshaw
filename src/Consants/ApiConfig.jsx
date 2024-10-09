@@ -73,13 +73,19 @@ static getAdvertisementEndpont() {
   }
 
 static postAdvertisementEndpont() {
-    return `${this.BASE_URL}/api/advertisement/driver`;
+    return `${this.BASE_URL}api/advertisement/driver`;
     }
 
 static deleteAdvertisementEndpont() {
       return `${this.BASE_URL}/api/advertisement/delete`;
       }
+
+
+
+
+
+    
 }
-  
+
   export default ApiConfig;
   
