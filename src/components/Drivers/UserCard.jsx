@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import driverImage from '../../assets/driverimg.jpg';
 import rikshawicon from '../../assets/rickshaw.png';
 import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
+
 const UserCard= ({driver})=>{
 
   const navigate = useNavigate();
   const handleViewProfile = () => {
-    navigate('/Home/driverProfile'); 
+    navigate(`/Home/driverProfile`, { state: { user: driver.data } });
   };
     return(
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">

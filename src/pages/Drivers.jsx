@@ -7,16 +7,7 @@ import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import UsersTable from "../components/Drivers/UsersTable";
 
-// import UserGrowthChart from "../components/users/UserGrowthChart";
-// import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
-// import UserDemographicsChart from "../components/users/UserDemographicsChart";
 
-// const userStats = {
-// 	totalUsers: 2845,
-// 	newUsersToday: 243,
-// 	activeUsers: 520,
-// 	 churnRate: 50,
-// };
 
 const Drivers = () => {
 	const [totalDriver,setTotalDriver] = useState(0);

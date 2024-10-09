@@ -1,70 +1,79 @@
 import React, { useState } from 'react';
-import Header from "../components/common/Header";
+import Header from "../common/Header";
 import { ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion'; 
 import { Link,useLocation,useNavigate } from 'react-router-dom';
-import driverImage from '../assets/driverimg.jpg';
-import DocumentPopup from '../components/Drivers/DocumentPopup';
-import RidesTable from '../components/Rides/RideTable';
-import TransactionTable from '../components/WithdrawHistory/TransactionTable';
+import driverImage from '../../assets/driverimg.jpg';
+import DocumentPopup from '../Drivers/DocumentPopup';
+import RidesTable from '../Rides/RideTable';
+import TransactionTable from '../WithdrawHistory/TransactionTable';
 
-const DriverProfile = ()=>{
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { user } = location.state; // Get user data passed from SearchUser component
+const DriversProfile = () => {
+  const location = useLocation();
+  const { user } = location.state; // Get user data passed from SearchUser component
+  const [activeTab, setActiveTab] = useState('profileSummary');
+  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [status, setStatus] = useState('Block');
+  const [walletBalance, setWalletBalance] = useState(500); // Initial wallet balance
+  const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
+  const [addAmount, setAddAmount] = useState(''); 
+  const navigate = useNavigate();
 
-    console.log(user);
-    
-  
-    const [activeTab, setActiveTab] = useState('profileSummary');
-    const [isPopupOpen, setPopupOpen] = useState(false);
-    const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(500); // Initial wallet balance
-    const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
-    const [addAmount, setAddAmount] = useState('');          
+  const toggleStatus = () => {
+    const newStatus = status === 'Block' ? 'Unblock' : 'Block';
+    setStatus(newStatus);
 
-    const toggleStatus = () => {
-        const newStatus = status === 'Block' ? 'Unblock' : 'Block';
-        setStatus(newStatus);
+    // Here, you can add an API call to update the status in your database
+    // Example:
+    // fetch(`/api/drivers/update-status`, {
+    //     method: 'POST',
+    //     body: JSON.stringify({ status: newStatus }),
+    //     headers: { 'Content-Type': 'application/json' }
+    // });
+};
+  const togglePopup = () => {
+    setShowAddMoneyPopup(!showAddMoneyPopup);
+  };
 
-        // Here, you can add an API call to update the status in your database
-        // Example:
-        // fetch(`/api/drivers/update-status`, {
-        //     method: 'POST',
-        //     body: JSON.stringify({ status: newStatus }),
-        //     headers: { 'Content-Type': 'application/json' }
-        // });
-    };
+const handleAddMoney = () => {
+    const newAmount = parseFloat(addAmount);
+    if (isNaN(newAmount) || newAmount <= 0) {
+      alert('Please enter a valid amount.');
+      return;
+    }
+    setWalletBalance(walletBalance + newAmount);
+    setAddAmount('');
+    togglePopup();
+  };
+const handleViewDocument = () => {
+  setPopupOpen(true);
+};
 
-    const togglePopup = () => {
-        setShowAddMoneyPopup(!showAddMoneyPopup);
-      };
-
-    const handleAddMoney = () => {
-        const newAmount = parseFloat(addAmount);
-        if (isNaN(newAmount) || newAmount <= 0) {
-          alert('Please enter a valid amount.');
-          return;
-        }
-        setWalletBalance(walletBalance + newAmount);
-        setAddAmount('');
-        togglePopup();
-      };
-    const handleViewDocument = () => {
-      setPopupOpen(true);
-    };
-  
-    const handleClosePopup = () => {
-      setPopupOpen(false);
-    };
+const handleClosePopup = () => {
+  setPopupOpen(false);
+};
 
 
-    const handleBackClick = () => {
-        navigate('/Home/drivers'); 
-      };
-    return(
-        <div className="flex-1 overflow-auto relative z-10">
-            <Header title='Drivers Profile' />
+const handleBackClick = () => {
+    navigate('/Home/dashboard'); 
+  };
+  return (
+    // <div className="driver-profile bg-white p-6 rounded-lg shadow-md">
+    //   <h2 className="text-2xl font-semibold mb-4">Driver Profile</h2>
+    //   <img src={user.profile_img} alt={`${user.name}'s profile`} className="rounded-full w-24 h-24 mb-4" />
+    //   <p><strong>Name:</strong> {user.name}</p>
+    //   <p><strong>Phone:</strong> {user.phone}</p>
+    //   <p><strong>Email:</strong> {user.email}</p>
+    //   <p><strong>Address:</strong> {user.address}</p>
+    //   <p><strong>Driver Type:</strong> {user.driver_type}</p>
+    //   <p><strong>Vehicle Number:</strong> {user.vehicle_number}</p>
+    //   <p><strong>Rating:</strong> {user.rating} / 5</p>
+    //   <p><strong>Wallet Balance:</strong> ${user.wallet_balance}</p>
+    //   <p><strong>Account Active:</strong> {user.isActive ? 'Active' : 'Inactive'}</p>
+    //   <p><strong>Date Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+    // </div>
+    <div className="flex-1 overflow-auto relative z-10">
+            <Header title={`${user.name}'s profile`} />
             <button 
                 onClick={handleBackClick}
                 className="flex items-center bg-white text-black pl-8 pt-3 whitespace-nowrap"
@@ -94,26 +103,26 @@ const DriverProfile = ()=>{
                 {/*  Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
 
-                <h1 className="text-2xl font-semibold text-gray-800">John Doe</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">{user.name}</h1>
                 
-                <p className="text-gray-600">📞 9922867393</p>
-                <p className="text-gray-600">✉️ demo@gmail.com</p>
-                <p className="text-gray-600">📍 Katraj,pune</p>
+                <p className="text-gray-600">📞 {user.phone}</p>
+                <p className="text-gray-600">✉️ {user.email}</p>
+                <p className="text-gray-600">📍 {user.address}</p>
                 </motion.div>
 
                 {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-2">
                 <div className="flex items-center justify-center md:justify-start">
-                    <span
-                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
+                <span
+                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${user.isActive ? 'bg-red-600' : 'bg-green-600'} text-white`}
                        // Add click handler to toggle status
                     >
-                        {status}
+                      {user.isActive ? 'Block' : 'unblock'}
                     </span>
                     <button
                             onClick={toggleStatus}
                             className="ml-4 px-3 py-1 bg-red-400 text-white font-sb rounded "
-                        >
+                    >
                             Change Status
                     </button>
                 </div>
@@ -124,15 +133,15 @@ const DriverProfile = ()=>{
                     ⭐ <span className="font-semibold">4.5</span> Reviews
                 </p>
 
-                <div className="flex items-center justify-center md:justify-start ">
+                <div className="flex  items-center justify-center md:justify-start">
                     <div className="bg-white mt-2">
                         <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                        <p className="text-xl mt-2">₹{user.wallet_balance.toFixed(2)}</p>
                     </div>
                     {/* Add Money Button */}
                     <button
                         onClick={togglePopup}
-                        className=" px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        className=" mx-3 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                         >
                         Add Money
                     </button>
@@ -142,7 +151,7 @@ const DriverProfile = ()=>{
 
       {/* Popup for adding money */}
       {showAddMoneyPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed text-black inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
 
@@ -268,7 +277,7 @@ const DriverProfile = ()=>{
             </main>
             
         </div>
-    )
-}
+  );
+};
 
-export default DriverProfile;
+export default DriversProfile;

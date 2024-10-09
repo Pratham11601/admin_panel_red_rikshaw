@@ -7,16 +7,19 @@ import Passengers from "./pages/Passengers";
 import Drivers from "./pages/Drivers";
 import Rides from "./pages/RidesPage";
 
-import Transaction from "./pages/Transaction";
+import WithdrawHistory from "./pages/WithdrawHistory";
 import SettingsPage from "./pages/SettingsPage";
 import TermsPage from "./pages/Terms";
 import PrivacyPage from "./pages/Privacy";
 import DriverProfile from "./pages/DriverProfile";
 import PassengerProfile from "./pages/PassengerProfile";
-import TransactionRequest from "./pages/TransactionRequest";
+import WithdrawRequest from "./pages/WithdrawRequest";
 import PassangerAd from "./pages/Advertisement/Passengers";
 import DriverAd from "./pages/Advertisement/Driver";
 import Charges from "./pages/charges";
+import DriversProfile from "./components/Dashboard/DriversProfile";
+import PassengersProfile from "./components/Dashboard/PassengersProfile";
+import Transactions from "./pages/Transactions";
 
 function Home() {
 	return (
@@ -33,8 +36,9 @@ function Home() {
 				<Route path='passengers' element={<Passengers />} />
 				<Route path='drivers' element={<Drivers />} />
 				<Route path='rides' element={<Rides />} />
-				<Route path='transaction' element={<Transaction />} />
-				<Route path='transactionrequest' element={<TransactionRequest />} />
+				<Route path='transactions' element={<Transactions />} />
+				<Route path='withdrawHistory' element={<WithdrawHistory />} />
+				<Route path='withdrawrequest' element={<WithdrawRequest />} />
 				<Route path='settings' element={<SettingsPage />} />
 				<Route path='terms' element={<TermsPage />} />
 				<Route path='privacy' element={<PrivacyPage />} />
@@ -43,6 +47,10 @@ function Home() {
 				<Route path="passangerAd" element={<PassangerAd />} />
 				<Route path="driverAd" element={< DriverAd />} />
 				<Route path="charges" element={< Charges />} />
+
+				<Route path="drivers-profile"  element={<DriversProfile/>}/>
+				<Route path="passengers-profile"  element={<PassengersProfile/>}/>
+				
 				
 				
 			</Routes>
