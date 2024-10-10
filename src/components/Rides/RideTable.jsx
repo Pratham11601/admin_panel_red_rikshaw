@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import TRANSACTION_DATA from "../Transaction/DATA";
 import { FadeLoader } from "react-spinners";
 import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
@@ -208,7 +207,7 @@ const RideTable = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.3 }}
-                        className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg"
+                        className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg "
                         >
                         {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black border-gray-700">
                             {ride._id}

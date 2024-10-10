@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import TRANSACTION_DATA from "../Transaction/DATA";
+import TRANSACTION_DATA from "../WithdrawHistory/DATA";
 import { FadeLoader } from "react-spinners";
 import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
@@ -131,7 +131,7 @@ const [transactions, setTransactions] = useState([]);
     >
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Transaction Requests </h2>
+        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Withdraw Requests </h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"

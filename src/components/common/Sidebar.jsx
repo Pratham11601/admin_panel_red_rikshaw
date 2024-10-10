@@ -9,8 +9,6 @@ const SIDEBAR_ITEMS = [
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
-  { name: "Transaction", icon: DollarSign, color: "black", href: "/Home/transactionDetails" },
-
   { name: "Transaction History", icon: DollarSign, color: "black", href: "/Home/transaction" },
   { name: "Transaction Requests", icon: ArrowRightLeft, color: "black", href: "/Home/transactionrequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import { useLocation } from 'react-router-dom';
-import TransactionTable from '../components/Transaction/TransactionTable';
+import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 
 
 const PassengerProfile = ()=>{
@@ -14,6 +14,14 @@ const PassengerProfile = ()=>{
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Active');
+    const [walletBalance, setWalletBalance] = useState(500);
+    const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);  
+
+    const togglePopup = () => {
+        console.log('button clicked');
+        
+        setShowAddMoneyPopup(!showAddMoneyPopup);
+      };
 
     const toggleStatus = () => {
         const newStatus = status === 'Active' ? 'Inactive' : 'Active';
@@ -27,6 +35,16 @@ const PassengerProfile = ()=>{
       setPopupOpen(false);
     };
 
+    const handleAddMoney = () => {
+        const newAmount = parseFloat(addAmount);
+        if (isNaN(newAmount) || newAmount <= 0) {
+          alert('Please enter a valid amount.');
+          return;
+        }
+        setWalletBalance(walletBalance + newAmount);
+        setAddAmount('');
+        togglePopup();
+      };
     const handleBackClick = () => {
         navigate('/Home/passengers'); 
       };
@@ -82,15 +100,29 @@ const PassengerProfile = ()=>{
                                 Change Status
                         </button>
                     </div>
+
                     <div className="flex items-center justify-center md:justify-start pt-3 ">
                         <p className=" text-grey-600 mr-8">
-                            <h1 className='text-grey-600 mb-2'>Wallet Price</h1>
-                            <span className="pt-8">100</span>
-                        </p>
                         <p className=" text-grey-600">
                             <h1 className='text-grey-600 mb-2'>Rides</h1>
                             <span className="pt-5">78</span>
                         </p>
+                        <div className="flex items-center justify-center md:justify-start ">
+                            <div className="bg-white mt-2">
+                                <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                                <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                            </div>
+                            {/* Add Money Button */}
+                            <button
+                                onClick={togglePopup}
+                                className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                >
+                                Add Money
+                            </button>
+                        </div>
+                            
+                        </p>
+                        
                     
                     </div>
                 </motion.div>

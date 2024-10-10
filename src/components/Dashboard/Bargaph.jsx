@@ -1,7 +1,9 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import { ResponsiveContainer } from 'recharts';
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarGraph = () => {
@@ -54,17 +56,18 @@ const BarGraph = () => {
 
   return (
     <motion.div
-            className='bg-white bg-opacity-20 backdrop-blur-md shadow-xl rounded-xl p-6 border-l border-red-400'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-        >
-        <div className='h-80 w-full'> 
-        <Bar data={data} options={options}  />
-        </div>
-        
-      
-        </motion.div>
+      className='bg-white bg-opacity-20 backdrop-blur-md shadow-xl rounded-xl p-6 border-l border-red-400'
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+    >
+      <h2 className='text-lg font-medium text-black'>Rides Overview</h2>
+      <div className='h-80 w-full'>
+        <ResponsiveContainer width="100%" height="100%">
+          <Bar data={data} options={options} />
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
   );
 };
 

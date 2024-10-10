@@ -3,24 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import driverImage from '../../assets/driverimg.jpg';
 import rikshawicon from '../../assets/rickshaw.png';
 import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
+
 const UserCard= ({driver})=>{
 
   const navigate = useNavigate();
-  const handleViewProfile = (id) => {
-    console.log('Driver ID:', id)
-    fetch(`https://example.com/api/driver/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Driver profile:', data);
-    })
-    .catch(error => {
-      console.error('Error fetching driver profile:', error);
-    });
+  const handleViewProfile = () => {
     navigate('/Home/driverProfile'); 
   };
     return(
