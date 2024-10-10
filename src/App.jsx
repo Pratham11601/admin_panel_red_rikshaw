@@ -1,51 +1,50 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Home from "./Home";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PageNotFound from "./pages/PageNotFound";
 
-// import Sidebar from "./components/common/Sidebar";
-
-// import OverviewPage from "./pages/OverviewPage";
-// import ProductsPage from "./pages/ProductsPage";
-// import UsersPage from "./pages/UsersPage";
-// import SalesPage from "./pages/SalesPage";
-// import OrdersPage from "./pages/OrdersPage";
-// import AnalyticsPage from "./pages/AnalyticsPage";
-// import SettingsPage from "./pages/SettingsPage";
-// import TermsPage from "./pages/Terms";
-// import PrivacyPage from "./pages/Privacy";
-
-
 function App() {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => localStorage.getItem("isAuthenticated") === "true"
+  );
 
-	
-	const handleLogin = (status) => {
-	  setIsAuthenticated(status);
-	};
-	return (
-		
-		<Routes>
-		  {/* Login Route */}
-		  <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-  
-		  {/* Protected Dashboard Route */}
-		  <Route
-			path="/Home/*"
-			element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
-		  />
-  
-		  {/* Default Route */}
-		  <Route path="/" element={<Navigate to="/login" />} />
-		  <Route path="/Home" element={<Navigate to="/Home/Dashboard" />} />
-		  <Route path="/Home" element={<Navigate to="/Home/Passengers" />} />
-		  <Route path="/Home" element={<Navigate to="/Home/Drivers" />} />
-		  <Route path="/Home" element={<Navigate to="/Home/Rides" />} />
-		  <Route path="*" element={<PageNotFound/>} />
-		</Routes>
-	  
-	);
+  const handleLogin = (status) => {
+    setIsAuthenticated(status);
+    localStorage.setItem("isAuthenticated", status);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("isAuthenticated");
+  };
+
+  useEffect(() => {
+    setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
+  }, []);
+
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />  
+      <Route
+        path="/Home/*"
+        element={
+          isAuthenticated ? (
+            <Home onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route path="/" element={<Navigate to="/login" />} />
+      {/* <Route path="/Home" element={<Navigate to="/Home/Dashboard" />} /> */}
+      <Route path="/Home" element={<Navigate to="/Home/drivers" />} />
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
+  );
 }
 
 export default App;
+
+
+//if away from home page its logout else login 

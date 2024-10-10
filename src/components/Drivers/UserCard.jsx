@@ -9,7 +9,11 @@ console.log(driver);
 
   const navigate = useNavigate();
   const handleViewProfile = () => {
+<<<<<<< HEAD
     navigate(`/Home/driverProfile`, { state: { driver: driver } });
+=======
+    navigate('/Home/driverProfile'); 
+>>>>>>> ce44213aad336f953038bb6eef20d4ff704d2095
   };
     return(
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
@@ -44,10 +48,14 @@ console.log(driver);
 
       {/* View Profile button at bottom-right corner */}
           <div className="my-2 absolute top-20  right-2">
-            <button onClick={handleViewProfile} className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold  rounded-lg   ">
-              View Profile
-              <ArrowRightToLine className="h-4 w-4 ml-2" />
-            </button>
+          
+          <button 
+  onClick={() => handleViewProfile(driver._id)} 
+  className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold rounded-lg"
+>
+  View Profile
+  <ArrowRightToLine className="h-4 w-4 ml-2" />
+</button>
           </div>
           </div>
       </div>
