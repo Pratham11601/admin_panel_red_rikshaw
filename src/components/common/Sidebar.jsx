@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
-  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
+  
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   
@@ -14,6 +14,7 @@ const SIDEBAR_ITEMS = [
   { name: "Withdraw History", icon: DollarSign, color: "black", href: "/Home/WithdrawHistory" },
   { name: "Withdraw Requests", icon: ArrowRightLeft, color: "black", href: "/Home/WithdrawRequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
+  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },

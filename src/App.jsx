@@ -37,7 +37,8 @@ function App() {
         }
       />
       <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/Home" element={<Navigate to="/Home/Dashboard" />} />
+      {/* <Route path="/Home" element={<Navigate to="/Home/Dashboard" />} /> */}
+      <Route path="/Home" element={<Navigate to="/Home/drivers" />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
