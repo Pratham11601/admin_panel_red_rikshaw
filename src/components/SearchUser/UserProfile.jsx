@@ -8,7 +8,7 @@ import DocumentPopup from '../Drivers/DocumentPopup';
 import RidesTable from '../Rides/RideTable';
 import TransactionTable from '../WithdrawHistory/TransactionTable';
 
-const UserProfile = ({user,clearUserData}) => {
+const UserProfile = ({userData}) => {
  // Get user data passed from SearchUser component
   const [activeTab, setActiveTab] = useState('profileSummary');
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -54,7 +54,7 @@ const handleClosePopup = () => {
 
 
 const handleBackClick = () => {
-  clearUserData(); 
+    navigate('/Home/searchuser'); 
   };
   return (
     <div className="flex-1 overflow-auto relative z-10">

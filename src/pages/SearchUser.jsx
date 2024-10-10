@@ -1,80 +1,103 @@
 import Header from "../components/common/Header";
-
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PassengersProfile from '../components/SearchUser/PassengersProfile';
-import DriversProfile from '../components/SearchUser/DriversProfile';
+import UserProfile from "../components/SearchUser/UserProfile";
+import DriversProfile from "../components/SearchUser/DriversProfile";
+import PassengersProfile from "../components/SearchUser/PassengersProfile";
+import usernotfound from '../assets/usernotfound2.jpg';
+import searchuser from '../assets/searchuser.jpg';
 
 const SearchUser = () => {
-	const [phoneNumber, setPhoneNumber] = useState('');
-	// const [userData, setUserData] = useState(null);
-	const [error, setError] = useState('');
-	const navigate = useNavigate(); // For programmatic navigation
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-	const handleSearch = async () => {
-		try {
-		  // Make API call to fetch user by phone number
-		  const response = await axios.get(
-			`http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/search/${phoneNumber}`
-		  );
-		  
-		  // The data from the API is in response.data, no need to use .json()
-		  // const result = response.data;
-	
-		  // if (response.status === 200) {
-		  //   setUserData(result.data); // Store user data (result.data contains the user's details)
-		  //   setError(''); // Clear any previous error messages
-		  // } else {
-		  //   throw new Error(result.message || 'Error fetching user data');
-		  // }
-	
-		  const userData = response.data;
-		  if (response.status === 200 && userData.status === 1) {
-			// Navigate to the respective profile page based on user role
-			if (userData.role === 'driver') {
-			  navigate(`/Home/drivers-profile`, { state: { user: userData.data } });
-			} else if (userData.role === 'passenger') {
-			  navigate(`/Home/passengers-profile`, { state: { user: userData.data } });
-			} else {
-			  throw new Error('Unknown user role');
-			}
-		  } else {
-			throw new Error(userData.message || 'Error fetching user data');
-		  }
-		} catch (err) {
-		  setError('User not found or an error occurred.');
-		  setUserData(null); // Clear user data on error
-		  console.error(err);
-		}
-	  };
-	
-	return (
-		<div className='flex-1 overflow-auto relative z-10 bg-white'>
-			<Header title={"Search User"} />
+  const handleSearch = async () => {
+	setLoading(true); // Start loading
+	setError(''); // Clear previous error
+    try {
+      // Make API call to fetch user by phone number
+      const response = await axios.get(
+        `http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/search/${phoneNumber}`
+      );
+      
+      const data = response.data;
+	  
+      if (response.status === 200 && data.status === 1) {
+        setUserData(data.data); // Store user data (data.data contains the user's details)
+        setError(''); // Clear any previous error messages
+      } else {
+        throw new Error(data.message || 'User not found');
+      }
+    } catch (err) {
+      setError('User not found or an error occurred.');
+      setUserData(null); // Clear user data on error
+      console.error(err);
+    }finally {
+		setLoading(false); // Stop loading
+	  }
+  };
 
-			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
-			  <div className="search-user text-black my-10 mx-5">
-				<h2>Search User by Phone Number</h2>
-				<input
-					type="text"
-					placeholder="Enter phone number"
-					value={phoneNumber}
-					onChange={(e) => setPhoneNumber(e.target.value)}
-					className="border px-10 py-2 rounded"
-				/>
-				<button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded ml-2">
-					Search
-				</button>
+  const renderUserProfile = () => {
+    if (userData && userData.role === 'driver') {
+      return <DriversProfile user={userData}  clearUserData={clearUserData}/>;
+    } else if (userData && userData.role === 'passenger') {
+      return <PassengersProfile user={userData} clearUserData={clearUserData}/>;
+    } else {
+      return <UserProfile user={userData} />;
+    }
+  };
 
-				{error && <p className="text-red-500">{error}</p>}
+  const clearUserData = () => {
+    setUserData(null);
+    setError('');
+    setPhoneNumber('');
+  };
+  return (
+    <div className='flex-1 overflow-auto relative z-10 bg-white'>
+      <Header title={"Search User"} />
 
+      <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+        <div className="search-user flex justify-center align-center text-black my-10 mx-5">
+          <input
+            type="text"
+            placeholder="Search User by Phone Number..."
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="border shadow-md px-10 py-2 rounded w-full max-w-lg"
+          />
+          <button onClick={handleSearch} className="bg-blue-500 text-white py-2 px-8 rounded ml-2 shadow-md">
+            Search
+          </button>
+        </div>
 
-			  </div>
-			</main>
-		</div>
-	);
+        {/* Render search message or user profile */}
+        {loading && (
+          <div className="text-black flex justify-center items-center">
+            <p>Loading...</p>
+          </div>
+        )}
+
+        {!loading && userData === null && !error && (
+          <div className="text-black flex flex-col justify-center items-center">
+            <img src={searchuser} alt="Search user" className="w-50 h-50" />
+            <h1 className="text-lg font-semibold text-gray-600">Search user here...</h1>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="text-black flex flex-col justify-center items-center ">
+            <img src={usernotfound} alt="User not found" className="w-80 h-80" />
+            <h1 className="text-lg font-semibold text-gray-600">User Not Found...</h1>
+          </div>
+        )}
+
+        {!loading && userData && renderUserProfile()}
+
+      </main>
+    </div>
+  );
 };
+
 export default SearchUser;
-
-

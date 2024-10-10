@@ -8,9 +8,8 @@ import DocumentPopup from '../Drivers/DocumentPopup';
 import { useLocation } from 'react-router-dom';
 import TransactionTable from '../WithdrawHistory/TransactionTable';
 
-const PassengersProfile = () => {
-  const location = useLocation();
-  const { user } = location.state; // Get user data passed from SearchUser component
+const PassengersProfile = ({user,clearUserData}) => {
+// Get user data passed from SearchUser component
   const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);  
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profileSummary');
@@ -37,13 +36,11 @@ const PassengersProfile = () => {
   };
 
   const handleBackClick = () => {
-      navigate('/Home/searchuser'); 
+    clearUserData(); 
     };
   return (
 
     <div className="flex-1 overflow-auto relative z-10">
-    {/* <Header title={`${user.name}'s profile`} /> */}
-    <Header title={`Passenger's profile`} />
     <button 
         onClick={handleBackClick}
         className="flex items-center bg-white text-black pl-8 pt-3 whitespace-nowrap"
@@ -51,6 +48,7 @@ const PassengersProfile = () => {
         <ChevronLeft  size={30} style={{ color: "black", minWidth: "20px" }} />
          <h2 className="pl-2 font-bold text-m ">Back</h2>
     </button>
+
     <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-white'>
         <motion.div
         className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
