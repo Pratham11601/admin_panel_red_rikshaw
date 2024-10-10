@@ -17,6 +17,7 @@ import WithdrawRequest from "./pages/WithdrawRequest";
 import PassangerAd from "./pages/Advertisement/Passengers";
 import DriverAd from "./pages/Advertisement/Driver";
 import Charges from "./pages/charges";
+import Transactions from "./pages/TransactionsDetails";
 
 function Home() {
 	return (

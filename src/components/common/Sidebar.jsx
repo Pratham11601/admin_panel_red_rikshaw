@@ -6,11 +6,13 @@ import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
   { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
-  { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
+  { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
+  
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
-  { name: "Transaction History", icon: DollarSign, color: "black", href: "/Home/transaction" },
-  { name: "Transaction Requests", icon: ArrowRightLeft, color: "black", href: "/Home/transactionrequest" },
+  { name: "Transactions", icon: DollarSign, color: "black", href: "/Home/transactions" },
+  { name: "Withdraw History", icon: DollarSign, color: "black", href: "/Home/WithdrawHistory" },
+  { name: "Withdraw Requests", icon: ArrowRightLeft, color: "black", href: "/Home/WithdrawRequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
   { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
