@@ -6,7 +6,21 @@ import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
 const UserCard= ({driver})=>{
 
   const navigate = useNavigate();
-  const handleViewProfile = () => {
+  const handleViewProfile = (id) => {
+    console.log('Driver ID:', id)
+    fetch(`https://example.com/api/driver/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Driver profile:', data);
+    })
+    .catch(error => {
+      console.error('Error fetching driver profile:', error);
+    });
     navigate('/Home/driverProfile'); 
   };
     return(
@@ -42,10 +56,14 @@ const UserCard= ({driver})=>{
 
       {/* View Profile button at bottom-right corner */}
           <div className="my-2 absolute top-20  right-2">
-            <button onClick={handleViewProfile} className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold  rounded-lg   ">
-              View Profile
-              <ArrowRightToLine className="h-4 w-4 ml-2" />
-            </button>
+          
+          <button 
+  onClick={() => handleViewProfile(driver._id)} 
+  className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold rounded-lg"
+>
+  View Profile
+  <ArrowRightToLine className="h-4 w-4 ml-2" />
+</button>
           </div>
           </div>
       </div>
