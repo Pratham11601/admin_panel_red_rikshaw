@@ -17,9 +17,10 @@ import WithdrawRequest from "./pages/WithdrawRequest";
 import PassangerAd from "./pages/Advertisement/Passengers";
 import DriverAd from "./pages/Advertisement/Driver";
 import Charges from "./pages/charges";
-import DriversProfile from "./components/Dashboard/DriversProfile";
-import PassengersProfile from "./components/Dashboard/PassengersProfile";
+import DriversProfile from "./components/SearchUser/DriversProfile";
+import PassengersProfile from "./components/SearchUser/PassengersProfile";
 import Transactions from "./pages/Transactions";
+import SearchUser from "./pages/SearchUser";
 
 function Home() {
 	return (
@@ -32,6 +33,8 @@ function Home() {
 
 			<Sidebar />
 			<Routes>
+			
+				<Route path='searchuser' element={<SearchUser />} />
 				<Route path='dashboard' element={<Dashboard />} />
 				<Route path='passengers' element={<Passengers />} />
 				<Route path='drivers' element={<Drivers />} />

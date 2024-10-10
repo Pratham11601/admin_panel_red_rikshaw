@@ -11,9 +11,9 @@ import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = location.state; // Get user data passed from SearchUser component
+    const { driver } = location.state; // Get user data passed from SearchUser component
 
-    console.log(user);
+    console.log(driver);
     
   
     const [activeTab, setActiveTab] = useState('profileSummary');
@@ -94,45 +94,44 @@ const DriverProfile = ()=>{
                 {/*  Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
 
-                <h1 className="text-2xl font-semibold text-gray-800">John Doe</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">{driver.name}</h1>
                 
-                <p className="text-gray-600">📞 9922867393</p>
-                <p className="text-gray-600">✉️ demo@gmail.com</p>
-                <p className="text-gray-600">📍 Katraj,pune</p>
+                <p className="text-gray-600">📞 {driver.phone}</p>
+                <p className="text-gray-600">✉️ {driver.email}</p>
+                <p className="text-gray-600">📍 {driver.address}</p>
+                <p className="text-gray-600">🚗 20 Total Trips</p>
+                
                 </motion.div>
 
                 {/*  Status, Total Trips, Reviews */}
-                <motion.div className="space-y-2">
+                <motion.div className="space-y-3">
+                <p className="text-gray-600">⭐ {driver.rating} Reviews</p>
                 <div className="flex items-center justify-center md:justify-start">
+                    
                     <span
-                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
-                       // Add click handler to toggle status
+                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
+     
                     >
                         {status}
                     </span>
                     <button
                             onClick={toggleStatus}
-                            className="ml-4 px-3 py-1 bg-red-400 text-white font-sb rounded "
+                            className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >
                             Change Status
                     </button>
                 </div>
-                <p className="text-center md:text-left">
-                    🚗 <span className="font-semibold">227</span> Total Trips
-                </p>
-                <p className="text-center md:text-left">
-                    ⭐ <span className="font-semibold">4.5</span> Reviews
-                </p>
+                
 
                 <div className="flex items-center justify-center md:justify-start ">
                     <div className="bg-white mt-2">
                         <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                        <p className="text-xl mt-2">₹{driver.wallet_balance}</p>
                     </div>
                     {/* Add Money Button */}
                     <button
                         onClick={togglePopup}
-                        className=" px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                         >
                         Add Money
                     </button>
@@ -142,7 +141,7 @@ const DriverProfile = ()=>{
 
       {/* Popup for adding money */}
       {showAddMoneyPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
 

@@ -7,7 +7,7 @@ import StatCard from "../components/common/StatCard";
 //import SalesOverviewChart from "../components/Dashboard/SalesOverviewChart";
 import CategoryDistributionChart from "../components/Dashboard/CategoryDistributionChart";
 import BarGraph from "../components/Dashboard/Bargaph";
-import SearchUser from "../components/Dashboard/SearchUser";
+
 
 const Dashboard = () => {
     const [totalRides,setTotalRides] = useState(0);
@@ -66,7 +66,7 @@ const Dashboard = () => {
             </motion.div>
 
 
-            <SearchUser/>
+           
             {/* CHARTS */}
             <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mx-3'>
                 <div className="h-full">

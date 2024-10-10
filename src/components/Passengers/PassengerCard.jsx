@@ -7,8 +7,9 @@ import driverImage from '../../assets/driverimg.jpg';
 const PassengerCard= ({passenger })=>{
   const navigate = useNavigate();
   const [isPopupOpen, setPopupOpen] = useState(false);
+
   const handleViewProfile = () => {
-    navigate('/Home/passengerProfile'); 
+    navigate(`/Home/passengerProfile`, { state: { passenger: passenger } }); 
   };
   
     return(

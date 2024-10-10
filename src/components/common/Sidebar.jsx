@@ -1,10 +1,11 @@
-import { BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard } from "lucide-react";
+import { UserSearchIcon,BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
+  { name: "SearchUser", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
   { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },

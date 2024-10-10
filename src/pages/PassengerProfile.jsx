@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
 import Header from "../components/common/Header";
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft,Car } from 'lucide-react';
 import { motion } from 'framer-motion'; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
-import { useLocation } from 'react-router-dom';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 
 
 const PassengerProfile = ()=>{
     const navigate = useNavigate();
+    const location = useLocation();
+    const { passenger } = location.state; 
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const [status, setStatus] = useState('Active');
+    const [status, setStatus] = useState('Block');
     const [walletBalance, setWalletBalance] = useState(500);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);  
 
+    console.log(passenger);
+    
     const togglePopup = () => {
         console.log('button clicked');
         
         setShowAddMoneyPopup(!showAddMoneyPopup);
-      };
+    };
 
     const toggleStatus = () => {
-        const newStatus = status === 'Active' ? 'Inactive' : 'Active';
+        const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
     }
     const handleViewDocument = () => {
@@ -79,16 +82,15 @@ const PassengerProfile = ()=>{
 
                 {/* 2nd Div: Name, Phone, Email, Address */}
                 <motion.div className="text-center md:text-left space-y-2">
-                    <h1 className="text-2xl font-semibold text-gray-800">John Doe</h1>
-                    <p className="text-gray-600">📞 9922867393</p>
-                    <p className="text-gray-600">✉️ demo@gmail.com</p>
-                    <p className="text-gray-600">📍 Katraj,pune</p>
+                    <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
+                    <p className="text-gray-600">📞   {passenger.mobile_number}</p>
+                    <p className="flex  text-gray-600  "><Car style={{color:'black', marginRight:'10px'}}/> {passenger.total_rides} Total Rides</p>
                 </motion.div>
 
                 <motion.div className="space-y-2">
                     <div className="flex items-center justify-center md:justify-start">
                         <span
-                            className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Active' ? 'bg-green-600' : 'bg-red-600'}`}
+                            className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
                         // Add click handler to toggle status
                         >
                             {status}
@@ -103,10 +105,6 @@ const PassengerProfile = ()=>{
 
                     <div className="flex items-center justify-center md:justify-start pt-3 ">
                         <p className=" text-grey-600 mr-8">
-                        <p className=" text-grey-600">
-                            <h1 className='text-grey-600 mb-2'>Rides</h1>
-                            <span className="pt-5">78</span>
-                        </p>
                         <div className="flex items-center justify-center md:justify-start ">
                             <div className="bg-white mt-2">
                                 <h1 className="text-xl font-semibold">Wallet Balance</h1>

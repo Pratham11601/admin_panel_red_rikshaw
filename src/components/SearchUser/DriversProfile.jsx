@@ -11,6 +11,7 @@ import TransactionTable from '../WithdrawHistory/TransactionTable';
 const DriversProfile = () => {
   const location = useLocation();
   const { user } = location.state; // Get user data passed from SearchUser component
+
   const [activeTab, setActiveTab] = useState('profileSummary');
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [status, setStatus] = useState('Block');
@@ -55,23 +56,9 @@ const handleClosePopup = () => {
 
 
 const handleBackClick = () => {
-    navigate('/Home/dashboard'); 
+    navigate('/Home/searchuser'); 
   };
   return (
-    // <div className="driver-profile bg-white p-6 rounded-lg shadow-md">
-    //   <h2 className="text-2xl font-semibold mb-4">Driver Profile</h2>
-    //   <img src={user.profile_img} alt={`${user.name}'s profile`} className="rounded-full w-24 h-24 mb-4" />
-    //   <p><strong>Name:</strong> {user.name}</p>
-    //   <p><strong>Phone:</strong> {user.phone}</p>
-    //   <p><strong>Email:</strong> {user.email}</p>
-    //   <p><strong>Address:</strong> {user.address}</p>
-    //   <p><strong>Driver Type:</strong> {user.driver_type}</p>
-    //   <p><strong>Vehicle Number:</strong> {user.vehicle_number}</p>
-    //   <p><strong>Rating:</strong> {user.rating} / 5</p>
-    //   <p><strong>Wallet Balance:</strong> ${user.wallet_balance}</p>
-    //   <p><strong>Account Active:</strong> {user.isActive ? 'Active' : 'Inactive'}</p>
-    //   <p><strong>Date Joined:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
-    // </div>
     <div className="flex-1 overflow-auto relative z-10">
             <Header title={`${user.name}'s profile`} />
             <button 
