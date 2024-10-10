@@ -5,22 +5,16 @@ import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
-<<<<<<< HEAD
+
   { name: "SearchUser", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
   { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
-=======
-  
->>>>>>> ce44213aad336f953038bb6eef20d4ff704d2095
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
-  { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
-  
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
   { name: "Transactions", icon: DollarSign, color: "black", href: "/Home/transactions" },
   { name: "Withdraw History", icon: DollarSign, color: "black", href: "/Home/WithdrawHistory" },
   { name: "Withdraw Requests", icon: ArrowRightLeft, color: "black", href: "/Home/WithdrawRequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
-  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },

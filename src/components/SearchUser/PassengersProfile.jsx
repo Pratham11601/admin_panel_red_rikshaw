@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from "../common/Header";
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft ,Car} from 'lucide-react';
 import { motion } from 'framer-motion'; 
 import { useNavigate } from 'react-router-dom';
 import driverImage from '../../assets/driverimg.jpg';
@@ -37,12 +37,13 @@ const PassengersProfile = () => {
   };
 
   const handleBackClick = () => {
-      navigate('/Home/dashboard'); 
+      navigate('/Home/searchuser'); 
     };
   return (
 
     <div className="flex-1 overflow-auto relative z-10">
-    <Header title={`${user.name}'s profile`} />
+    {/* <Header title={`${user.name}'s profile`} /> */}
+    <Header title={`Passenger's profile`} />
     <button 
         onClick={handleBackClick}
         className="flex items-center bg-white text-black pl-8 pt-3 whitespace-nowrap"
@@ -70,11 +71,11 @@ const PassengersProfile = () => {
         </motion.div>
 
         {/* 2nd Div: Name, Phone, Email, Address */}
-        <motion.div className="text-center text-black md:text-left space-y-2">
+        <motion.div className="flex  flex-col text-center text-black md:text-left space-y-2">
         <h1 className="text-2xl font-semibold text-gray-800">{user.name}</h1>
-                <p className="text-gray-600">📞 {user.phone}</p>
-                <p className="text-gray-600">✉️ {user.email}</p>
-                <p className="text-gray-600">📍 {user.address}</p>
+                <p className="text-gray-600">📞 {user.mobile_number}</p>
+                <p className="flex  text-gray-600  "><Car style={{color:'black', marginRight:'10px'}}/> {user.total_rides} Total Rides</p>
+                
             
         </motion.div>
 

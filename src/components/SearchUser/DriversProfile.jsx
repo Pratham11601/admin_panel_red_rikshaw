@@ -60,7 +60,8 @@ const handleBackClick = () => {
   };
   return (
     <div className="flex-1 overflow-auto relative z-10">
-            <Header title={`${user.name}'s profile`} />
+            {/* <Header title={`${user.name}'s profile`} /> */}
+            <Header title={`Driver's profile`} /> 
             <button 
                 onClick={handleBackClick}
                 className="flex items-center bg-white text-black pl-8 pt-3 whitespace-nowrap"

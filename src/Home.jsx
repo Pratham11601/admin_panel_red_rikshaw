@@ -17,10 +17,11 @@ import WithdrawRequest from "./pages/WithdrawRequest";
 import PassangerAd from "./pages/Advertisement/Passengers";
 import DriverAd from "./pages/Advertisement/Driver";
 import Charges from "./pages/charges";
+
 import DriversProfile from "./components/SearchUser/DriversProfile";
 import PassengersProfile from "./components/SearchUser/PassengersProfile";
-
 import SearchUser from "./pages/SearchUser";
+
 import Transactions from "./pages/TransactionsDetails";
 
 
@@ -52,6 +53,8 @@ function Home() {
 				<Route path="passangerAd" element={<PassangerAd />} />
 				<Route path="driverAd" element={< DriverAd />} />
 				<Route path="charges" element={< Charges />} />
+				<Route path="drivers-profile" element={<  DriversProfile/>} />
+				<Route path="passengers-profile" element={<  PassengersProfile/>} />
 				
 				
 			</Routes>

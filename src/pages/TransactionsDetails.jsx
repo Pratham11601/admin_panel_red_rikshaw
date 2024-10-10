@@ -1,6 +1,5 @@
 import React from 'react'
 import Header from "../components/common/Header";
-//import TransactionTable from "../components/WithdrawHistory/TransactionTable";
  import TransactionTable from "../components/Transaction/TransactionTable";
 import TrancationOverview from "../components/WithdrawHistory/TrancationOverview";
 

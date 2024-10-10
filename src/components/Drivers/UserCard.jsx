@@ -9,11 +9,9 @@ console.log(driver);
 
   const navigate = useNavigate();
   const handleViewProfile = () => {
-<<<<<<< HEAD
+
     navigate(`/Home/driverProfile`, { state: { driver: driver } });
-=======
-    navigate('/Home/driverProfile'); 
->>>>>>> ce44213aad336f953038bb6eef20d4ff704d2095
+
   };
     return(
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
