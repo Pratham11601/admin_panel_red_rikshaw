@@ -6,6 +6,7 @@ import { useNavigate,useLocation } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
+import PassengerRides from '../components/Passengers/PassengerRides';
 
 
 const PassengerProfile = ()=>{
@@ -202,7 +203,7 @@ const PassengerProfile = ()=>{
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                            <TransactionTable/>
+                            <PassengerRides passengerId={passenger._id}/>
                         </motion.div>
                     )}
             </main>

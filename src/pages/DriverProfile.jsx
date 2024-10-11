@@ -7,15 +7,12 @@ import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import RidesTable from '../components/Rides/RideTable';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
+import DriverRides from '../components/Drivers/DriverRides';
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
     const { driver } = location.state; // Get user data passed from SearchUser component
-
-    console.log(driver);
-    
-  
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
@@ -249,8 +246,8 @@ const DriverProfile = ()=>{
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                        <RidesTable/>
-                        
+                        <DriverRides driverId={driver._id} />
+                        {/* <DriverRides driverId={driver.driverId} /> */}
                         </motion.div>
                 )}
 

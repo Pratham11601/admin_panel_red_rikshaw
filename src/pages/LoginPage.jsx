@@ -147,7 +147,7 @@ const LoginPage = ({ onLogin }) => {
 
             if (response.ok) {
                 onLogin(true);
-                navigate('/Home');
+                navigate('/Home/dashboard');
                 console.log('Login successful');
             } else if (response.status === 401) {
                 setErrorMessage('Incorrect phone number or password. Please try again.');

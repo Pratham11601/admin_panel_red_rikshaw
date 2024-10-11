@@ -24,8 +24,8 @@ const PassengerCard= ({passenger })=>{
           <div className="flex items-center mb-4">
             <img src={driverImage} alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
 
-            <div className="flex flex-col ">
-              <h1 className="text-m font-bold text-gray-900 pl-4 my-2">{passenger.name}</h1>
+            <div className="flex flex-col text-black ">
+              <h1 className="text-m font-bold  text-gray-900 pl-4 my-2">{passenger.name}</h1>
               <p className="text-sm flex font-medium text-gray-700 my-2 ml-3">
                 <IndianRupee className="h-5 w-5 mr-4 color-black-900 "/>
                 {passenger.wallet_balance}

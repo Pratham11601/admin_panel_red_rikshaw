@@ -23,13 +23,16 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/adminpanel/drivers-getAll?page=1&limit=15`;
     }
-
-    //Rides
-    static getAllRidesEndpoint() {
+    //Rides as per driver
+    static getDriverRidesEndpoint(driverId) {
       
-      return `${this.BASE_URL}/api/adminpanel/rides-getAll?page=1&limit=15`;
+      return `${this.BASE_URL}/api/adminpanel/driver-rides/${driverId}?page=1&limit=15`;
     }
 
+    //Rides
+    static getPassengerRidesEndpoint(passengerId) {
+      return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
+    }
     //Transaction Request
     static getTransactionHistoryEndPoint() {
       
