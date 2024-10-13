@@ -166,36 +166,36 @@ const PassengerRides = ({ passengerId }) => {
                 >
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
-                    <tr className="h-12 bg-gray-200">
+                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         
-                        <th
-                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                        <th text-gray-600 uppercase text-sm leading-normal
+                        className="py-3 px-6 text-left cursor-pointer"
                           onClick={() => handleSortChange("driver")}
                         >
                           <span className="flex" >Driver<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                        className="py-3 px-6 text-left cursor-pointer"
                           onClick={() => handleSortChange("fare")}
                         >
                           <span className="flex">Fare<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                        <th className="py-3 px-6 text-left cursor-pointer"
                           onClick={() => handleSortChange("fromplace")}
                         >
                           <span className="flex">From Place<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                        <th className="py-3 px-6 text-left cursor-pointer"
                           onClick={() => handleSortChange("toplace")}
                         >
                         <span className="flex">To Place<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className=" w-1/6 px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"
+                        <th className="py-3 px-6 text-left cursor-pointer"
                         //   onClick={() => handleSortChange("toplace")}
                         >
                         <span className="flex">Status<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer">
+                        <th className="py-3 px-6 text-left cursor-pointer">
                         View Invoice
                         </th>
                     </tr>

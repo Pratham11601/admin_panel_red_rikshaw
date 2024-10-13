@@ -165,7 +165,7 @@ const DriverRides = ({ driverId }) => {
                 >
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
-                    <tr className="h-12 bg-gray-200">
+                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         
                         <th
                         className="px-6 py-3 text-left text-sm font-medium text-black uppercase cursor-pointer"

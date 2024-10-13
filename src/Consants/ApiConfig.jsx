@@ -17,6 +17,11 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/adminpanel/passengers-getAll?page=1&limit=15`;
     }
+    
+    //Rides as per passenger
+    static getPassengerRidesEndpoint(passengerId) {
+      return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
+    }
 
     //drivers
     static getDriversEndpoint() {
@@ -30,10 +35,18 @@ class ApiConfig {
     }
 
     //Rides
-    static getPassengerRidesEndpoint(passengerId) {
-      return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
-    }
-    //Transaction Request
+    static getAllRidesEndpoint(){
+      return `${this.BASE_URL}/api/adminpanel/rides-getall?page=1&limit=15`
+    } 
+
+
+    //Transactions
+    static getTransactionsEndPoint() {
+      
+      return `${this.BASE_URL}/api/walletTranfer/get-all?page=1&limit=15`;
+    }    
+
+    //Transaction History
     static getTransactionHistoryEndPoint() {
       
       return `${this.BASE_URL}/api/adminpanel/transactionshistory?page=1&limit=10`;

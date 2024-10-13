@@ -166,40 +166,40 @@ const [transactions, setTransactions] = useState([]);
                 >
                 <table className="min-w-full bg-white border border-gray-300 shadow-lg">
                     <thead>
-                    <tr className="h-12 bg-gray-200">    
+                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">    
 
 
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase  cursor-pointer"
+                        className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("name")}
                         >
                             <span className="flex" >Name<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase  cursor-pointer"
+                        className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("role")}
                         >
                             <span className="flex">Role<ArrowDownUp className="pl-2"/></span>
                         </th>
                         <th
-                        className="px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer"
+                        className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("value")}
                         >
                             <span className="flex">Value<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer "
+                        <th className=" py-3 px-6 text-left cursor-pointer"
                             onClick={() => handleSortChange("datetime")}
                         >
                             <span className="flex"> Date/Time<ArrowDownUp className="pl-2"/></span>
                        
                         </th>
-                        <th className="  px-6 py-3 text-center text-sm font-medium text-black uppercase cursor-pointer"
+                        <th className="py-3 px-6 text-left cursor-pointer"
                             onClick={() => handleSortChange("status")}
                         >
                             <span className="flex"> Status<ArrowDownUp className="pl-2"/></span>
                        
                         </th>
-                        <th className="px-6 py-3 text-center text-sm font-medium text-black uppercase "
+                        <th className="py-3 px-6 text-left cursor-pointer "
                         >
                             Action
                         </th>
