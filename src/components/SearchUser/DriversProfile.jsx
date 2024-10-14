@@ -7,6 +7,7 @@ import driverImage from '../../assets/driverimg.jpg';
 import DocumentPopup from '../Drivers/DocumentPopup';
 import RidesTable from '../Rides/RideTable';
 import TransactionTable from '../WithdrawHistory/TransactionTable';
+import DriverRides from '../Drivers/DriverRides';
 
 const UserProfile = ({user,clearUserData}) => {
  // Get user data passed from SearchUser component
@@ -243,7 +244,7 @@ const handleBackClick = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                        <RidesTable/>
+                            <DriverRides driverId={user._id} />
                         
                         </motion.div>
                 )}

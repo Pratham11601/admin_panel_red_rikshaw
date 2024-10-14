@@ -7,6 +7,7 @@ import driverImage from '../../assets/driverimg.jpg';
 import DocumentPopup from '../Drivers/DocumentPopup';
 import { useLocation } from 'react-router-dom';
 import TransactionTable from '../WithdrawHistory/TransactionTable';
+import PassengerRides from '../Passengers/PassengerRides';
 
 const PassengersProfile = ({user,clearUserData}) => {
 // Get user data passed from SearchUser component
@@ -217,7 +218,8 @@ const PassengersProfile = ({user,clearUserData}) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 >
-                    <TransactionTable/>
+                  <PassengerRides passengerId={user._id}/>
+                    {/* <TransactionTable/> */}
                 </motion.div>
             )}
     </main>

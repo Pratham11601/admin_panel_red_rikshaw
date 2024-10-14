@@ -124,7 +124,18 @@ const TransactionTable = () => {
                     <td className="py-3 px-6 text-left">
                       {new Date(transaction.createdAt).toLocaleString()}
                     </td>
-                    <td className="py-3 px-6 text-left">{transaction.status}</td>
+                    <td className="py-3 px-6 text-left">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${
+                              transaction.status === "completed"
+                                ? "bg-green-200 text-green-900"
+                                : transaction.status === "pending"
+                                ? "bg-yellow-200 text-yellow-900"
+                                : "bg-red-200 text-red-900"
+                            }`}>
+                                {transaction.status}
+                            </span>
+                      </td>
                   </motion.tr>
                 ))}
               </tbody>
