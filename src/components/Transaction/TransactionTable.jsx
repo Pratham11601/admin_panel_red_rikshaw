@@ -9,9 +9,8 @@ const TransactionTable = () => {
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added"); // Default sort
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
-  const [sortField, setSortField] = useState('createdAt');
+  const [sortField, setSortField] = useState('createdAt'); // Default sort field
+  const [sortOrder, setSortOrder] = useState('asc'); // Default sort order
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10; // Number of transactions per page
 
@@ -24,14 +23,36 @@ const TransactionTable = () => {
     setIsLoading(true);
     const response = await fetch(ApiConfig.getTransactionsEndPoint());
     const data = await response.json();
-    setTransactions(data.transfers || []);
+
+    // Apply sorting to the fetched transactions based on the sortField and sortOrder
+    const sortedData = data.transfers.sort((a, b) => {
+      const fieldA = getNestedField(a, sortField);
+      const fieldB = getNestedField(b, sortField);
+
+      if (sortOrder === "asc") {
+        return fieldA > fieldB ? 1 : -1;
+      } else {
+        return fieldA < fieldB ? 1 : -1;
+      }
+    });
+
+    setTransactions(sortedData);
     setTotalPages(Math.ceil(data.transfers.length / itemsPerPage)); // Calculate total pages
     setIsLoading(false);
   };
 
+  // Helper function to access nested fields (e.g., 'from.name')
+  const getNestedField = (obj, fieldPath) => {
+    return fieldPath.split('.').reduce((acc, field) => acc[field], obj);
+  };
+
   const handleSort = (field) => {
-    setSortField(field);
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); // Toggle sort order
+    } else {
+      setSortField(field); // Change sort field
+      setSortOrder('asc'); // Reset to ascending order for new field
+    }
   };
 
   // Handle pagination logic
