@@ -67,7 +67,18 @@ const TransactionTable = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }) + ' ' + date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
   return (
     <motion.div
       className="bg-white bg-opacity-50 backdrop-blur-md shadow-xl rounded-xl p-6 border-r border-red-400 mb-8"
@@ -143,17 +154,17 @@ const TransactionTable = () => {
                     </td>
                     <td className="py-3 px-6 text-left">{transaction.amount}</td>
                     <td className="py-3 px-6 text-left">
-                      {new Date(transaction.createdAt).toLocaleString()}
+                    {formatDateTime(transaction.createdAt)}
                     </td>
                     <td className="py-3 px-6 text-left">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            ${
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               transaction.status === "completed"
                                 ? "bg-green-200 text-green-900"
                                 : transaction.status === "pending"
-                                ? "bg-yellow-200 text-yellow-900"
+                                ? "bg-yellow-200 text-pink-900"
                                 : "bg-red-200 text-red-900"
                             }`}>
+                   
                                 {transaction.status}
                             </span>
                       </td>

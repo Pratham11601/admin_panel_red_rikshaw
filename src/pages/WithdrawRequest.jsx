@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import TransactionReqTable from "../components/WithdrawRequest/TransactionReqTable";
-import Charges from "../components/Charges";
 
 
 
@@ -14,7 +13,7 @@ const TransactionRequest = () => {
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-white'>
 				<TransactionReqTable/>
 
-				{/* <Charges/> */}
+			
 				
 			</main>
 		</div>

@@ -121,6 +121,18 @@ const [transactions, setTransactions] = useState([]);
   const closeModal = () => {
     setSelectedtransaction(null);
   };
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }) + ' ' + date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   return (
     <motion.div
@@ -225,19 +237,20 @@ const [transactions, setTransactions] = useState([]);
                             {transaction.value}
                         </td>
                         <td className="px-6 py-4 text-left text-sm  text-black  ">
-                            {transaction.createdAt}
+                        {formatDateTime(transaction.createdAt)}
                         </td>
-                        <td className="px-6 py-4 text-left text-sm text-black  ">
-                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        <td className="py-3 px-6 text-left">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               transaction.status === "completed"
                                 ? "bg-green-200 text-green-900"
                                 : transaction.status === "pending"
-                                ? "bg-yellow-200 text-yellow-900"
+                                ? "bg-yellow-200 text-pink-900"
                                 : "bg-red-200 text-red-900"
                             }`}>
+                   
                                 {transaction.status}
-                            </span>
-                        </td>
+                          </span>
+                      </td>
                         <td className="px-3 py-4  text-center text-sm  text-black">
                             <button
                             className="text-indigo-400 hover:text-indigo-300 mr-2"
