@@ -127,9 +127,6 @@ const TransactionTable = () => {
                   <th onClick={() => handleSort('createdAt')} className="py-3 px-6 text-left cursor-pointer">
                     <span className="flex">Date/Time<ArrowDownUpIcon className="pl-2"/></span>
                   </th>
-                  <th onClick={() => handleSort('status')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">Status <ArrowDownUpIcon className="pl-2"/></span>
-                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -156,18 +153,7 @@ const TransactionTable = () => {
                     <td className="py-3 px-6 text-left">
                     {formatDateTime(transaction.createdAt)}
                     </td>
-                    <td className="py-3 px-6 text-left">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              transaction.status === "completed"
-                                ? "bg-green-200 text-green-900"
-                                : transaction.status === "pending"
-                                ? "bg-yellow-200 text-pink-900"
-                                : "bg-red-200 text-red-900"
-                            }`}>
-                   
-                                {transaction.status}
-                            </span>
-                      </td>
+
                   </motion.tr>
                 ))}
               </tbody>
