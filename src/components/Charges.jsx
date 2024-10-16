@@ -162,7 +162,7 @@ import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import { Car, User } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ApiConfig from '../Consants/ApiConfig'; // Make sure the ApiConfig has BASE_URL defined
+import ApiConfig from '../Consants/ApiConfig'; 
 
 function Charges() {
   const [charges, setCharges] = useState({
