@@ -45,9 +45,9 @@ function Driver() {
     const formData = new FormData();
   
     if (file) {
-      const fileNameWithoutExt = file.name.split('.').slice(0, -1).join('.'); // Get file name without extension
+      const fileNameWithoutExt = file.name.split('.').slice(0, -1).join('.'); 
       formData.append('mediaFile', file);
-      formData.append('advertiseCategory', fileNameWithoutExt); // Set the category to the file name without extension
+      formData.append('advertiseCategory', fileNameWithoutExt); 
   
       try {
         const response = await axios.post(ApiConfig.postAdvertisementEndpont(), formData, {

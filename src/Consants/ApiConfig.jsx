@@ -85,11 +85,11 @@ class ApiConfig {
 
 //Advertisement
 static getAdvertisementEndpont() {
-  return `${this.BASE_URL}/api/advertisement/getByCategory?category=driver`;
+  return `${this.BASE_URL}/api/advertisement/getByCategory`;
   }
 
 static postAdvertisementEndpont() {
-    return `${this.BASE_URL}api/advertisement/driver`;
+    return `${this.BASE_URL}api/advertisement/upload-ads`;
     }
 
 static deleteAdvertisementEndpont() {
