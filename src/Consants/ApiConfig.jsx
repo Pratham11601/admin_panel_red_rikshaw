@@ -97,7 +97,22 @@ static deleteAdvertisementEndpont() {
       }
 
 
+//Benefits
+static getBenefitsEndpont() {
+  return `${this.BASE_URL}/api/benifits/fetch`;
+  }
 
+static postBenefitsEndpont() {
+    return `${this.BASE_URL}/api/benifits/create`;
+    }
+
+    static putBenefitsEndpont(id) {
+      return `${this.BASE_URL}/api/benifits/put/${id}`;  
+    }
+
+    static deleteBenefitsEndpont(id) {
+      return `${this.BASE_URL}/api/benifits/delete/${id}`;
+    }
 
 
     

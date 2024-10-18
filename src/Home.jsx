@@ -24,6 +24,9 @@ import SearchUser from "./pages/SearchUser";
 
 import Transactions from "./pages/TransactionsDetails";
 
+import PassengersBenefits from "./pages/Benefits/PassengersBenefits";
+import DriversBenefits from "./pages/Benefits/DriverBenefits";
+
 
 function Home() {
 	return (
@@ -55,6 +58,8 @@ function Home() {
 				<Route path="charges" element={< Charges />} />
 				<Route path="drivers-profile" element={<  DriversProfile/>} />
 				<Route path="passengers-profile" element={<  PassengersProfile/>} />
+				<Route path="passengers-Benefits" element={<  PassengersBenefits/>} />
+				<Route path="drivers-Benefits" element={<  DriversBenefits/>} />
 				
 				
 			</Routes>
