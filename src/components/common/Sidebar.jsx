@@ -1,21 +1,21 @@
-import { UserSearchIcon,BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard } from "lucide-react";
+import { UserSearchIcon,BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard, Gift, ArrowDownCircle } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
-
   { name: "SearchUser", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
   { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
   { name: "Transactions", icon: DollarSign, color: "black", href: "/Home/transactions" },
-  { name: "Withdraw History", icon: DollarSign, color: "black", href: "/Home/WithdrawHistory" },
+  { name: "Withdraw History", icon: ArrowDownCircle, color: "black", href: "/Home/WithdrawHistory" },
   { name: "Withdraw Requests", icon: ArrowRightLeft, color: "black", href: "/Home/WithdrawRequest" },
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
   { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
+  { name: "Benefits", icon: Gift, color: "black", href: "#" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },
 ];
@@ -24,13 +24,15 @@ const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isAdMenuOpen, setIsAdMenuOpen] = useState(false);
+  const [isBenefitsMenuOpen, setIsBenefitsMenuOpen] = useState(false); // New state for "Benefits" dropdown
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleItemClick = (href) => {
     setSelectedItem(href);
     // Close the advertisement submenu when selecting other items
-    if (href !== "advertisement") {
+    if (href !== "advertisement" && href !== "benefits") {
       setIsAdMenuOpen(false);
+      setIsBenefitsMenuOpen(false); // Close the "Benefits" submenu
     }
     // Close mobile sidebar on selection
     if (window.innerWidth < 768) {
@@ -40,6 +42,10 @@ const Sidebar = () => {
 
   const handleAdClick = () => {
     setIsAdMenuOpen((prevState) => !prevState);
+  };
+
+  const handleBenefitsClick = () => {
+    setIsBenefitsMenuOpen((prevState) => !prevState); // Toggle the "Benefits" menu
   };
 
   return (
@@ -65,8 +71,11 @@ const Sidebar = () => {
           setSelectedItem={setSelectedItem}
           isAdMenuOpen={isAdMenuOpen}
           setIsAdMenuOpen={setIsAdMenuOpen}
+          isBenefitsMenuOpen={isBenefitsMenuOpen} // Pass down the new state
+          setIsBenefitsMenuOpen={setIsBenefitsMenuOpen} // Pass down the state setter
           handleItemClick={handleItemClick}
           handleAdClick={handleAdClick}
+          handleBenefitsClick={handleBenefitsClick} // Pass the click handler
         />
       </motion.div>
 
@@ -84,8 +93,11 @@ const Sidebar = () => {
           setSelectedItem={setSelectedItem}
           isAdMenuOpen={isAdMenuOpen}
           setIsAdMenuOpen={setIsAdMenuOpen}
+          isBenefitsMenuOpen={isBenefitsMenuOpen}
+          setIsBenefitsMenuOpen={setIsBenefitsMenuOpen}
           handleItemClick={handleItemClick}
           handleAdClick={handleAdClick}
+          handleBenefitsClick={handleBenefitsClick}
         />
       </motion.div>
     </>
@@ -99,6 +111,8 @@ const SidebarContent = ({
   handleItemClick,
   isAdMenuOpen,
   handleAdClick,
+  isBenefitsMenuOpen, // Added this prop
+  handleBenefitsClick, // Added this prop
 }) => (
   <div className="h-full bg-gradient-to-b from-white via-gray-50 to-red-300 bg-opacity-90 backdrop-blur-md p-4 flex flex-col">
     <div className="flex justify-between items-center">
@@ -167,6 +181,55 @@ const SidebarContent = ({
               )}
             </AnimatePresence>
           </div>
+        ) : item.name === "Benefits" ? (
+          <div key={item.name}>
+            <motion.div
+              className={`flex items-center p-4 text-sm font-medium rounded-lg mb-2 text-black ${
+                selectedItem === item.href ? "bg-red-300 " : "hover:bg-[#ffffff]"
+              }`}
+              onClick={handleBenefitsClick} 
+            >
+              <item.icon size={20} style={{ color: item.color, minWidth: "20px" }} />
+              <AnimatePresence>
+                {isSidebarOpen && (
+                  <motion.span
+                    className="ml-4 whitespace-nowrap"
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2, delay: 0.3 }}
+                  >
+                    {item.name}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              {isSidebarOpen && <ChevronDown className="ml-auto" size={16} />}
+            </motion.div>
+
+            {/* Submenu for Benefits */}
+            <AnimatePresence>
+              {isBenefitsMenuOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="pl-8"
+                >
+                  <Link to="/Home/drivers-Benefits" onClick={() => handleItemClick("drivers-Benefits")}>
+                    <motion.div className="p-2 text-sm font-medium rounded-lg mb-2 text-black hover:bg-[#ffffff]">
+                      Driver Benefits
+                    </motion.div>
+                  </Link>
+                  <Link to="/Home/passengers-Benefits" onClick={() => handleItemClick("passengers-Benefits")}>
+                    <motion.div className="p-2 text-sm font-medium rounded-lg text-black hover:bg-[#ffffff]">
+                      Passenger Benefits
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         ) : (
           <Link key={item.href} to={item.href} onClick={() => handleItemClick(item.href)}>
             <motion.div
@@ -195,5 +258,6 @@ const SidebarContent = ({
     </nav>
   </div>
 );
+
 
 export default Sidebar;
