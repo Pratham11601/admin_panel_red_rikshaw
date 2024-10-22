@@ -27,13 +27,16 @@ const DocumentPopup=({ isOpen, onClose, documentUrl })=>{
   
             {/* Scrollable Document Area */}
             <div className="overflow-auto max-h-[70vh] max-w-full border">
-              {/* For simplicity, using an iframe to display document */}
-              <iframe
-                src={documentUrl}
-                title="Document"
-                className="w-full h-[70vh] object-cover"
-                frameBorder="0"
-              ></iframe>
+            <img
+            src={documentUrl.front}
+            alt="Aadhar Card Front"
+            className="w-full h-auto max-w-xs object-cover rounded-lg"
+          />
+          <img
+            src={documentUrl.back}
+            alt="Aadhar Card Back"
+            className="w-full h-auto max-w-xs object-cover rounded-lg"
+          />
             </div>
           </motion.div>
         </motion.div>

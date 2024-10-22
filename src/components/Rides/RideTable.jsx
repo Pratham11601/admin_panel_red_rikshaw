@@ -60,8 +60,8 @@ const RideTable = () => {
   // Filter and sort the ride data
   const filteredRides = ridesData.filter(
     (ride) =>
-      ride.driverId.name.toLowerCase().includes(searchTerm) ||
-      ride.passengerId.name.toLowerCase().includes(searchTerm) ||
+      // ride.driverId.name.toLowerCase().includes(searchTerm) ||
+      // ride.passengerId.name.toLowerCase().includes(searchTerm) ||
       ride.pickupLocation.place.toLowerCase().includes(searchTerm) ||
       ride.dropoffLocation.place.toLowerCase().includes(searchTerm)
   );
@@ -70,8 +70,8 @@ const RideTable = () => {
   const sortedRides = [...filteredRides].sort((a, b) => {
     if (sortBy === "driver") {
       return sortOrder === "asc"
-        ? a.driverId.name.localeCompare(b.driverId.name)
-        : b.driverId.name.localeCompare(a.driverId.name);
+        // ? a.driverId.name.localeCompare(b.driverId.name)
+        // : b.driverId.name.localeCompare(a.driverId.name);
     }
     if (sortBy === "passenger") {
       return sortOrder === "asc"

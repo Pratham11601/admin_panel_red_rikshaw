@@ -6,6 +6,12 @@ class ApiConfig {
   
     // API Endpoints
 
+    //login
+    static getLoginData() {
+      
+      return `${this.BASE_URL}/api/admin/login`;
+    }
+
     //dashboard
     static getDashboardData() {
       
