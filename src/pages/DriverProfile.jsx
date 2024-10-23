@@ -25,8 +25,6 @@ const DriverProfile = ()=>{
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
 
-        // Here, you can add an API call to update the status in your database
-        // Example:
         // fetch(`/api/drivers/update-status`, {
         //     method: 'POST',
         //     body: JSON.stringify({ status: newStatus }),
@@ -102,7 +100,7 @@ const DriverProfile = ()=>{
                 
                 <p className="text-gray-600">📞 {driver.phone}</p>
                 <p className="text-gray-600">✉️ {driver.email}</p>
-                <p className="text-gray-600">📍 {driver.address}</p>
+                {/* <p className="text-gray-600">📍 {driver.address}</p> */}
                 <p className="text-gray-600">🚗 20 Total Trips</p>
                 
                 </motion.div>

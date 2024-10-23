@@ -22,7 +22,7 @@ const UserCard= ({driver})=>{
 
       {/* Driver image and ratings */}
           <div className="flex text-black items-center mb-4">
-          <img src={driverImage} alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
+          <img src={driver.profile_img} alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
             <div className="flex flex-col ">
               <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{driver.name}</h2>
               <p className="text-sm flex font-medium text-gray-600 mt-2 ml-3">
@@ -44,15 +44,15 @@ const UserCard= ({driver})=>{
           </div>
 
       {/* View Profile button at bottom-right corner */}
-          <div className="my-2 absolute top-20  right-2">
+          <div className=" absolute top-20  right-2">
           
           <button 
-  onClick={() => handleViewProfile(driver._id)} 
-  className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold rounded-lg"
->
-  View Profile
-  <ArrowRightToLine className="h-4 w-4 ml-2" />
-</button>
+                onClick={() => handleViewProfile(driver._id)} 
+                className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold rounded-lg"
+              >
+                View Profile
+                <ArrowRightToLine className="h-4 w-4 ml-2" />
+          </button>
           </div>
           </div>
       </div>

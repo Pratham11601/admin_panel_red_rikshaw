@@ -78,7 +78,7 @@ const handleBackClick = () => {
             
                 >
                 <img
-                    src={driverImage}
+                    src={user.profile_img}
                     alt=""
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />

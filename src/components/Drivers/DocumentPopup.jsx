@@ -30,12 +30,12 @@ const DocumentPopup=({ isOpen, onClose, documentUrl })=>{
             <img
             src={documentUrl.front}
             alt="Aadhar Card Front"
-            className="w-full h-auto max-w-xs object-cover rounded-lg"
+            className="w-full h-auto max-w-xs object-cover rounded-lg pb-2"
           />
           <img
             src={documentUrl.back}
             alt="Aadhar Card Back"
-            className="w-full h-auto max-w-xs object-cover rounded-lg"
+            className="w-full h-auto max-w-xs object-cover rounded-lg pt-2"
           />
             </div>
           </motion.div>
