@@ -213,19 +213,19 @@ const RideTable = () => {
                             {ride._id}
                         </td> */}
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black ">
-                            {ride.passengerId.name}
+                          {ride.passengerId ? ride.passengerId.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black">
-                            {ride.driverId.name}
+                          {ride.driverId ? ride.driverId.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                             $15.00
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black hidden sm:table-cell">
-                            {ride.pickupLocation.place}
+                        {ride.pickupLocation ? ride.pickupLocation.place : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black hidden sm:table-cell">
-                            {ride.dropoffLocation.place}
+                        {ride.dropoffLocation ? ride.dropoffLocation.place : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black">
                             <button

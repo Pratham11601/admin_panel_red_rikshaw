@@ -8,7 +8,7 @@ import DocumentPopup from '../Drivers/DocumentPopup';
 import RidesTable from '../Rides/RideTable';
 import TransactionTable from '../WithdrawHistory/TransactionTable';
 
-const UserProfile = ({userData}) => {
+const UserProfile = ({user}) => {
  // Get user data passed from SearchUser component
   const [activeTab, setActiveTab] = useState('profileSummary');
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -120,7 +120,8 @@ const handleBackClick = () => {
                 <div className="flex  items-center justify-center md:justify-start">
                     <div className="bg-white mt-2">
                         <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">₹{user.wallet_balance.toFixed(2)}</p>
+                        <p className="text-xl mt-2">100</p>
+                        {/* <p className="text-xl mt-2">₹{user.wallet_balance.toFixed(2)}</p> */}
                     </div>
                     {/* Add Money Button */}
                     <button
