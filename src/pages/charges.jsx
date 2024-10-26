@@ -29,7 +29,7 @@ function Charges() {
       [e.target.name]: e.target.value
     });
   };
-
+//search 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
