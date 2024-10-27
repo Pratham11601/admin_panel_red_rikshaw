@@ -8,6 +8,8 @@ function Charges() {
   const [charges, setCharges] = useState({
     km_0_1_5: '37', 
     km_1_5_plus: '16', 
+    night_km_0_1_5: '50', 
+    night_km_1_5_plus: '25' ,
     per_ride_driver: '3',
     per_ride_passenger: '2',
     platform_fee: '5',
@@ -17,6 +19,7 @@ function Charges() {
     joining_bonus_passenger: '51',
     waiting_threshold: '10', 
     waiting_charge: '7' 
+    
   });
 
   const [showPopup, setShowPopup] = useState(false);
@@ -81,142 +84,12 @@ function Charges() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-lg">
-          <h2 className="text-xl font-bold mb-6 text-start">Travel Fair Charges</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {/* Charge Fields */}
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">0-1.5 KM Charge</label>
-              <input
-                type="text"
-                name="km_0_1_5"
-                value={charges.km_0_1_5}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter charge"
-                required
-              />
-            </div>
 
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">1.5+ KM Charge</label>
-              <input
-                type="text"
-                name="km_1_5_plus"
-                value={charges.km_1_5_plus}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter charge"
-                required
-              />
-            </div>
 
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Platform Fee</label>
-              <input
-                type="text"
-                name="platform_fee"
-                value={charges.platform_fee}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter platform fee"
-                required
-              />
-            </div>
-          </div>
-
-          <h2 className="text-xl font-bold mb-4 text-start mt-5">Waiting Charges</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Waiting Time (in minutes)</label>
-              <input
-                type="text"
-                name="waiting_threshold"
-                value={charges.waiting_threshold}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter wait time (in min)"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Charge After Waiting Time</label>
-              <input
-                type="text"
-                name="waiting_charge"
-                value={charges.waiting_charge}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter waiting charge"
-                required
-              />
-            </div>
-          </div>
-
-          <h2 className="text-xl font-bold mb-4 text-start mt-5">Referral Rewards</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Driver Referral Reward</label>
-              <input
-                type="text"
-                name="driverReferral"
-                value={charges.driverReferral}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter driver referral reward"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Passenger Referral Reward</label>
-              <input
-                type="text"
-                name="passengerReferral"
-                value={charges.passengerReferral}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter passenger referral reward"
-                required
-              />
-            </div>
-          </div>
-
-          <h2 className="text-xl font-bold mb-4 text-start mt-5">Joining Bonuses</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Joining Bonus for Driver</label>
-              <input
-                type="text"
-                name="joining_bonus_driver"
-                value={charges.joining_bonus_driver}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter driver joining bonus"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">Joining Bonus for Passenger</label>
-              <input
-                type="text"
-                name="joining_bonus_passenger"
-                value={charges.joining_bonus_passenger}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
-                placeholder="Enter passenger joining bonus"
-                required
-              />
-            </div>
-          </div>
-        </form>
-
-        {/* new card  updated charges*/}
-        <div className="mt-6 mx-3 p-6 bg-white shadow-2xl rounded-lg ">
-  <h2 className="text-xl font-bold mb-4 text-start">Updated Charges</h2>
-  <table className="w-full">
+         {/* new card  updated charges*/}
+         <div className="mt-6 mx-3 p-6 bg-white shadow-2xl rounded-lg ">
+  <h2 className="text-2xl font-bold mb-4 text-start">Updated Charges</h2>
+  <table className="w-full text-lg">
     <thead>
       <tr className="bg-gray-300">
         <th className="text-left py-2 px-4">Charge Type</th>
@@ -230,6 +103,14 @@ function Charges() {
       </tr>
       <tr className="border-b">
         <td className="py-2 px-4">1.5+ KM Charge</td>
+        <td className="py-2 px-4">₹{charges.km_1_5_plus}</td>
+      </tr>
+      <tr className="border-b">
+        <td className="py-2 px-4">1.5+ KM Night Charge</td>
+        <td className="py-2 px-4">₹{charges.night_km_0_1_5}</td>
+      </tr>
+      <tr className="border-b">
+        <td className="py-2 px-4">1.5+ KM Night Charge</td>
         <td className="py-2 px-4">₹{charges.km_1_5_plus}</td>
       </tr>
       <tr className="border-b">
@@ -253,6 +134,169 @@ function Charges() {
   </table>
 </div>
 
+
+        <form onSubmit={handleSubmit} className="mt-9 space-y-6 bg-white p-6 rounded-lg max-w-full mx-auto text-xl">
+  <h2 className="text-xl font-bold mb-6 text-start">Travel Fair Charges</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    {/* Daytime Charge Fields */}
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">0-1.5 KM Charge (Day)</label>
+      <input
+        type="text"
+        name="km_0_1_5"
+        value={charges.km_0_1_5}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter charge"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">1.5+ KM Charge (Day)</label>
+      <input
+        type="text"
+        name="km_1_5_plus"
+        value={charges.km_1_5_plus}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter charge"
+        required
+      />
+    </div>
+
+    {/* Night Charge Fields */}
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">0-1.5 KM Charge (Night)</label>
+      <input
+        type="text"
+        name="night_km_0_1_5"
+        value={charges.night_km_0_1_5}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter night charge"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">1.5+ KM Charge (Night)</label>
+      <input
+        type="text"
+        name="night_km_1_5_plus"
+        value={charges.night_km_1_5_plus}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter night charge"
+        required
+      />
+    </div>
+    
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Platform Fee</label>
+      <input
+        type="text"
+        name="platform_fee"
+        value={charges.platform_fee}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter platform fee"
+        required
+      />
+    </div>
+  </div>
+
+  {/* Waiting and Referral Fields remain the same */}
+  <h2 className="text-xl font-bold mb-4 text-start mt-5">Waiting Charges</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Waiting Time (in minutes)</label>
+      <input
+        type="text"
+        name="waiting_threshold"
+        value={charges.waiting_threshold}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter wait time (in min)"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Charge After Waiting Time</label>
+      <input
+        type="text"
+        name="waiting_charge"
+        value={charges.waiting_charge}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter waiting charge"
+        required
+      />
+    </div>
+  </div>
+
+  <h2 className="text-xl font-bold mb-4 text-start mt-5">Referral Rewards</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Driver Referral Reward</label>
+      <input
+        type="text"
+        name="driverReferral"
+        value={charges.driverReferral}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter driver referral reward"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Passenger Referral Reward</label>
+      <input
+        type="text"
+        name="passengerReferral"
+        value={charges.passengerReferral}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter passenger referral reward"
+        required
+      />
+    </div>
+  </div>
+
+  <h2 className="text-xl font-bold mb-4 text-start mt-5">Joining Bonuses</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Joining Bonus for Driver</label>
+      <input
+        type="text"
+        name="joining_bonus_driver"
+        value={charges.joining_bonus_driver}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter driver joining bonus"
+        required
+      />
+    </div>
+
+    <div>
+      <label className="block text-gray-700 text-lg font-bold mb-2">Joining Bonus for Passenger</label>
+      <input
+        type="text"
+        name="joining_bonus_passenger"
+        value={charges.joining_bonus_passenger}
+        onChange={handleChange}
+        className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-red-500"
+        placeholder="Enter passenger joining bonus"
+        required
+      />
+    </div>
+  </div>
+</form>
+
+
+       
 
         {showPopup && (
           <div className="fixed top-4 right-4 p-4 bg-green-500 text-white rounded-lg shadow-lg transition-opacity duration-500 ease-in-out">
