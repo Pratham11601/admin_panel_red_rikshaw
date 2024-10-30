@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
+
+
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => localStorage.getItem("isAuthenticated") === "true"
   );

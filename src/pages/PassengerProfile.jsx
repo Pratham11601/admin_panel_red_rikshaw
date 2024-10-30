@@ -75,7 +75,7 @@ const PassengerProfile = ()=>{
             
                 >
                 <img
-                    src={driverImage}
+                    src={passenger.profile_img}
                     alt=""
                     className="w-50 h-50 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />

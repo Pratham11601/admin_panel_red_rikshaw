@@ -8,6 +8,12 @@ class ApiConfig {
   
     // API Endpoints
 
+    //login
+    // static getLogin() {
+      
+    //   return `${this.BASE_URL}/api/adminpanel/dashboard`;
+    // }
+
     //dashboard
     static getDashboardData() {
       
@@ -99,22 +105,7 @@ static deleteAdvertisementEndpoint(id) {
 }
 
 
-//Benefits
-static getBenefitsEndpont() {
-  return `${this.BASE_URL}/api/benifits/fetch`;
-  }
 
-static postBenefitsEndpont() {
-    return `${this.BASE_URL}/api/benifits/create`;
-    }
-
-    static putBenefitsEndpont(id) {
-      return `${this.BASE_URL}/api/benifits/put/${id}`;  
-    }
-
-    static deleteBenefitsEndpont(id) {
-      return `${this.BASE_URL}/api/benifits/delete/${id}`;
-    }
 
 
     

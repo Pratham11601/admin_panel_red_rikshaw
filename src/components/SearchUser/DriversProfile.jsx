@@ -18,6 +18,7 @@ const UserProfile = ({user,clearUserData}) => {
   const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
   const [addAmount, setAddAmount] = useState(''); 
   const navigate = useNavigate();
+  const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
 
   const toggleStatus = () => {
     const newStatus = status === 'Block' ? 'Unblock' : 'Block';
@@ -45,8 +46,14 @@ const handleAddMoney = () => {
     setAddAmount('');
     togglePopup();
   };
-const handleViewDocument = () => {
-  setPopupOpen(true);
+  const handleViewDocument = () => {
+    setPopupOpen(true);
+    setDocumentUrls({
+        front: user.adhar_img_front,
+
+        back: user.adhar_img_back
+      });
+  
 };
 
 const handleClosePopup = () => {
@@ -140,15 +147,7 @@ const handleBackClick = () => {
           <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
 
-            {/* Input field for the amount */}
-            <input
-              type="number"
-              value={addAmount}
-              onChange={(e) => setAddAmount(e.target.value)}
-              className="mt-4 p-2 border rounded w-full"
-              placeholder="Enter amount"
-            />
-
+            <img src={user.qr_code} alt=""  className='p-10'/>
             {/* Add Money Button */}
             <button
               onClick={handleAddMoney}
@@ -202,26 +201,31 @@ const handleBackClick = () => {
                         >
 
 
-                        {/* Auto Details */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
+                          {/* Auto Details */}
+                          <div className="p-4 bg-white shadow-lg rounded-lg">
                             <h3 className="text-xl font-bold mb-3">Auto Details</h3>
-                            <div className="">
-                            <img 
-                                src="https://via.placeholder.com/100" 
-                                alt="Auto Image" 
-                                className="w-200 h-200 object-cover rounded-lg" 
-                            />
-                            <div>
-                                <p className="text-gray-600">Vehicle Number: ABC-1234</p>
-                            </div>
+                            <p className="text-gray-600">Vehicle Number: ABC-1234</p>
+                            
+                            <div className="flex flex-col ">
+                                <img 
+                                src={user.vehicle_img_front}
+                                alt="Auto Image Front" 
+                                className="w-50 max-w-xs "
+                                />
+                                <img 
+                                src={user.vehicle_img_back}
+                                alt="Auto Image Back" 
+                                className="w-70 max-w-xs "
+                                />
                             </div>
                         </div>
+
 
                         {/* Documents */}
                         <div className="p-4 bg-white shadow-lg rounded-lg">
                             <h3 className="text-xl font-bold mb-3">Documents</h3>
                             <div className='flex space-x-10'>
-                                <p className="text-gray-600">Driver's License: Document1.pdf</p>
+                                <p className="text-gray-600">Aadhar Card</p>
                                 <button onClick={handleViewDocument} className="text-blue-500 hover:underline">
                                     View
                                 </button>
@@ -234,7 +238,7 @@ const handleBackClick = () => {
                         <DocumentPopup
                             isOpen={isPopupOpen}
                             onClose={handleClosePopup}
-                            documentUrl="https://example.com/document.pdf" // Replace with actual document URL
+                            documentUrl={documentUrls} // Replace with actual document URL
                          />
 
                 {/* Trip Summary Section */}
