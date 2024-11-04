@@ -18,7 +18,7 @@ function Charges() {
     passengerReferral: '0',
     joining_bonus_driver: '0',
     joining_bonus_passenger: '0',
-    waiting_time: '0',
+    // waiting_time: '0',
     waiting_charge: '0',
     cancellation_Charges: '0'
   });
@@ -47,7 +47,7 @@ function Charges() {
         passengerReferral: chargesData.passenger_refferal || '0',
         joining_bonus_driver: chargesData.driver_joining_amount || '0',
         joining_bonus_passenger: chargesData.passenger_joining_amount || '0',
-        waiting_time: chargesData.waiting_time || '0', 
+        // waiting_time: chargesData.waiting_time || '0', 
         waiting_charge: chargesData.waitingCharges || '0',
         cancellation_Charges: chargesData.cancellationCharges || '0' 
       });
