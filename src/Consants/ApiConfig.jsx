@@ -86,7 +86,7 @@ class ApiConfig {
       return `${this.BASE_URL}/api/Charges`;
     }
 
-    static patchChargesEndpoint() {
+    static putChargesEndpoint() {
       return `${this.BASE_URL}/api/charges/edit`;
     }
 

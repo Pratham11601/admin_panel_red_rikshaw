@@ -18,15 +18,15 @@ function Charges() {
     passengerReferral: '0',
     joining_bonus_driver: '0',
     joining_bonus_passenger: '0',
-    waiting_threshold: '0',
-    waiting_charge: '0'
+    waiting_time: '0',
+    waiting_charge: '0',
+    cancellation_Charges: '0'
   });
 
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch charges on mount
   useEffect(() => {
     fetchCharges();
   }, []);
@@ -36,21 +36,20 @@ function Charges() {
       const response = await axios.get(ApiConfig.getChargesEndpoint());
       const chargesData = response.data.data;
 
-      console.log(chargesData);
-
       setCharges({
         day_km_1_to_1_5: chargesData.oneToOneAndHalf || '0',
         day_km_1_5_plus: chargesData.oneAndHalfPlus || '0',
-        night_km_1_to_1_5: chargesData.night_km_1_to_1_5 || '0',
-        night_km_1_5_plus: chargesData.night_km_1_5_plus || '0',
+        night_km_1_to_1_5: chargesData.night_km_1_to_1_5 || '0', 
+        night_km_1_5_plus: chargesData.night_km_1_5_plus || '0', 
         perRideCharges: chargesData.perRideCharges || '0',
         platform_fee: chargesData.platform_fee || '0',
-        driverReferral: chargesData.driverReferral || '0',
-        passengerReferral: chargesData.passengerReferral || '0',
-        joining_bonus_driver: chargesData.joining_bonus_driver || '0',
-        joining_bonus_passenger: chargesData.joining_bonus_passenger || '0',
-        waiting_threshold: chargesData.waiting_threshold || '0',
-        waiting_charge: chargesData.waiting_charge || '0'
+        driverReferral: chargesData.driver_refferal || '0',
+        passengerReferral: chargesData.passenger_refferal || '0',
+        joining_bonus_driver: chargesData.driver_joining_amount || '0',
+        joining_bonus_passenger: chargesData.passenger_joining_amount || '0',
+        waiting_time: chargesData.waiting_time || '0', 
+        waiting_charge: chargesData.waitingCharges || '0',
+        cancellation_Charges: chargesData.cancellationCharges || '0' 
       });
     } catch (error) {
       console.error("Error fetching charges: ", error);
@@ -70,7 +69,7 @@ function Charges() {
     setLoading(true);
     setError(null); 
     try {
-      const response = await axios.patch(ApiConfig.patchChargesEndpoint(), charges, {
+      const response = await axios.put(ApiConfig.putChargesEndpoint(), charges, {
         headers: {
           'Content-Type': 'application/json' 
         }
@@ -97,17 +96,17 @@ function Charges() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <StatCard name="1-1.5 KM Charge" icon={Car} value={`₹${charges.day_km_1_to_1_5}`} color="#8B5CF6" />
-          <StatCard name="1.5+ KM Charge" icon={Car} value={`₹${charges.day_km_1_5_plus}`} color="#34D399" />
+          {/* <StatCard name="1.5+ KM Charge" icon={Car} value={`₹${charges.day_km_1_5_plus}`} color="#34D399" /> */}
           <StatCard name="Per Ride Driver Charge" icon={User} value={`₹${charges.perRideCharges}`} color="#EF4444" />
           <StatCard name="Platform Fee" icon={User} value={`₹${charges.platform_fee}`} color="#EF4444" />
+          <StatCard name="Cancellation Charges" icon={User} value={`₹${charges.cancellation_Charges}`} color="#F59E0B" />
+          <StatCard name="Waiting charges" icon={User} value={`${charges.waiting_charge} `} color="#6B7280" /> 
         </motion.div>
 
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-        {/* Display updated charges */}
         <div className="mt-6 mx-3 p-6 bg-white shadow-2xl rounded-lg">
-          <h2 className="text-2xl font-bold mb-4 text-start">Updated Charges</h2>
+          <h2 className="text-2xl font-bold mb-4 text-start ">Updated Charges</h2>
           <table className="w-full text-lg">
             <thead>
               <tr className="bg-gray-300">
@@ -119,7 +118,9 @@ function Charges() {
               {Object.keys(charges).map((key) => (
                 <tr className="border-b" key={key}>
                   <td className="py-2 px-4">{key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</td>
-                  <td className="py-2 px-4">₹{charges[key]}</td>
+                  <td className="py-2 px-4">
+                    {key === 'waiting_time' ? `${charges[key]} min` : `₹${charges[key]}`}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -135,7 +136,7 @@ function Charges() {
                   {key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                 </label>
                 <input
-                  type="number" // Change from text to number for monetary values
+                  type="number" 
                   name={key}
                   value={value}
                   onChange={handleChange}
@@ -147,16 +148,19 @@ function Charges() {
             ))}
           </div>
 
-          <button
-            type="submit"
-            className="ml-4 px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
-            disabled={loading}
-          >
-            {loading ? 'Updating...' : 'Update Charges'}
-          </button>
+          <div className="flex justify-center">
+  <button
+    type="submit"
+    className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
+    disabled={loading}
+  >
+    {loading ? 'Updating...' : 'Update Charges'}
+  </button>
+</div>
+
         </form>
 
-        {showPopup && <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-lg">Charges updated successfully!</div>}
+        {showPopup && <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-lg">Charges updated successfully!</div>}
       </div>
     </>
   );
