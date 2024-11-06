@@ -3,6 +3,8 @@ class ApiConfig {
     // Base URL swagger 
     
     static BASE_URL = "http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/";
+   
+
   
     
     // API Endpoints
@@ -81,27 +83,27 @@ class ApiConfig {
     }
 
     //charges
-    static putChargesEndpont() {
+    static getChargesEndpoint() {
       return `${this.BASE_URL}/api/Charges`;
-  }
+    }
 
-  static getChargesEndpont() {
-    return `${this.BASE_URL}/api/Charges`;
-  }
+    static putChargesEndpoint() {
+      return `${this.BASE_URL}/api/charges/edit`;
+    }
 
 
 //Advertisement
-static getAdvertisementEndpont() {
+static getAdvertisementEndpoint() {
   return `${this.BASE_URL}/api/advertisement/getByCategory`;
-  }
+}
 
-static postAdvertisementEndpont() {
-    return `${this.BASE_URL}api/advertisement/upload-ads`;
-    }
+static postAdvertisementEndpoint() {
+  return `${this.BASE_URL}/api/advertisement/upload-ads`;
+}
 
-static deleteAdvertisementEndpont() {
-      return `${this.BASE_URL}/api/advertisement/delete`;
-      }
+static deleteAdvertisementEndpoint(id) {
+  return `${this.BASE_URL}/api/advertisement/delete/${id}`;
+}
 
 
 
