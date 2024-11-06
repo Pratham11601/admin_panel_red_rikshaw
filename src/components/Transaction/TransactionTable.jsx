@@ -138,16 +138,18 @@ const TransactionTable = () => {
                     className="border-b border-gray-200 hover:bg-gray-100"
                   >
                     <td className="py-3 px-6 text-left">
-                      {transaction.from.userId.name}
+                    {transaction.from.userId ? transaction.from.userId.name : "N/A"}
+
                     </td>
                     <td className="py-3 px-6 text-left">
-                      {transaction.from.userType}
+                    {transaction.from.userType || "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">
-                      {transaction.to.userId.name}
+                      {transaction.to.userId ? transaction.to.userId.name : "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">
-                      {transaction.to.userType}
+                    {transaction.to.userType || "N/A"}
+
                     </td>
                     <td className="py-3 px-6 text-left">{transaction.amount}</td>
                     <td className="py-3 px-6 text-left">

@@ -6,7 +6,6 @@ import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
   { name: "SearchUser", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
-  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
@@ -18,6 +17,7 @@ const SIDEBAR_ITEMS = [
   { name: "Benefits", icon: Gift, color: "black", href: "#" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },
+  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
 ];
 
 const Sidebar = () => {

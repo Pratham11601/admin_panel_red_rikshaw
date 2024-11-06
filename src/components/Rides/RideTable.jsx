@@ -195,9 +195,7 @@ const RideTable = () => {
                         >
                         <span className="flex">To Place<ArrowDownUp className="pl-2"/></span>
                         </th>
-                        <th className="py-3 px-6 text-left cursor-pointer">
-                        View Invoice
-                        </th>
+                      
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -227,14 +225,8 @@ const RideTable = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black hidden sm:table-cell">
                         {ride.dropoffLocation ? ride.dropoffLocation.place : "N/A"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm  text-black">
-                            <button
-                            className="text-indigo-400 hover:text-indigo-300 mr-2"
-                            onClick={() => handleViewInvoice(ride)}
-                            >
-                            View
-                            </button>
-                        </td>
+                     
+                      
                         </motion.tr>
                     ))}
                     </tbody>

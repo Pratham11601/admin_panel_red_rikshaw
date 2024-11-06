@@ -19,7 +19,9 @@ const DriverProfile = ()=>{
     const [walletBalance, setWalletBalance] = useState(500); // Initial wallet balance
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
     const [addAmount, setAddAmount] = useState('');     
-    const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });     
+    const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [password, setPassword] = useState('');   
 
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
@@ -64,6 +66,25 @@ const DriverProfile = ()=>{
     const handleBackClick = () => {
         navigate('/Home/drivers'); 
       };
+
+    const handleDeleteClick = () => {
+        setShowDeletePopup(true); // Open delete confirmation popup
+    };
+    const handleDeleteConfirm = () => {
+        // Implement password confirmation logic here, e.g., validate the password
+        if (password === 'correct_password') { // Replace with actual password check logic
+          // Perform delete operation, e.g., calling the API
+          alert("User has been deleted");
+          setShowDeletePopup(false);
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      };
+    
+      const handleCloseDeletePopup = () => {
+        setShowDeletePopup(false);
+        setPassword('');
+      };
     return(
         <div className="flex-1 overflow-auto relative z-10">
             <Header title='Drivers Profile' />
@@ -76,7 +97,7 @@ const DriverProfile = ()=>{
             </button>
             <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-white'>
                 <motion.div
-                className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white shadow-lg rounded-lg p-6 text-black"
+                className="grid grid-cols-1 md:grid-cols-3 gap-1 bg-white shadow-lg rounded-lg p-6 text-black"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -102,42 +123,84 @@ const DriverProfile = ()=>{
                 <p className="text-gray-600">✉️ {driver.email}</p>
                 {/* <p className="text-gray-600">📍 {driver.address}</p> */}
                 <p className="text-gray-600">🚗 20 Total Trips</p>
+                <p className="text-gray-600">⭐ {driver.rating} Reviews</p>
                 
                 </motion.div>
 
                 {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-3">
-                <p className="text-gray-600">⭐ {driver.rating} Reviews</p>
+            
                 <div className="flex items-center justify-center md:justify-start">
                     
                     <span
-                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
+                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
      
                     >
-                        {status}
+                        {driver.blockStatus ? 'Unblock' : 'Block'}
                     </span>
                     <button
+                    onClick={handleDeleteClick}
+                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                >
+                    Delete 
+                </button>
+                    {/* <button
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >
                             Change Status
-                    </button>
+                    </button> */}
                 </div>
-                
+                <div className="flex items-center justify-center md:justify-start pt-3">
+                            <div className="flex items-center">
+                                <div className="bg-white mt-2">
+                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                                </div>
+                                {/* Conditionally Render "Add Money" Button */}
+                                {driver.blockStatus ? (
+                                    <p className="ml-4 text-red-600 font-semibold">
+                                        Money can't be added, user is blocked
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={togglePopup}
+                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Add Money
+                                    </button>
+                                )}
+                            </div>
+                        </div>
 
-                <div className="flex items-center justify-center md:justify-start ">
-                    <div className="bg-white mt-2">
-                        <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">₹{driver.wallet_balance}</p>
-                    </div>
-                    {/* Add Money Button */}
-                    <button
-                        onClick={togglePopup}
-                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                {/* Delete Confirmation Popup */}
+                {showDeletePopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                        <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                        <p className="mb-2"></p>
+                        <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded mb-4"
+                        placeholder="Enter password"
+                        />
+                        <button
+                        onClick={handleDeleteConfirm}
+                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                         >
-                        Add Money
-                    </button>
-                </div>
+                        Confirm Delete
+                        </button>
+                        <button
+                        onClick={handleCloseDeletePopup}
+                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </div>
+                )}
                 </motion.div>
                 </motion.div>
 

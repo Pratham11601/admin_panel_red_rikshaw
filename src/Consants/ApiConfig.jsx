@@ -4,6 +4,7 @@ class ApiConfig {
     
     static BASE_URL = "http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/";
   
+    
     // API Endpoints
 
     //login

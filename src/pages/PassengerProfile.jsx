@@ -18,6 +18,8 @@ const PassengerProfile = ()=>{
     const [status, setStatus] = useState('Block');
     const [walletBalance, setWalletBalance] = useState(500);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);  
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [password, setPassword] = useState('');  
 
     console.log(passenger);
     
@@ -51,6 +53,24 @@ const PassengerProfile = ()=>{
       };
     const handleBackClick = () => {
         navigate('/Home/passengers'); 
+      };
+      const handleDeleteClick = () => {
+        setShowDeletePopup(true); // Open delete confirmation popup
+    };
+    const handleDeleteConfirm = () => {
+        // Implement password confirmation logic here, e.g., validate the password
+        if (password === 'correct_password') { // Replace with actual password check logic
+          // Perform delete operation, e.g., calling the API
+          alert("User has been deleted");
+          setShowDeletePopup(false);
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      };
+    
+      const handleCloseDeletePopup = () => {
+        setShowDeletePopup(false);
+        setPassword('');
       };
     return(
         <div className="flex-1 overflow-auto relative z-10">
@@ -91,10 +111,10 @@ const PassengerProfile = ()=>{
                 <motion.div className="space-y-2">
                     <div className="flex items-center justify-center md:justify-start">
                         <span
-                            className={`px-4 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
-                        // Add click handler to toggle status
+                            className={`px-4 py-1 rounded-full text-white cursor-pointer ${passenger.is_active? 'bg-red-600' : 'bg-green-600'}`}
+                      
                         >
-                            {status}
+                              {passenger.is_active ? 'Block' : 'Unblock'} 
                         </span>
                         <button
                                 onClick={toggleStatus}
@@ -124,6 +144,40 @@ const PassengerProfile = ()=>{
                         
                     
                     </div>
+                    <button
+                    onClick={handleDeleteClick}
+                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                >
+                    Delete User
+                </button>
+                {/* Delete Confirmation Popup */}
+                {showDeletePopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                        <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                        <p className="mb-2"></p>
+                        <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded mb-4"
+                        placeholder="Enter password"
+                        />
+                        <button
+                        onClick={handleDeleteConfirm}
+                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                        Confirm Delete
+                        </button>
+                        <button
+                        onClick={handleCloseDeletePopup}
+                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </div>
+                )}
                 </motion.div>
                 </motion.div>
 

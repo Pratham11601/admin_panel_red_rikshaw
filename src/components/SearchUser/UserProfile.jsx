@@ -17,6 +17,8 @@ const UserProfile = ({user}) => {
   const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
   const [addAmount, setAddAmount] = useState(''); 
   const navigate = useNavigate();
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [password, setPassword] = useState('');   
 
   const toggleStatus = () => {
     const newStatus = status === 'Block' ? 'Unblock' : 'Block';
@@ -56,6 +58,24 @@ const handleClosePopup = () => {
 const handleBackClick = () => {
     navigate('/Home/searchuser'); 
   };
+  const handleDeleteClick = () => {
+    setShowDeletePopup(true); // Open delete confirmation popup
+};
+const handleDeleteConfirm = () => {
+    // Implement password confirmation logic here, e.g., validate the password
+    if (password === 'correct_password') { // Replace with actual password check logic
+      // Perform delete operation, e.g., calling the API
+      alert("User has been deleted");
+      setShowDeletePopup(false);
+    } else {
+      alert("Incorrect password. Please try again.");
+    }
+  };
+
+  const handleCloseDeletePopup = () => {
+    setShowDeletePopup(false);
+    setPassword('');
+  };
   return (
     <div className="flex-1 overflow-auto relative z-10">
             <button 
@@ -91,17 +111,23 @@ const handleBackClick = () => {
                 
                 <p className="text-gray-600">📞 {user.phone}</p>
                 <p className="text-gray-600">✉️ {user.email}</p>
-                <p className="text-gray-600">📍 {user.address}</p>
+                <p className="text-center md:text-left">
+                    🚗 <span className="font-semibold">227</span> Total Trips
+                </p>
+                <p className="text-center md:text-left">
+                    ⭐ <span className="font-semibold">4.5</span> Reviews
+                </p>
+                
                 </motion.div>
 
                 {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-2">
                 <div className="flex items-center justify-center md:justify-start">
                 <span
-                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${user.isActive ? 'bg-red-600' : 'bg-green-600'} text-white`}
+                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${user.activeStatus ? 'bg-red-600' : 'bg-green-600'} text-white`}
                        // Add click handler to toggle status
                     >
-                      {user.isActive ? 'Block' : 'unblock'}
+                      {user.activeStatus ? 'Block' : 'unblock'}
                     </span>
                     <button
                             onClick={toggleStatus}
@@ -110,27 +136,63 @@ const handleBackClick = () => {
                             Change Status
                     </button>
                 </div>
-                <p className="text-center md:text-left">
-                    🚗 <span className="font-semibold">227</span> Total Trips
-                </p>
-                <p className="text-center md:text-left">
-                    ⭐ <span className="font-semibold">4.5</span> Reviews
-                </p>
 
-                <div className="flex  items-center justify-center md:justify-start">
-                    <div className="bg-white mt-2">
-                        <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">100</p>
-                        {/* <p className="text-xl mt-2">₹{user.wallet_balance.toFixed(2)}</p> */}
-                    </div>
-                    {/* Add Money Button */}
+
+                {user.role === 'passenger' ? (
+                  <button
+                    onClick={togglePopup}
+                    className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  >
+                    Add Money
+                  </button>
+                ) : (
+                  user.blockStatus ? (
+                    <p className="ml-4 text-red-600 font-semibold">
+                      Money can't be added, user is blocked
+                    </p>
+                  ) : (
                     <button
-                        onClick={togglePopup}
-                        className=" mx-3 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                        >
-                        Add Money
+                      onClick={togglePopup}
+                      className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    >
+                      Add Money
                     </button>
-                </div>
+                  )
+                )}
+                <button
+                    onClick={handleDeleteClick}
+                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                >
+                    Delete User
+                </button>
+                {/* Delete Confirmation Popup */}
+                {showDeletePopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                        <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                        <p className="mb-2"></p>
+                        <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded mb-4"
+                        placeholder="Enter password"
+                        />
+                        <button
+                        onClick={handleDeleteConfirm}
+                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                        Confirm Delete
+                        </button>
+                        <button
+                        onClick={handleCloseDeletePopup}
+                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </div>
+                )}
                 </motion.div>
                 </motion.div>
 
@@ -140,14 +202,9 @@ const handleBackClick = () => {
           <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
 
-            {/* Input field for the amount */}
-            <input
-              type="number"
-              value={addAmount}
-              onChange={(e) => setAddAmount(e.target.value)}
-              className="mt-4 p-2 border rounded w-full"
-              placeholder="Enter amount"
-            />
+            
+
+            <img src={user.qr_code} alt=""  className='p-10'/>
 
             {/* Add Money Button */}
             <button

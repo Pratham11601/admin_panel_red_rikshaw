@@ -40,7 +40,7 @@ const LoginPage = ({ onLogin }) => {
 
             if (response.ok) {
                 onLogin(true);
-                navigate('/Home/dashboard');
+                navigate('/Home/searchuser');
                 console.log('Login successful');
             } else if (response.status === 401) {
                 setErrorMessage('Incorrect phone number or password. Please try again.');
