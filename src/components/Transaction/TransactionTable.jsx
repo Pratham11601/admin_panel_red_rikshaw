@@ -20,8 +20,16 @@ const TransactionTable = () => {
   }, [sortField, sortOrder, currentPage]);
 
   const fetchTransactions = async () => {
+    const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
     setIsLoading(true);
-    const response = await fetch(ApiConfig.getTransactionsEndPoint());
+    const response = await fetch(ApiConfig.getTransactionsEndPoint(),{
+      method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+    });
     const data = await response.json();
 
     // Apply sorting to the fetched transactions based on the sortField and sortOrder

@@ -5,6 +5,8 @@ import { IndianRupee ,PhoneCall,BadgeCheck,ArrowRightToLine} from 'lucide-react'
 import driverImage from '../../assets/driverimg.jpg';
 
 const PassengerCard= ({passenger })=>{
+  console.log(passenger);
+  
   const navigate = useNavigate();
   const [isPopupOpen, setPopupOpen] = useState(false);
 
@@ -32,7 +34,7 @@ const PassengerCard= ({passenger })=>{
               </p>
               <p className="text-sm  flex font-medium text-gray-700 ml-3">
                 <PhoneCall className="h-4 w-4 mr-4 color-black-900"/>
-                {passenger.mobile_number}
+                {passenger.phone}
               </p>
               
             </div>

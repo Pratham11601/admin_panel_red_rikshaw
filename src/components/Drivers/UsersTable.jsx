@@ -43,7 +43,14 @@ const UsersTable = () => {
     const fetchDrivers = async () => {
       setIsLoading(true);
       try {
-        const data = await retryFetch(ApiConfig.getDriversEndpoint(), maxRetries, retryDelay);
+        const token = localStorage.getItem('token');
+        const data = await retryFetch(ApiConfig.getDriversEndpoint(),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        }, maxRetries, retryDelay);
         const Drivers = data.data;
         setIsLoading(false);
         if (Array.isArray(Drivers)) {

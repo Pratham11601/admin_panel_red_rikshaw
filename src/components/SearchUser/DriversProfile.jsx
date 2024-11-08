@@ -100,44 +100,88 @@ const handleBackClick = () => {
                 <p className="text-gray-600">📞 {user.phone}</p>
                 <p className="text-gray-600">✉️ {user.email}</p>
                 <p className="text-gray-600">📍 {user.address}</p>
-                </motion.div>
-
-                {/*  Status, Total Trips, Reviews */}
-                <motion.div className="space-y-2">
-                <div className="flex items-center justify-center md:justify-start">
-                <span
-                        className={`px-4 py-1 rounded-full text-white cursor-pointer ${user.isActive ? 'bg-red-600' : 'bg-green-600'} text-white`}
-                       // Add click handler to toggle status
-                    >
-                      {user.isActive ? 'Block' : 'unblock'}
-                    </span>
-                    <button
-                            onClick={toggleStatus}
-                            className="ml-4 px-3 py-1 bg-red-400 text-white font-sb rounded "
-                    >
-                            Change Status
-                    </button>
-                </div>
                 <p className="text-center md:text-left">
                     🚗 <span className="font-semibold">227</span> Total Trips
                 </p>
                 <p className="text-center md:text-left">
                     ⭐ <span className="font-semibold">4.5</span> Reviews
                 </p>
+                </motion.div>
 
-                <div className="flex  items-center justify-center md:justify-start">
-                    <div className="bg-white mt-2">
-                        <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                        <p className="text-xl mt-2">₹{user.wallet_balance.toFixed(2)}</p>
-                    </div>
-                    {/* Add Money Button */}
+                {/*  Status, Total Trips, Reviews */}
+                <motion.div className="space-y-3">
+            
+                <div className="flex items-center justify-center md:justify-start">
+                    
+                    <span
+                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+     
+                    >
+                        {driver.blockStatus ? 'Unblock' : 'Block'}
+                    </span>
                     <button
-                        onClick={togglePopup}
-                        className=" mx-3 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    onClick={handleDeleteClick}
+                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                >
+                    Delete 
+                </button>
+                    {/* <button
+                            onClick={toggleStatus}
+                            className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >
-                        Add Money
-                    </button>
+                            Change Status
+                    </button> */}
                 </div>
+                <div className="flex items-center justify-center md:justify-start pt-3">
+                            <div className="flex items-center">
+                                <div className="bg-white mt-2">
+                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                                </div>
+                                {/* Conditionally Render "Add Money" Button */}
+                                {driver.blockStatus ? (
+                                    <p className="ml-4 text-red-600 font-semibold">
+                                        Money can't be added, user is blocked
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={togglePopup}
+                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Add Money
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                {/* Delete Confirmation Popup */}
+                {showDeletePopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                        <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                        <p className="mb-2"></p>
+                        <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded mb-4"
+                        placeholder="Enter password"
+                        />
+                        <button
+                        onClick={handleDeleteConfirm}
+                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                        Confirm Delete
+                        </button>
+                        <button
+                        onClick={handleCloseDeletePopup}
+                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </div>
+                )}
                 </motion.div>
                 </motion.div>
 

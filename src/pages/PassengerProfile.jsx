@@ -58,11 +58,11 @@ const PassengerProfile = ()=>{
         setShowDeletePopup(true); // Open delete confirmation popup
     };
     const handleDeleteConfirm = () => {
-        // Implement password confirmation logic here, e.g., validate the password
-        if (password === 'correct_password') { // Replace with actual password check logic
-          // Perform delete operation, e.g., calling the API
-          alert("User has been deleted");
-          setShowDeletePopup(false);
+
+        if (password === 'Steve@123') {
+            alert("User deleted successfully");
+            setShowDeletePopup(false);
+            setPassword('');
         } else {
           alert("Incorrect password. Please try again.");
         }
@@ -108,48 +108,51 @@ const PassengerProfile = ()=>{
                     <p className="flex  text-gray-600  "><Car style={{color:'black', marginRight:'10px'}}/> {passenger.total_rides} Total Rides</p>
                 </motion.div>
 
-                <motion.div className="space-y-2">
-                    <div className="flex items-center justify-center md:justify-start">
-                        <span
-                            className={`px-4 py-1 rounded-full text-white cursor-pointer ${passenger.is_active? 'bg-red-600' : 'bg-green-600'}`}
-                      
-                        >
-                              {passenger.is_active ? 'Block' : 'Unblock'} 
-                        </span>
-                        <button
-                                onClick={toggleStatus}
-                                className="ml-4 px-3 py-1 bg-red-400 text-white font-sb rounded "
-                        >
-                                Change Status
-                        </button>
-                    </div>
-
-                    <div className="flex items-center justify-center md:justify-start pt-3 ">
-                        <p className=" text-grey-600 mr-8">
-                        <div className="flex items-center justify-center md:justify-start ">
-                            <div className="bg-white mt-2">
-                                <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                                <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
-                            </div>
-                            {/* Add Money Button */}
-                            <button
-                                onClick={togglePopup}
-                                className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                >
-                                Add Money
-                            </button>
-                        </div>
-                            
-                        </p>
-                        
+                <motion.div className="space-y-3">
+            
+                <div className="flex items-center justify-center md:justify-start">
                     
-                    </div>
+                    <span
+                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${passenger.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+     
+                    >
+                        {passenger.blockStatus ? 'Unblock' : 'Block'}
+                    </span>
                     <button
                     onClick={handleDeleteClick}
                     className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
                 >
-                    Delete User
+                    Delete 
                 </button>
+                    {/* <button
+                            onClick={toggleStatus}
+                            className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
+                        >
+                            Change Status
+                    </button> */}
+                </div>
+                <div className="flex items-center justify-center md:justify-start pt-3">
+                            <div className="flex items-center">
+                                <div className="bg-white mt-2">
+                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                                </div>
+                                {/* Conditionally Render "Add Money" Button */}
+                                {passenger.blockStatus ? (
+                                    <p className="ml-4 text-red-600 font-semibold">
+                                        Money can't be added, user is blocked
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={togglePopup}
+                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Add Money
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (
                     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">

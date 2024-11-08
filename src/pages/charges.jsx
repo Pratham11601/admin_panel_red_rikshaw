@@ -33,7 +33,14 @@ function Charges() {
 
   const fetchCharges = async () => {
     try {
-      const response = await axios.get(ApiConfig.getChargesEndpoint());
+      const token = localStorage.getItem('token');    // Retrieve token from localStorage
+      const response = await axios.get(ApiConfig.getChargesEndpoint(),{
+        method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+      });
       const chargesData = response.data.data;
 
       setCharges({

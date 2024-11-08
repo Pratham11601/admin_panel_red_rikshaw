@@ -15,6 +15,7 @@ const LoginPage = ({ onLogin }) => {
         const phoneRegex = /^[6-9]\d{9}$/; // Valid Indian phone number format (10 digits, starts with 6-9)
         return phoneRegex.test(phone);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);  // Show loading state
@@ -22,8 +23,10 @@ const LoginPage = ({ onLogin }) => {
 
         if (!validatePhoneNumber(phoneNumber)) {
             setErrorMessage('Please enter a valid phone number (10 digits, starts with 6-9).');
+            setLoading(false);
             return;
         }
+
         const requestBody = {
             phone: phoneNumber,
             password: password
@@ -38,7 +41,11 @@ const LoginPage = ({ onLogin }) => {
                 body: JSON.stringify(requestBody),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
+                // Save token to localStorage
+                localStorage.setItem('token', data.token);
                 onLogin(true);
                 navigate('/Home/searchuser');
                 console.log('Login successful');
@@ -48,8 +55,8 @@ const LoginPage = ({ onLogin }) => {
                 setErrorMessage('Login failed. Please try again later.');
             }
         } catch (error) {
-            
             console.error('Error during login', error);
+            setErrorMessage('An error occurred. Please try again later.');
         } finally {
             setLoading(false);  // Hide loading state
         }

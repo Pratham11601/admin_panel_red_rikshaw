@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import TRANSACTION_DATA from "./DATA";
 import { FadeLoader } from "react-spinners";
 import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
@@ -37,7 +36,15 @@ const [transactions, setTransactions] = useState([]);
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
-        const response = await fetch(ApiConfig.getTransactionRequestEndPoint());
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
+        const response = await fetch(ApiConfig.getTransactionRequestEndPoint(),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         const data = await response.json();
         const transaction = data.items;
 

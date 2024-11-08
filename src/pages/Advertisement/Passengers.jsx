@@ -46,7 +46,13 @@ function Passengers() {
   // Delete Advertisement
   const handleDeleteBanner = async (id) => {
     try {
-      const response = await axios.delete(`${ApiConfig.deleteAdvertisementEndpoint()}/${id}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`${ApiConfig.deleteAdvertisementEndpoint()}/${id}`,{
+        headers: {
+          'Authorization': `Bearer ${token}`,  // Add token to headers
+          'Content-Type': 'application/json'
+        }
+      });
       if (response.data.status === 1) {
         setBanners(banners.filter((banner) => banner._id !== id));
         alert('Advertisement deleted successfully.');

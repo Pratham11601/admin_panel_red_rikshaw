@@ -40,8 +40,15 @@ const PassengerRides = ({ passengerId }) => {
   useEffect(() => {
     const fetchRidesByDriver = async () => {
       setIsLoading(true);
+      const token = localStorage.getItem('token'); // Retrieve token from localStorage
       try {
-        const response = await fetch(ApiConfig.getPassengerRidesEndpoint(passengerId));
+        const response = await fetch(ApiConfig.getPassengerRidesEndpoint(passengerId),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         const data = await response.json();
         
         if (response.ok && data.status === 1) {

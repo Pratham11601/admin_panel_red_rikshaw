@@ -33,7 +33,15 @@ const TransactionReqTable = () => {
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
-        const response = await fetch(ApiConfig.getTransactionRequestEndPoint());
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
+        const response = await fetch(ApiConfig.getTransactionRequestEndPoint(),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         const data = await response.json();
         const transaction = data.items;
 

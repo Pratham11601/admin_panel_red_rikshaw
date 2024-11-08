@@ -40,7 +40,15 @@ const DriverRides = ({ driverId }) => {
     const fetchRidesByDriver = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(ApiConfig.getDriverRidesEndpoint(driverId));
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
+        const response = await fetch(ApiConfig.getDriverRidesEndpoint(driverId),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         const data = await response.json();
         
         if (response.ok && data.status === 1) {

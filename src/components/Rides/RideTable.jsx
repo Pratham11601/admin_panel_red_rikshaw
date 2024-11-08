@@ -37,7 +37,15 @@ const RideTable = () => {
   useEffect(() => {
     const fetchRides = async () => {
       try {
-        const response = await fetch(ApiConfig.getAllRidesEndpoint());
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
+        const response = await fetch(ApiConfig.getAllRidesEndpoint(),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         const data = await response.json();
         const Rides = data.data;
 

@@ -19,7 +19,13 @@ function Driver() {
 
   const fetchAdvertisements = async () => {
     try {
-      const response = await axios.get(ApiConfig.getAdvertisementEndpont());
+      const token = localStorage.getItem('token');
+      const response = await axios.get(ApiConfig.getAdvertisementEndpont(),{
+        headers: {
+          'Authorization': `Bearer ${token}`,  // Add token to headers
+          'Content-Type': 'application/json'
+        }
+      });
       // Format createdAt to a readable string
       const formattedBanners = response.data.data.map(banner => ({
         ...banner,

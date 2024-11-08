@@ -27,11 +27,7 @@ const DriverProfile = ()=>{
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
 
-        // fetch(`/api/drivers/update-status`, {
-        //     method: 'POST',
-        //     body: JSON.stringify({ status: newStatus }),
-        //     headers: { 'Content-Type': 'application/json' }
-        // });
+        
     };
 
     const togglePopup = () => {
@@ -69,13 +65,14 @@ const DriverProfile = ()=>{
 
     const handleDeleteClick = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
+        
     };
     const handleDeleteConfirm = () => {
-        // Implement password confirmation logic here, e.g., validate the password
-        if (password === 'correct_password') { // Replace with actual password check logic
-          // Perform delete operation, e.g., calling the API
-          alert("User has been deleted");
-          setShowDeletePopup(false);
+       
+        if (password === 'Steve@123') { 
+            alert("User deleted successfully");
+            setShowDeletePopup(false);
+            setPassword('');
         } else {
           alert("Incorrect password. Please try again.");
         }

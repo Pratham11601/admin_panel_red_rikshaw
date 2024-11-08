@@ -17,32 +17,37 @@ const Drivers = () => {
 	const inactive=0;
 	useEffect(() => {
 		const fetchDrivers = async () => {
-
 			try {
-			  fetch(ApiConfig.getDriversEndpoint())
-				.then((response) => response.json())
-				.then((data) => {  
-				  setTotalDriver(data.totalUsers);
-
-				  const active = data.data.filter(driver => driver.isActive === true);
-				  const inactive = data.data.filter(driver => driver.isActive === false);
-
-				  
-				  setActiveDriver(active.length);
-				  setInactiveDriver(inactive.length);
-				  
-				  
-			
-			  })
+				const token = localStorage.getItem('token'); // Retrieve token from localStorage
+	
+				const response = await fetch(ApiConfig.getDriversEndpoint(), {
+					method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+				});
+	
+				if (response.ok) {
+					const data = await response.json();
+					setTotalDriver(data.totalUsers);
+	
+					const active = data.data.filter(driver => driver.isActive === true);
+					const inactive = data.data.filter(driver => driver.isActive === false);
+	
+					setActiveDriver(active.length);
+					setInactiveDriver(inactive.length);
+				} else {
+					console.error('Failed to fetch drivers data');
+				}
 			} catch (error) {
-				console.error('Error fetching Rides Data', error);
+				console.error('Error fetching drivers data', error);
 			}
 		};
 	
 		fetchDrivers();
-			
-	
 	}, []);
+	
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Drivers' />

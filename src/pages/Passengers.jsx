@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import { Users, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
-import ProductsTable from "../components/Passengers/PassengerTable";
+import PassengerTable from "../components/Passengers/PassengerTable";
 
 const Passengers = () => {
 	return (
@@ -24,7 +24,7 @@ const Passengers = () => {
 
 				</motion.div>
 
-				<ProductsTable />
+				<PassengerTable />
 
 				{/* CHARTS */}
 				{/* <div className='grid grid-col-1 lg:grid-cols-2 gap-8'>

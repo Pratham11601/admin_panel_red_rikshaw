@@ -20,7 +20,14 @@ const PassengerTable = () => {
   useEffect(() => {
     const fetchPassengers = async (retryCount = 0) => {
       try {
-        const response = await fetch(ApiConfig.getPassengersEndpoint());
+        const token = localStorage.getItem('token'); // Retrieve token from localStorage
+        const response = await fetch(ApiConfig.getPassengersEndpoint(),{
+          method: 'GET',
+					headers: {
+						'Authorization': `Bearer ${token}`,  // Add token to headers
+						'Content-Type': 'application/json'
+					}
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
