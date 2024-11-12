@@ -3,7 +3,7 @@ import Header from '../components/common/Header';
 import { motion } from "framer-motion";
 import StatCard from "../components/common/StatCard";
 import { UsersIcon, UserX } from "lucide-react";
-
+import ApiConfig from '../Consants/ApiConfig';
 const DeletedUsers = () => {
   const [filter, setFilter] = useState("all"); // Default filter is "all"
 
