@@ -105,7 +105,27 @@ static deleteAdvertisementEndpoint(id) {
   return `${this.BASE_URL}/api/advertisement/delete/${id}`;
 }
 
+//Benefis
+static getBenifitsEndpoint() {
+  return `${this.BASE_URL}/api/benifits/fetch`;
+}
 
+static postBenifitsEndpoint() {
+  return `${this.BASE_URL}/api/benifits/create`;
+}
+
+static putBenifitsEndpoint(id) {
+  return `${this.BASE_URL}/api/benifits/put/${id}`;
+}
+
+static deleteBenifitsEndpoint(id) {
+  return `${this.BASE_URL}/api/benifits/delete/${id}`;
+}
+
+// Admin Benefits
+static getAdminBenefitsEndpoint() {
+  return `http://localhost:3025/api/benifits/fetchForAdminuse`;
+}
 
 
 

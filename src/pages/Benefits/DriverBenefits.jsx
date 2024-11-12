@@ -29,8 +29,23 @@ function DriverBenefits() {
   const [modalType, setModalType] = useState('');
 
   // Fetch benefits from API on component mount
+  // useEffect(() => {
+  //   axios.get(ApiConfig.getBenifitsEndpoint())
+  //     .then((response) => {
+  //       if (response.data.status === 1 && response.data.data) {
+  //         setBenefits(response.data.data);
+  //       } else {
+  //         console.error("Failed to fetch benefits:", response.data.message);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching benefits:", error);
+  //     });
+  // }, []);
+
   useEffect(() => {
-    axios.get(ApiConfig.getBenefitsEndpont())
+    // Fetch benefits from API on component mount without token
+    axios.get(ApiConfig.getAdminBenefitsEndpoint())
       .then((response) => {
         if (response.data.status === 1 && response.data.data) {
           setBenefits(response.data.data);
@@ -39,9 +54,10 @@ function DriverBenefits() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching benefits:", error);
+        console.error("Error fetching benefits:", error.response?.data || error.message);
       });
   }, []);
+  
 
   // Open modal for adding new benefit
   const handleOpenAddModal = () => {
@@ -60,7 +76,7 @@ function DriverBenefits() {
   // Add new benefit
   const handleAddBenefit = () => {
     if (newBenefit.trim()) {
-      axios.post(ApiConfig.postBenefitsEndpont(), {
+      axios.post(ApiConfig.postBenifitsEndpoint(), {
         text: newBenefit,
         Category: 'driver',
       })
@@ -93,7 +109,7 @@ function DriverBenefits() {
         Category: 'driver',
       };
 
-      axios.put(ApiConfig.putBenefitsEndpont(updatedBenefit._id), updatedBenefit)
+      axios.put(ApiConfig.putBenifitsEndpoint(updatedBenefit._id), updatedBenefit)
         .then((response) => {
           if (response.data.status === 0) {
             console.error('Failed to save changes:', response.data.message);
@@ -117,22 +133,20 @@ function DriverBenefits() {
   };
 
   // Delete benefit
-// In DriverBenefits.jsx
-const handleDeleteBenefit = (index) => {
-  const benefitId = benefits[index]._id;  // Extract the benefit ID
-  axios.delete(ApiConfig.deleteBenefitsEndpont(benefitId))
-    .then((response) => {
-      if (response.data.status === 0) {
-        console.error('Failed to delete benefit:', response.data.message);
-      } else {
-        setBenefits(benefits.filter((_, i) => i !== index));
-      }
-    })
-    .catch((error) => {
-      console.error("Failed to delete benefit:", error);
-    });
-};
-
+  const handleDeleteBenefit = (index) => {
+    const benefitId = benefits[index]._id;
+    axios.delete(ApiConfig.deleteBenifitsEndpoint(benefitId))
+      .then((response) => {
+        if (response.data.status === 0) {
+          console.error('Failed to delete benefit:', response.data.message);
+        } else {
+          setBenefits(benefits.filter((_, i) => i !== index));
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to delete benefit:", error);
+      });
+  };
 
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10 p-4 text-black">
