@@ -45,7 +45,7 @@ function DriverBenefits() {
 
   useEffect(() => {
     // Fetch benefits from API on component mount without token
-    axios.get(ApiConfig.getAdminBenefitsEndpoint())
+    axios.get(ApiConfig.getBenefitsEndpoint())
       .then((response) => {
         if (response.data.status === 1 && response.data.data) {
           setBenefits(response.data.data);
@@ -76,7 +76,7 @@ function DriverBenefits() {
   // Add new benefit
   const handleAddBenefit = () => {
     if (newBenefit.trim()) {
-      axios.post(ApiConfig.postBenifitsEndpoint(), {
+      axios.post(ApiConfig.postBenefitsEndpoint(), {
         text: newBenefit,
         Category: 'driver',
       })
@@ -109,7 +109,7 @@ function DriverBenefits() {
         Category: 'driver',
       };
 
-      axios.put(ApiConfig.putBenifitsEndpoint(updatedBenefit._id), updatedBenefit)
+      axios.put(ApiConfig.putBenefitsEndpoint(updatedBenefit._id), updatedBenefit)
         .then((response) => {
           if (response.data.status === 0) {
             console.error('Failed to save changes:', response.data.message);
@@ -135,7 +135,7 @@ function DriverBenefits() {
   // Delete benefit
   const handleDeleteBenefit = (index) => {
     const benefitId = benefits[index]._id;
-    axios.delete(ApiConfig.deleteBenifitsEndpoint(benefitId))
+    axios.delete(ApiConfig.deleteBenefitsEndpoint(benefitId))
       .then((response) => {
         if (response.data.status === 0) {
           console.error('Failed to delete benefit:', response.data.message);
