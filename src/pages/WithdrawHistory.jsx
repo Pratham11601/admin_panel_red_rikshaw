@@ -1,6 +1,6 @@
 import Header from "../components/common/Header";
 import TransactionTable from "../components/WithdrawHistory/TransactionTable";
-import TrancationOverview from "../components/WithdrawHistory/TrancationOverview";
+//import TrancationOverview from "../components/WithdrawHistory/TrancationOverview";
 
 const TransactionPage = () => {
 	return (
@@ -8,7 +8,7 @@ const TransactionPage = () => {
 			<Header title={"Withdraw History"} />
 
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
-					<TrancationOverview />
+					{/* <TrancationOverview /> */}
 
 					<TransactionTable />
 			</main>

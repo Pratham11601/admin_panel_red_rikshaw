@@ -125,7 +125,7 @@ static deleteBenefitsEndpoint(id) {
 
 //Delete Users
 static getDeletedUsersEndpoint() {
-  return `${this.BASE_URL}/api/adminpanel/delete-user`;
+  return `${this.BASE_URL}/api/adminpanel/getAllDeleted`;
 }
 
 

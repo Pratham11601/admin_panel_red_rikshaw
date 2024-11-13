@@ -1,29 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/common/Header';
 import { motion } from "framer-motion";
 import StatCard from "../components/common/StatCard";
 import { UsersIcon, UserX } from "lucide-react";
 import ApiConfig from '../Consants/ApiConfig';
+import axios from 'axios';
+
 const DeletedUsers = () => {
   const [filter, setFilter] = useState("all"); // Default filter is "all"
+  const [search, setSearch] = useState(""); // Search term
+  const [page, setPage] = useState(1); // Current page for pagination
+  const [limit] = useState(10); // Records per page
+  const [deletedUsers, setDeletedUsers] = useState([]);
+  const [total, setTotal] = useState(0); // Total number of deleted users
+  const totalPages = Math.ceil(total / limit); // Calculate total pages
 
-  // Sample data for deleted users (this would be fetched from your API)
-  const deletedUsers = [
-    { id: 1, name: "John Doe", category: "passenger", deletedAt: "2024-11-01" },
-    { id: 2, name: "Jane Smith", category: "driver", deletedAt: "2024-11-03" },
-    { id: 3, name: "Robert Brown", category: "passenger", deletedAt: "2024-11-05" },
-    // more users...
-  ];
+  // API endpoint for fetching deleted users
+  const fetchDeletedUsers = async () => {
+    try {
+      const response = await axios.get(`${ApiConfig.getDeletedUsersEndpoint()}`, {
+        params: {
+          page,
+          limit,
+          search,
+          category: filter !== "all" ? filter : undefined,
+        },
+      });
+      if (response.data.status === "success") {
+        setDeletedUsers(response.data.data);
+        setTotal(response.data.total);
+      }
+    } catch (error) {
+      console.error("Error fetching deleted users:", error);
+    }
+  };
 
-  // Apply the filter based on category
-  const filteredUsers = filter === "all" ? deletedUsers : deletedUsers.filter(user => user.category === filter);
+  // Fetch data when the component mounts or when filter, search, or page changes
+  useEffect(() => {
+    fetchDeletedUsers();
+  }, [filter, search, page]);
 
   return (
     <div className="flex-1 overflow-auto relative z-10">
       <Header title="Deleted Users" />
 
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-white">
-
         {/* Stats */}
         <motion.div
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
@@ -34,34 +55,32 @@ const DeletedUsers = () => {
           <StatCard
             name="Total Deleted Users"
             icon={UsersIcon}
-            value={filteredUsers.length.toString()}
+            value={total.toString()}
             color="#6366F1"
           />
-          <StatCard
+          {/* <StatCard
             name="Total Passengers Deleted"
             icon={UserX}
-            value={filteredUsers.filter(user => user.category === "passenger").length.toString()}
+            value={deletedUsers.filter(user => user.role === "Passenger").length}
             color="#F59E0B"
           />
           <StatCard
             name="Total Drivers Deleted"
             icon={UserX}
-            value={filteredUsers.filter(user => user.category === "driver").length.toString()}
+            value={deletedUsers.filter(user => user.role === "Driver").length}
             color="#EF4444"
-          />
+          /> */}
         </motion.div>
 
-        {/* Dropdown Filter */}
-        <div className="mb-6">
-          <select
-            className="px-4 py-2 bg-white text-black border rounded"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          >
-            <option value="all">All Users</option>
-            <option value="passenger">Passengers</option>
-            <option value="driver">Drivers</option>
-          </select>
+        {/* Search */}
+        <div className="flex mb-6 gap-4">
+          <input
+            type="text"
+            className="px-4 py-2 border rounded"
+            placeholder="Search by name, role, or phone"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         {/* Deleted Users Table */}
@@ -69,20 +88,49 @@ const DeletedUsers = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 text-left">Name</th>
-              <th className="px-4 py-2 text-left">Category</th>
+              <th className="px-4 py-2 text-left">Role</th>
+              <th className="px-4 py-2 text-left">Phone</th>
               <th className="px-4 py-2 text-left">Deleted At</th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map(user => (
-              <tr key={user.id} className="border-b">
+            {deletedUsers.map(user => (
+              <tr key={user.userId} className="border-b">
                 <td className="px-4 py-2">{user.name}</td>
-                <td className="px-4 py-2">{user.category}</td>
-                <td className="px-4 py-2">{user.deletedAt}</td>
+                <td className="px-4 py-2">{user.role}</td>
+                <td className="px-4 py-2">{user.phone}</td>
+                <td className="px-4 py-2">{new Date(user.deletedAt).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center mt-6 space-x-2 text-black">
+          <button
+            onClick={() => setPage(page > 1 ? page - 1 : 1)}
+            disabled={page === 1}
+            className="px-4 py-2 bg-gray-300 rounded disabled:bg-gray-200"
+          >
+            Previous
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setPage(index + 1)}
+              className={`px-4 py-2 rounded ${page === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
+            disabled={page === totalPages}
+            className="px-4 py-2 bg-gray-300 rounded disabled:bg-gray-200"
+          >
+            Next
+          </button>
+        </div>
       </main>
     </div>
   );

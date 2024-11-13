@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
-import { Search, ArrowDownUp, ArrowDownUpIcon } from "lucide-react";
+import { ArrowRightLeft, CircleDollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 import ApiConfig from '../../Consants/ApiConfig';
+import StatCard from '../../components/common/StatCard';
+import { ArrowDownUpIcon } from "lucide-react";
 
 const TransactionTable = () => {
   const [transactions, setTransactions] = useState([]);
@@ -21,14 +23,14 @@ const TransactionTable = () => {
 
   const fetchTransactions = async () => {
     const token = localStorage.getItem('token'); // Retrieve token from localStorage
-	
+    
     setIsLoading(true);
-    const response = await fetch(ApiConfig.getTransactionsEndPoint(),{
+    const response = await fetch(ApiConfig.getTransactionsEndPoint(), {
       method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Add token to headers
+        'Content-Type': 'application/json'
+      }
     });
     const data = await response.json();
 
@@ -75,6 +77,11 @@ const TransactionTable = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // Calculate total transactions and total amount
+  const totalTransactions = transactions.length;
+  const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
     return date.toLocaleDateString('en-US', {
@@ -87,6 +94,7 @@ const TransactionTable = () => {
       hour12: true,
     });
   };
+
   return (
     <motion.div
       className="bg-white bg-opacity-50 backdrop-blur-md shadow-xl rounded-xl p-6 border-r border-red-400 mb-8"
@@ -94,7 +102,27 @@ const TransactionTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      {/* Header Section */}
+      {/* State cards with dynamic data */}
+      <motion.div
+        className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 mb-8'
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <StatCard
+          name='Total Transactions'
+          icon={ArrowRightLeft}
+          value={totalTransactions}
+          color='#6366F1'
+        />
+        <StatCard
+          name='Total Amount' 
+          icon={CircleDollarSign} 
+          value={totalAmount.toFixed(2)} // Format amount to two decimal places
+          color='#10B981' 
+        />
+      </motion.div>
+
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">
           Transactions
@@ -118,22 +146,22 @@ const TransactionTable = () => {
               <thead>
                 <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                   <th onClick={() => handleSort('from.name')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">From Name<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">From Name<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort('from.userType')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">From Role<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">From Role<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort('to.name')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">To Name<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">To Name<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort('to.userType')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">To Role<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">To Role<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort('amount')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">Amount<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">Amount<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort('createdAt')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">Date/Time<ArrowDownUpIcon className="pl-2"/></span>
+                    <span className="flex">Date/Time<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                 </tr>
               </thead>
@@ -146,24 +174,21 @@ const TransactionTable = () => {
                     className="border-b border-gray-200 hover:bg-gray-100"
                   >
                     <td className="py-3 px-6 text-left">
-                    {transaction.from.userId ? transaction.from.userId.name : "N/A"}
-
+                      {transaction.from.userId ? transaction.from.userId.name : "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">
-                    {transaction.from.userType || "N/A"}
+                      {transaction.from.userType || "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">
                       {transaction.to.userId ? transaction.to.userId.name : "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">
-                    {transaction.to.userType || "N/A"}
-
+                      {transaction.to.userType || "N/A"}
                     </td>
                     <td className="py-3 px-6 text-left">{transaction.amount}</td>
                     <td className="py-3 px-6 text-left">
-                    {formatDateTime(transaction.createdAt)}
+                      {formatDateTime(transaction.createdAt)}
                     </td>
-
                   </motion.tr>
                 ))}
               </tbody>
@@ -172,38 +197,13 @@ const TransactionTable = () => {
 
           {/* Pagination */}
           <div className="flex justify-center mt-4">
-            <ul className="flex space-x-2">
-              <li>
-                <button
-                  onClick={() => paginate(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-                >
-                  Previous
-                </button>
-              </li>
-
-              {Array.from({ length: totalPages }, (_, index) => (
-                <li key={index}>
-                  <button
-                    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
-                    onClick={() => paginate(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                </li>
-              ))}
-
-              <li>
-                <button
-                  onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-                >
-                  Next
-                </button>
-              </li>
-            </ul>
+            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+              Prev
+            </button>
+            <span className="px-4 py-2">{currentPage} of {totalPages}</span>
+            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+              Next
+            </button>
           </div>
         </div>
       )}
@@ -212,3 +212,7 @@ const TransactionTable = () => {
 };
 
 export default TransactionTable;
+
+
+
+//remember to remove Transaction details file from pages 

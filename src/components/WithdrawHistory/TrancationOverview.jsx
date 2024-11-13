@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { CheckCircle, XCircle, Clock, FileText } from "lucide-react";
 import ApiConfig from "../../Consants/ApiConfig"; // Ensure the correct path to ApiConfig
-
 
 const TransactionOverviewCards = () => {
   const [transactionData, setTransactionData] = useState([]);
@@ -34,17 +33,26 @@ const TransactionOverviewCards = () => {
     fetchTransactionData();
   }, []);
 
-  // Calculate transaction statistics
-  const totalTransactions = transactionData.length;
-  const completedTransactions = transactionData.filter(t => t.status === "completed").length;
-  const pendingTransactions = transactionData.filter(t => t.status === "pending").length;
-  const cancelledTransactions = transactionData.filter(t => t.status === "cancelled").length;
+  // Memoize transaction statistics calculation to avoid recalculating on every render
+  const transactionStatistics = useMemo(() => {
+    const totalTransactions = transactionData.length;
+    const completedTransactions = transactionData.filter(t => t.status === "completed").length;
+    const pendingTransactions = transactionData.filter(t => t.status === "pending").length;
+    const cancelledTransactions = transactionData.filter(t => t.status === "cancelled").length;
+
+    return {
+      totalTransactions,
+      completedTransactions,
+      pendingTransactions,
+      cancelledTransactions
+    };
+  }, [transactionData]);
 
   const transactionOverviewData = [
-    { name: "Total Transactions", value: totalTransactions, change: 0, icon: FileText },
-    { name: "Completed Transactions", value: completedTransactions, change: 0, icon: CheckCircle },
-    { name: "Pending Transactions", value: pendingTransactions, change: 0, icon: Clock },
-    { name: "Cancelled Transactions", value: cancelledTransactions, change: 0, icon: XCircle },
+    { name: "Total Transactions", value: transactionStatistics.totalTransactions, change: 0, icon: FileText },
+    { name: "Completed Transactions", value: transactionStatistics.completedTransactions, change: 0, icon: CheckCircle },
+    { name: "Pending Transactions", value: transactionStatistics.pendingTransactions, change: 0, icon: Clock },
+    { name: "Cancelled Transactions", value: transactionStatistics.cancelledTransactions, change: 0, icon: XCircle },
   ];
 
   return (
@@ -69,12 +77,9 @@ const TransactionOverviewCards = () => {
               <div
                 className={`p-3 rounded-full bg-opacity-20 ${item.change >= 0 ? "bg-green-500" : "bg-red-500"}`}
               >
-                <item.icon className={`size-6 ${item.change >= 0 ? "text-green-500" : "text-red-500"}`} />
+                <item.icon className={`h-6 w-6 ${item.change >= 0 ? "text-green-500" : "text-red-500"}`} />
               </div>
             </div>
-
-           
-            
           </motion.div>
         ))
       )}

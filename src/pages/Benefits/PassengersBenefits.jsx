@@ -201,7 +201,7 @@ function PassengersBenefits() {
     axios.get(ApiConfig.getBenefitsEndpoint())
       .then((response) => {
         if (response.data.status === 1 && Array.isArray(response.data.data)) {
-          setBenefits(response.data.data.filter(benefit => benefit.Category === 'passenger'));
+          setBenefits(response.data.data.filter(benefit => benefit.Category === 'Passenger'));
         } else {
           console.error("Fetched benefits are not an array", response.data);
         }
@@ -257,7 +257,7 @@ function PassengersBenefits() {
     const updatedBenefit = {
       _id: benefits[editingIndex]._id,
       text: editingBenefit,
-      Category: 'passenger',
+      Category: 'Passenger',
     };
 
     axios.put(ApiConfig.putBenefitsEndpoint(updatedBenefit._id), updatedBenefit)
