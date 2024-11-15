@@ -44,7 +44,7 @@ const UserCard= ({driver})=>{
           </div>
 
       {/* View Profile button at bottom-right corner */}
-          <div className=" absolute top-20  right-2">
+          <div className=" absolute top-12  right-2">
           
           <button 
                 onClick={() => handleViewProfile(driver._id)} 

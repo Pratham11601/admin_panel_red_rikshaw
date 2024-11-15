@@ -60,11 +60,24 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/adminpanel/transactionshistory?page=1&limit=10`;
     }
+
+
+
     //Transaction Request
     static getTransactionRequestEndPoint() {
       
       return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=15`;
     }
+
+    static putTransactionRequestEndPoint(id) {
+      
+      return `${this.BASE_URL}/api/adminpanel/transactionsRequest-update/${id}`;
+    }
+//  static putTransactionRequestEndPoint(id) {
+//     return `${this.BASE_URL}/api/adminpanel/transaction-request/${id}`;
+//   }
+
+
     //Privacy&Policy
     static getPrivacyPolicyEndpoint() {
       
