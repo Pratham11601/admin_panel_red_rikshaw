@@ -109,7 +109,7 @@ const Terms = () => {
     }
 
     return (
-        <div className='flex-1 relative z-10 overflow-auto bg-white'>
+        <div className='flex-1 relative z-10 overflow-auto bg-white text-black'>
             <Header title={"Terms and Conditions"} />
             <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
                 <button className='bg-blue-500 text-white px-4 py-2 rounded-md mb-4' onClick={handleAddClick}>Add</button>
