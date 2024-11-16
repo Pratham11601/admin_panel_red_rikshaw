@@ -112,7 +112,9 @@ class ApiConfig {
     static getTermsAndConditionEndpont() {
         return `${this.BASE_URL}/api/terms/getAll`;
     }
-
+    static deleteTermsAndConditionEndpoint(id) {
+      return `${this.BASE_URL}/api/terms/delete/${id}`;
+    }
     //charges
     static getChargesEndpoint() {
       return `${this.BASE_URL}/api/charges`;

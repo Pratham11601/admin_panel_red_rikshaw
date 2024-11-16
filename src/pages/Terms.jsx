@@ -82,22 +82,23 @@ const Terms = () => {
             });
     };
 
-    const handleDeleteClick = (id) => {
-        fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), {
-            method: 'DELETE',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 1) {
-                    setTerms(terms.filter((term) => term._id !== id));
-                } else {
-                    setError(data.message || 'Failed to delete the term');
-                }
-            })
-            .catch((error) => {
-                setError('Error deleting data: ' + error.message);
-            });
-    };
+    const handleDeleteClick = async (id) => {
+        try {
+          const response = await fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), { method: "DELETE" });
+          const data = await response.json();
+          console.log("Delete Response:", data);
+    
+          if (data.status === 1) {
+            setTerms((prev) => prev.filter((term) => term._id !== id));
+          } else {
+            setError(data.message || "Failed to delete the term.");
+          }
+        } catch (err) {
+          console.error("Error deleting data:", err.message);
+          setError("Error deleting data: " + err.message);
+        }
+      };
+    
 
     if (loading) {
         return <div className='text-center'>Loading...</div>;
