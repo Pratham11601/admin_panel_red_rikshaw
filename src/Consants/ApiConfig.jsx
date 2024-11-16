@@ -15,6 +15,10 @@ class ApiConfig {
     //   return `${this.BASE_URL}/api/adminpanel/dashboard`;
     // }
 
+    static getLogin(){
+      return `${this.BASE_URL}/api/admin/login`
+    }
+
     //dashboard
     static getDashboardData() {
       
@@ -83,6 +87,20 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/privacypolicy/getAll`;
     }
+    static postPrivacyPolicyEndpoint() {
+      
+      return `${this.BASE_URL}/api/privacypolicy/post`;
+    }
+
+    static putPrivacyPolicyEndpoint(id) {
+      
+      return `${this.BASE_URL}/api/privacypolicy/edit/${id}`;
+    }
+
+    static deletePrivacyPolicyEndpoint(id) {
+      
+      return `${this.BASE_URL}/api/privacypolicy/delete/${id}`;
+    }
 
     //Terms&Conditions
     static postTermsAndConditionEndpoint() {
@@ -97,7 +115,7 @@ class ApiConfig {
 
     //charges
     static getChargesEndpoint() {
-      return `${this.BASE_URL}/api/Charges`;
+      return `${this.BASE_URL}/api/charges`;
     }
 
     static putChargesEndpoint() {

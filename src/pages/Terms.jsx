@@ -115,7 +115,7 @@ const Terms = () => {
                 <ul className='space-y-4'>
                     {terms.map((term) => (
                         <li key={term._id} className='bg-white p-4 rounded-lg shadow-md text-black bordr-b border-red-400'>
-                            <strong>Serial Number: {term.sr_no}</strong><br />
+                            {/* <strong>Serial Number: {term.sr_no}</strong><br /> */}
                             <span>Title: {term.title}</span><br />
                             <span>Subtitle: {term.subtitle}</span><br />
                             <span>Content: {term.content}</span><br />

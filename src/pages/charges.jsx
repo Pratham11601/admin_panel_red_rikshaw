@@ -1,10 +1,12 @@
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from "../components/common/Header";
 import StatCard from "../components/common/StatCard";
 import { Car, User } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ApiConfig from '../Consants/ApiConfig'; 
+import ApiConfig from '../Consants/ApiConfig';
 
 function Charges() {
   const [charges, setCharges] = useState({
@@ -18,7 +20,6 @@ function Charges() {
     passengerReferral: '0',
     joining_bonus_driver: '0',
     joining_bonus_passenger: '0',
-    // waiting_time: '0',
     waiting_charge: '0',
     cancellation_Charges: '0'
   });
@@ -33,34 +34,41 @@ function Charges() {
 
   const fetchCharges = async () => {
     try {
-      const token = localStorage.getItem('token');    // Retrieve token from localStorage
-      const response = await axios.get(ApiConfig.getChargesEndpoint(),{
-        method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
-      });
-      const chargesData = response.data.data;
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('User is not authenticated. Please log in.');
+        return;
+      }
 
-      setCharges({
-        day_km_1_to_1_5: chargesData.oneToOneAndHalf || '0',
-        day_km_1_5_plus: chargesData.oneAndHalfPlus || '0',
-        night_km_1_to_1_5: chargesData.night_km_1_to_1_5 || '0', 
-        night_km_1_5_plus: chargesData.night_km_1_5_plus || '0', 
-        perRideCharges: chargesData.perRideCharges || '0',
-        platform_fee: chargesData.platform_fee || '0',
-        driverReferral: chargesData.driver_refferal || '0',
-        passengerReferral: chargesData.passenger_refferal || '0',
-        joining_bonus_driver: chargesData.driver_joining_amount || '0',
-        joining_bonus_passenger: chargesData.passenger_joining_amount || '0',
-        // waiting_time: chargesData.waiting_time || '0', 
-        waiting_charge: chargesData.waitingCharges || '0',
-        cancellation_Charges: chargesData.cancellationCharges || '0' 
+      const response = await axios.get(ApiConfig.getChargesEndpoint(), {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
+
+      if (response.data && response.data.data) {
+        const chargesData = response.data.data;
+        setCharges({
+          day_km_1_to_1_5: chargesData.oneToOneAndHalf || '0',
+          day_km_1_5_plus: chargesData.oneAndHalfPlus || '0',
+          night_km_1_to_1_5: chargesData.night_km_1_to_1_5 || '0',
+          night_km_1_5_plus: chargesData.night_km_1_5_plus || '0',
+          perRideCharges: chargesData.perRideCharges || '0',
+          platform_fee: chargesData.platform_fee || '0',
+          driverReferral: chargesData.driver_refferal || '0',
+          passengerReferral: chargesData.passenger_refferal || '0',
+          joining_bonus_driver: chargesData.driver_joining_amount || '0',
+          joining_bonus_passenger: chargesData.passenger_joining_amount || '0',
+          waiting_charge: chargesData.waitingCharges || '0',
+          cancellation_Charges: chargesData.cancellationCharges || '0'
+        });
+      } else {
+        setError('Unexpected response structure from the API.');
+      }
     } catch (error) {
       console.error("Error fetching charges: ", error);
-      setError('Failed to fetch charges. Please try again later.');
+      setError(`Failed to fetch charges. ${error.message}`);
     }
   };
 
@@ -74,13 +82,30 @@ function Charges() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); 
+    setError(null);
+
+    const requestBody = {
+      oneToOneAndHalf: charges.day_km_1_to_1_5,
+      oneAndHalfPlus: charges.day_km_1_5_plus,
+      passenger_joining_amount: charges.joining_bonus_passenger,
+      driver_joining_amount: charges.joining_bonus_driver,
+      passenger_refferal: charges.passengerReferral,
+      driver_refferal: charges.driverReferral,
+      perRideCharges: charges.perRideCharges,
+      cancellationCharges: charges.cancellation_Charges,
+      waitingCharges: charges.waiting_charge,
+      platform_fee: charges.platform_fee
+    };
+
     try {
-      const response = await axios.put(ApiConfig.putChargesEndpoint(), charges, {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(ApiConfig.putChargesEndpoint(), requestBody, {
         headers: {
-          'Content-Type': 'application/json' 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
+
       console.log("Update response: ", response.data);
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
@@ -103,17 +128,16 @@ function Charges() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          {/* <StatCard name="1.5+ KM Charge" icon={Car} value={`₹${charges.day_km_1_5_plus}`} color="#34D399" /> */}
           <StatCard name="Per Ride Driver Charge" icon={User} value={`₹${charges.perRideCharges}`} color="#EF4444" />
           <StatCard name="Platform Fee" icon={User} value={`₹${charges.platform_fee}`} color="#EF4444" />
           <StatCard name="Cancellation Charges" icon={User} value={`₹${charges.cancellation_Charges}`} color="#F59E0B" />
-          <StatCard name="Waiting charges" icon={User} value={`${charges.waiting_charge} `} color="#6B7280" /> 
+          <StatCard name="Waiting charges" icon={User} value={`${charges.waiting_charge}`} color="#6B7280" />
         </motion.div>
 
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
         <div className="mt-6 mx-3 p-6 bg-white shadow-2xl rounded-lg">
-          <h2 className="text-2xl font-bold mb-4 text-start ">Updated Charges</h2>
+          <h2 className="text-2xl font-bold mb-4 text-start">Updated Charges</h2>
           <table className="w-full text-lg">
             <thead>
               <tr className="bg-gray-300">
@@ -143,7 +167,7 @@ function Charges() {
                   {key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                 </label>
                 <input
-                  type="number" 
+                  type="number"
                   name={key}
                   value={value}
                   onChange={handleChange}
@@ -156,18 +180,21 @@ function Charges() {
           </div>
 
           <div className="flex justify-center">
-  <button
-    type="submit"
-    className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
-    disabled={loading}
-  >
-    {loading ? 'Updating...' : 'Update Charges'}
-  </button>
-</div>
-
+            <button
+              type="submit"
+              className="px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition duration-300 ease-in-out"
+              disabled={loading}
+            >
+              {loading ? 'Updating...' : 'Update Charges'}
+            </button>
+          </div>
         </form>
 
-        {showPopup && <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-lg">Charges updated successfully!</div>}
+        {showPopup && (
+          <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-lg">
+            Charges updated successfully!
+          </div>
+        )}
       </div>
     </>
   );
