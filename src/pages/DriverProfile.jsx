@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft } from 'lucide-react';
@@ -104,11 +105,12 @@ const DriverProfile = ()=>{
                 className="flex justify-center md:justify-start"
             
                 >
-                <img
-                    src={driverImage}
-                    alt=""
+              <img
+                    src={driver.profile_image || driverImage}  
+                    alt="Driver"
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />
+
                 </motion.div>
 
                 {/*  Name, Phone, Email, Address */}
@@ -128,13 +130,13 @@ const DriverProfile = ()=>{
                 <motion.div className="space-y-3">
             
                 <div className="flex items-center justify-center md:justify-start">
-                    
-                    <span
-                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
-     
-                    >
-                        {driver.blockStatus ? 'Unblock' : 'Block'}
-                    </span>
+                                
+              <span
+                className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
+                onClick={toggleStatus}
+            >
+                {status === 'Block' ? 'Block' : 'Unblock'}
+            </span>
                     <button
                     onClick={handleDeleteClick}
                     className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
@@ -147,28 +149,28 @@ const DriverProfile = ()=>{
                         >
                             Change Status
                     </button> */}
-                </div>
-                <div className="flex items-center justify-center md:justify-start pt-3">
-                            <div className="flex items-center">
-                                <div className="bg-white mt-2">
-                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
                                 </div>
-                                {/* Conditionally Render "Add Money" Button */}
-                                {driver.blockStatus ? (
-                                    <p className="ml-4 text-red-600 font-semibold">
-                                        Money can't be added, user is blocked
-                                    </p>
-                                ) : (
-                                    <button
-                                        onClick={togglePopup}
-                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        Add Money
-                                    </button>
-                                )}
-                            </div>
+                                <div className="flex items-center justify-center md:justify-start pt-3">
+                    <div className="flex items-center">
+                        <div className="bg-white mt-2">
+                            <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                            <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
                         </div>
+                        {/* Conditionally Render "Add Money" Button */}
+                        {status === 'Block' ? (  // Use `status` here instead of `driver.blockStatus`
+                            <p className="ml-4 text-red-600 font-semibold">
+                                Money can't be added, user is blocked
+                            </p>
+                        ) : (
+                            <button
+                                onClick={togglePopup}
+                                className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            >
+                                Add Money
+                            </button>
+                        )}
+                    </div>
+                </div>
 
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (
