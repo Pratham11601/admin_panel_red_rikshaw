@@ -73,9 +73,9 @@ class ApiConfig {
       return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=15`;
     }
 
-    static putTransactionRequestEndPoint(id) {
+    static putTransactionRequestEndPoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/transactionsRequest-update/${id}`;
+      return `${this.BASE_URL}/api/adminpanel/transactionsRequest-update`;
     }
 //  static putTransactionRequestEndPoint(id) {
 //     return `${this.BASE_URL}/api/adminpanel/transaction-request/${id}`;

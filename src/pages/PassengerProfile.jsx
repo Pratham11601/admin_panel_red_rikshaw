@@ -7,9 +7,16 @@ import driverImage from '../assets/driverimg.jpg';
 import DocumentPopup from '../components/Drivers/DocumentPopup';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import PassengerRides from '../components/Passengers/PassengerRides';
+<<<<<<< HEAD
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
 
+=======
+import defaultUserImage from "../assets/default_user.png"
+import blockedUser from "../assets/blocked_user.png"
+
+
+>>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
 const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -17,6 +24,7 @@ const PassengerProfile = () => {
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
+<<<<<<< HEAD
     const [walletBalance, setWalletBalance] = useState(0);
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
@@ -25,6 +33,15 @@ const PassengerProfile = () => {
 
     console.log(passenger);
 
+=======
+    const [walletBalance, setWalletBalance] = useState("0");
+    const [lockBalance, setLockBalance] = useState("0");
+    const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [password, setPassword] = useState('');
+
+
+>>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
     const togglePopup = () => {
         console.log('button clicked');
 
@@ -91,6 +108,7 @@ const PassengerProfile = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
+<<<<<<< HEAD
                     {/*  Profile Image */}
                     <motion.div
                         className="flex justify-center md:justify-start"
@@ -98,10 +116,21 @@ const PassengerProfile = () => {
                     >
                         <img
                             src={passenger.blockStatus ? blockedUser : (passenger.profile_image || defaultUser)}
+=======
+
+                    {/*  Profile Image */}
+                    <motion.div
+                        className="flex justify-center md:justify-start"
+
+                    >
+                        <img
+                            src={passenger.blockStatus ? blockedUser : passenger.profile_img || defaultUserImage}
+>>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
                             alt=""
                             className="w-50 h-50 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                         />
                     </motion.div>
+<<<<<<< HEAD
 
                     {/* 2nd Div: Name, Phone, Email, Address */}
                     <motion.div className="text-center md:text-left space-y-2">
@@ -144,11 +173,45 @@ const PassengerProfile = () => {
                                 </button>
                             )}
                             {/* <button
+=======
+
+                    {/* 2nd Div: Name, Phone, Email, Address */}
+                    <motion.div className="text-center md:text-left space-y-2">
+                        <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
+                        <p className="text-gray-600">📞   {passenger.phone}</p>
+                        
+                        <p className="text-gray-600">✉️ {passenger.email}</p>
+                        
+                        
+                        <p className="text-gray-600">⭐ {passenger.rating} Reviews</p>
+                        <p className="flex  text-gray-600  "><Car style={{ color: 'black', marginRight: '10px' }} /> {passenger.total_rides} Total Rides</p>
+                    </motion.div>
+
+                    <motion.div className="space-y-3">
+
+                        <div className="flex flex-wrap items-center my-2 justify-center ">
+
+                            <span
+                                className={` flex-wrap px-5 py-1 my-2 rounded-full text-white text-center cursor-pointer ${passenger.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+
+                            >
+                                {passenger.blockStatus ? 'Unblock' : 'Block'}
+                            </span>
+                            <button
+                                onClick={handleDeleteClick}
+                                className="ml-4 px-3 py-1 my-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                            >
+                                Delete
+                            </button>
+                            {/* <button
+
+>>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >
                             Change Status
                     </button> */}
+<<<<<<< HEAD
                         </div>
                         <div className="flex items-center justify-center md:justify-start pt-3">
                             <div className="flex w-full flex-col justify-center gap-3 items-start">
@@ -161,6 +224,32 @@ const PassengerProfile = () => {
                                     <h1 className="text-xl font-semibold">Lock Balance</h1>
                                     <p className="text-xl ">₹{passenger.bankDetails ? (passenger.bankDetails.lock_amount ? passenger.bankDetails.lock_amount : lockBalance) : lockBalance}</p>
                                 </div>
+=======
+                            {passenger.blockStatus ? (
+                                <p className="ml-4 text-red-600 my-2 font-semibold">
+                                    Money can't be added, user is blocked
+                                </p>
+                            ) : (
+                                <button
+                                    onClick={togglePopup}
+                                    className="ml-4 px-2 py-1 bg-blue-500 my-2 text-white rounded-lg hover:bg-blue-600"
+                                >
+                                    Add Money
+                                </button>
+                            )}
+                        </div>
+                        <div className="flex items-center justify-center md:justify-start pt-3">
+                            <div className="flex flex-col w-full items-center">
+                                <div className="bg-white w-full flex flex-row justify-around items-center mt-2">
+                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                                    <p className="text-xl ">₹{passenger.bankDetails ? (passenger.bankDetails.balance && passenger.bankDetails.balance.toFixed(2)) : walletBalance}</p>
+                                </div>
+                                <div className="bg-white w-full flex flex-row justify-around items-center mt-2">
+                                    <h1 className="text-xl font-semibold">Lock Balance</h1>
+                                    <p className="text-xl ">₹{passenger.bankDetails ? (passenger.bankDetails.lock_amount && passenger.bankDetails.lock_amount.toFixed(2)) : lockBalance}</p>
+                                </div>
+                                {/* Conditionally Render "Add Money" Button */}
+>>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
 
                             </div>
                         </div>

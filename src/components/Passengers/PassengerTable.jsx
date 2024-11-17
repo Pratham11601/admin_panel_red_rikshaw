@@ -36,6 +36,8 @@ const PassengerTable = () => {
         }
         const data = await response.json();
         const passengers = data.passengers;
+        // console.log("----data----")
+        // console.log(data)
 
         setIsLoading(false);
         if (Array.isArray(passengers)) {
