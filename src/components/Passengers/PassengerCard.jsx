@@ -3,13 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import ProfilePopup from "./ProfilePopup";
 import { IndianRupee ,PhoneCall,BadgeCheck,ArrowRightToLine} from 'lucide-react';
 import driverImage from '../../assets/driverimg.jpg';
-<<<<<<< HEAD
 import  defaultUser from "../../assets/default_user.png"
 import  blockedUser from "../../assets/blocked_user.png"
-=======
-import defaultUserImage from "../../assets/default_user.png"
-import blockedUser from "../../assets/blocked_user.png"
->>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
 const PassengerCard= ({passenger })=>{
   
   
@@ -32,22 +27,13 @@ const PassengerCard= ({passenger })=>{
 
       {/* Driver image and ratings */}
           <div className="flex items-center mb-4">
-<<<<<<< HEAD
           <img src={ passenger.blockStatus ? blockedUser : (passenger.profile_image || defaultUser)} alt={`Profile picture of ${passenger.name}`} className="w-16 h-16 rounded-full object-cover shadow-md" />
-=======
-          
-            <img src={ passenger.blockStatus ? blockedUser: passenger.profile_img || defaultUserImage } alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
->>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
 
             <div className="flex flex-col text-black ">
               <h1 className="text-m font-bold  text-gray-900 pl-4 my-2">{passenger.name}</h1>
               <p className="text-sm flex font-medium text-gray-700 my-2 ml-3">
                 <IndianRupee className="h-5 w-5 mr-4 color-black-900 "/>
-<<<<<<< HEAD
-                {passenger.balance && 0}
-=======
                 {passenger.bankDetails ? passenger.bankDetails.balance.toFixed(2) : walletBalance}
->>>>>>> 3c785cfb9e2ff8aef7de25a24da5269995d17c74
               </p>
               <p className="text-sm  flex font-medium text-gray-700 ml-3">
                 <PhoneCall className="h-4 w-4 mr-4 color-black-900"/>
