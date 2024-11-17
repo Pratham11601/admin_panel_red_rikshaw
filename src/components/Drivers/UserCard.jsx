@@ -3,10 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import driverImage from '../../assets/driverimg.jpg';
 import rikshawicon from '../../assets/rickshaw.png';
 import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
-
+import defaultUserImage from "../../assets/default_user.png"
+import blockedUser from "../../assets/blocked_user.png"
 const UserCard= ({driver})=>{
-
+  
+  
+  
   const navigate = useNavigate();
+  
   const handleViewProfile = () => {
 
     navigate(`/Home/driverProfile`, { state: { driver: driver } });
@@ -22,7 +26,10 @@ const UserCard= ({driver})=>{
 
       {/* Driver image and ratings */}
           <div className="flex text-black items-center mb-4">
-          <img src={driver.profile_img} alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
+
+          <img src={ driver.blockStatus ? blockedUser: driver.profile_img || defaultUserImage } alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
+
+
             <div className="flex flex-col ">
               <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{driver.name}</h2>
               <p className="text-sm flex font-medium text-gray-600 mt-2 ml-3">
