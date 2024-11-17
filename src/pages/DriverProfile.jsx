@@ -9,6 +9,8 @@ import DocumentPopup from '../components/Drivers/DocumentPopup';
 import RidesTable from '../components/Rides/RideTable';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import DriverRides from '../components/Drivers/DriverRides';
+import  defaultUser from "../assets/default_user.png"
+import  blockedUser from "../assets/blocked_user.png"
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
@@ -17,7 +19,8 @@ const DriverProfile = ()=>{
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(500); // Initial wallet balance
+    const [walletBalance, setWalletBalance] = useState(0); // Initial wallet balance
+    const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
     const [addAmount, setAddAmount] = useState('');     
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
@@ -106,7 +109,7 @@ const DriverProfile = ()=>{
             
                 >
               <img
-                    src={driver.profile_image || driverImage}  
+                   src={ driver.blockStatus ? blockedUser : (driver.profile_image || defaultUser)} 
                     alt="Driver"
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />
@@ -129,20 +132,32 @@ const DriverProfile = ()=>{
                 {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-3">
             
-                <div className="flex items-center justify-center md:justify-start">
+                <div className="flex flex-wrap flex-row items-center justify-center md:justify-start">
                                 
               <span
-                className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
+                className={` px-5 py-1 flex flex-wrap my-2 flex-row items-center justify-center rounded-full text-white cursor-pointer ${status === 'Block' ? 'bg-red-600' : 'bg-green-600'}`}
                 onClick={toggleStatus}
             >
                 {status === 'Block' ? 'Block' : 'Unblock'}
             </span>
                     <button
                     onClick={handleDeleteClick}
-                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                    className="ml-4 px-3 py-1 bg-red-600 my-2 text-white font-semibold rounded hover:bg-red-700"
                 >
                     Delete 
                 </button>
+                {status === 'Block' ? (  // Use `status` here instead of `driver.blockStatus`
+                            <p className="ml-4 text-red-600 my-2 font-semibold">
+                                Money can't be added, user is blocked
+                            </p>
+                        ) : (
+                            <button
+                                onClick={togglePopup}
+                                className="ml-4 px-2 py-1 my-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            >
+                                Add Money
+                            </button>
+                        )}
                     {/* <button
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
@@ -151,24 +166,17 @@ const DriverProfile = ()=>{
                     </button> */}
                                 </div>
                                 <div className="flex items-center justify-center md:justify-start pt-3">
-                    <div className="flex items-center">
-                        <div className="bg-white mt-2">
+                    <div className="flex w-full flex-col justify-center gap-3 items-start">
+                        <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
                             <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                            <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
+                            <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.balance ? driver.bankDetails.balance : walletBalance) :walletBalance }</p>
                         </div>
                         {/* Conditionally Render "Add Money" Button */}
-                        {status === 'Block' ? (  // Use `status` here instead of `driver.blockStatus`
-                            <p className="ml-4 text-red-600 font-semibold">
-                                Money can't be added, user is blocked
-                            </p>
-                        ) : (
-                            <button
-                                onClick={togglePopup}
-                                className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                            >
-                                Add Money
-                            </button>
-                        )}
+                        <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
+                            <h1 className="text-xl font-semibold">Lock Balance</h1>
+                            <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.lock_amount ? driver.bankDetails.lock_amount : lockBalance) :lockBalance }</p>
+                        </div>
+                        
                     </div>
                 </div>
 
