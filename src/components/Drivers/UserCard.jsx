@@ -27,8 +27,12 @@ const UserCard= ({driver})=>{
       {/* Driver image and ratings */}
           <div className="flex text-black items-center mb-4">
 
+
           <img src={ driver.blockStatus ? blockedUser: driver.profile_img || defaultUserImage } alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
 
+
+
+          
 
             <div className="flex flex-col ">
               <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{driver.name}</h2>

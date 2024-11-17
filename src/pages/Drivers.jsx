@@ -18,30 +18,35 @@ const Drivers = () => {
 	useEffect(() => {
 		const fetchDrivers = async () => {
 			try {
-				const token = localStorage.getItem('token'); // Retrieve token from localStorage
+				const token = localStorage.getItem('token');
 	
 				const response = await fetch(ApiConfig.getDriversEndpoint(), {
 					method: 'GET',
 					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
+						'Authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json',
+					},
 				});
 	
 				if (response.ok) {
 					const data = await response.json();
-					setTotalDriver(data.totalUsers);
+					console.log('API Response:', data);
 	
-					const active = data.data.filter(driver => driver.isActive === true);
-					const inactive = data.data.filter(driver => driver.isActive === false);
+					setTotalDriver(data.totalUsers || 0);
+	
+					const active = data.data?.filter(driver => driver.isActive) || [];
+					const inactive = data.data?.filter(driver => !driver.isActive) || [];
+	
+					console.log('Active Drivers:', active);
+					console.log('Inactive Drivers:', inactive);
 	
 					setActiveDriver(active.length);
 					setInactiveDriver(inactive.length);
 				} else {
-					console.error('Failed to fetch drivers data');
+					console.error('Failed to fetch drivers:', await response.text());
 				}
 			} catch (error) {
-				console.error('Error fetching drivers data', error);
+				console.error('Error fetching drivers:', error);
 			}
 		};
 	

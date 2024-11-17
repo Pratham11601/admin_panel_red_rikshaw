@@ -127,12 +127,6 @@ const RideTable = () => {
           value={totalRides}
           color='#6366F1'
         />
-        {/* <StatCard
-          name='Total Fare'
-          icon={UserPlus}
-          value={`$${totalFare.toFixed(2)}`}
-          color='#10B981'
-        /> */}
       </motion.div>
 
       {/* Header Section */}
@@ -216,7 +210,7 @@ const RideTable = () => {
                           {ride.driverId ? ride.driverId.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {ride.totalCost ? `$${ride.totalCost.toFixed(2)}` : "N/A"}
+                          {ride.totalCost ? `₹ ${ride.totalCost}` : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.pickupLocation.place}
@@ -229,6 +223,25 @@ const RideTable = () => {
                   </tbody>
                 </table>
               </motion.div>
+
+              {/* Pagination */}
+              <div className="flex justify-center mt-4">
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Prev
+                </button>
+                <span className="px-4 py-2 text-black">{currentPage} of {totalPages}</span>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </>

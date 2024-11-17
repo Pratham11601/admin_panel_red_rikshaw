@@ -26,6 +26,7 @@ const PassengerCard= ({passenger })=>{
 
       {/* Driver image and ratings */}
           <div className="flex items-center mb-4">
+          
             <img src={ passenger.blockStatus ? blockedUser: passenger.profile_img || defaultUserImage } alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
 
             <div className="flex flex-col text-black ">

@@ -91,6 +91,7 @@ const PassengerProfile = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
+
                     {/*  Profile Image */}
                     <motion.div
                         className="flex justify-center md:justify-start"
@@ -132,6 +133,7 @@ const PassengerProfile = () => {
                                 Delete
                             </button>
                             {/* <button
+
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >

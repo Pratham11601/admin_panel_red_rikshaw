@@ -82,22 +82,23 @@ const Terms = () => {
             });
     };
 
-    const handleDeleteClick = (id) => {
-        fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), {
-            method: 'DELETE',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 1) {
-                    setTerms(terms.filter((term) => term._id !== id));
-                } else {
-                    setError(data.message || 'Failed to delete the term');
-                }
-            })
-            .catch((error) => {
-                setError('Error deleting data: ' + error.message);
-            });
-    };
+    const handleDeleteClick = async (id) => {
+        try {
+          const response = await fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), { method: "DELETE" });
+          const data = await response.json();
+          console.log("Delete Response:", data);
+    
+          if (data.status === 1) {
+            setTerms((prev) => prev.filter((term) => term._id !== id));
+          } else {
+            setError(data.message || "Failed to delete the term.");
+          }
+        } catch (err) {
+          console.error("Error deleting data:", err.message);
+          setError("Error deleting data: " + err.message);
+        }
+      };
+    
 
     if (loading) {
         return <div className='text-center'>Loading...</div>;
@@ -108,14 +109,14 @@ const Terms = () => {
     }
 
     return (
-        <div className='flex-1 relative z-10 overflow-auto bg-white'>
+        <div className='flex-1 relative z-10 overflow-auto bg-white text-black'>
             <Header title={"Terms and Conditions"} />
             <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
                 <button className='bg-blue-500 text-white px-4 py-2 rounded-md mb-4' onClick={handleAddClick}>Add</button>
                 <ul className='space-y-4'>
                     {terms.map((term) => (
                         <li key={term._id} className='bg-white p-4 rounded-lg shadow-md text-black bordr-b border-red-400'>
-                            <strong>Serial Number: {term.sr_no}</strong><br />
+                            {/* <strong>Serial Number: {term.sr_no}</strong><br /> */}
                             <span>Title: {term.title}</span><br />
                             <span>Subtitle: {term.subtitle}</span><br />
                             <span>Content: {term.content}</span><br />

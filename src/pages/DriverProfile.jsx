@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft } from 'lucide-react';
@@ -108,10 +109,11 @@ const DriverProfile = ()=>{
             
                 >
                 <img
-                    src={ driver.blockStatus ? blockedUser: driver.profile_img || defaultUserImage }
+                    src={driverImage}
                     alt=""
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />
+
                 </motion.div>
 
                 {/*  Name, Phone, Email, Address */}
@@ -130,10 +132,10 @@ const DriverProfile = ()=>{
                 {/*  Status, Total Trips, Reviews */}
                 <motion.div className="space-y-3">
             
-                <div className="flex flex-wrap items-center my-2 justify-center ">
+                <div className="flex items-center justify-center md:justify-start">
                     
                     <span
-                        className={` px-5 py-1 flex-wrap rounded-full text-center my-2 text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
      
                     >
                         {driver.blockStatus ? 'Unblock' : 'Block'}
@@ -163,22 +165,25 @@ const DriverProfile = ()=>{
                             Change Status
                     </button> */}
                 </div>
-                <div className="flex flex-col items-center justify-center md:justify-start pt-3">
-                            <div className="flex w-full items-center">
-                                <div className="bg-white w-full flex flex-row justify-around items-center  mt-2">
+                <div className="flex items-center justify-center md:justify-start pt-3">
+                            <div className="flex items-center">
+                                <div className="bg-white mt-2">
                                     <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                                    <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.balance && driver.bankDetails.balance.toFixed(2)) : lockBalance}</p>
+                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
                                 </div>
                                 {/* Conditionally Render "Add Money" Button */}
-                                
-                            </div>
-                            <div className="flex w-full items-center">
-                                <div className="bg-white w-full flex flex-row justify-around items-center  mt-2">
-                                    <h1 className="text-xl font-semibold">Lock Balance</h1>
-                                    <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.lock_amount && driver.bankDetails.lock_amount.toFixed(2)) : lockBalance}</p>
-                                </div>
-                                {/* Conditionally Render "Add Money" Button */}
-                                
+                                {driver.blockStatus ? (
+                                    <p className="ml-4 text-red-600 font-semibold">
+                                        Money can't be added, user is blocked
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={togglePopup}
+                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Add Money
+                                    </button>
+                                )}
                             </div>
                         </div>
 
