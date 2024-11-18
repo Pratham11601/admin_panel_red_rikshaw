@@ -22,7 +22,7 @@ const PassengerProfile = () => {
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');
-
+    console.log("this is passenger")
     console.log(passenger);
 
     const togglePopup = () => {
@@ -97,7 +97,7 @@ const PassengerProfile = () => {
 
                     >
                         <img
-                            src={passenger.blockStatus ? blockedUser : (passenger.profile_image || defaultUser)}
+                            src={passenger.blockStatus ? blockedUser : (passenger.profile_img || defaultUser)}
                             alt=""
                             className="w-50 h-50 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                         />

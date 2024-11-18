@@ -109,7 +109,7 @@ const DriverProfile = ()=>{
             
                 >
               <img
-                   src={ driver.blockStatus ? blockedUser : (driver.profile_image || defaultUser)} 
+                   src={ driver.blockStatus ? blockedUser : (driver.data.profile_img || defaultUser)} 
                     alt="Driver"
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />
