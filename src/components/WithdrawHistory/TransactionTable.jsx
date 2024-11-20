@@ -15,38 +15,50 @@ const TransactionTable = () => {
   const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const itemsPerPage = 10;
-
-  // Fetch transaction data
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
         const token = localStorage.getItem('token'); // Retrieve token from localStorage
-
-        const response = await fetch(ApiConfig.getTransactionRequestEndPoint(), {
+  
+        const response = await fetch(ApiConfig.getTransactionHistoryEndPoint(), {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,  // Add token to headers
-            'Content-Type': 'application/json'
-          }
+            'Authorization': `Bearer ${token}`, // Add token to headers
+            'Content-Type': 'application/json',
+          },
         });
-        const data = await response.json();
-        const transaction = data.items;
-
-        setIsLoading(false);
-
-        if (Array.isArray(transaction)) {
-          setTransactions(transaction);
-        } else {
-          console.error('Failed to fetch Transactions');
+  
+        if (!response.ok) {
+          console.error(`Error fetching transactions: ${response.status} ${response.statusText}`);
+          setIsLoading(false);
+          return;
         }
+  
+        const data = await response.json();
+        console.log("API Response:", data); // Log the response to check its structure
+  
+        // Ensure the response contains the 'Transactions' array
+        if (data && Array.isArray(data.Transactions)) {
+          setTransactions(data.Transactions); // Set transactions if the 'Transactions' array exists
+        } else if (data && data.result && Array.isArray(data.result.Transactions)) {
+          // Handle nested response structure
+          setTransactions(data.result.Transactions);
+        } else {
+          console.error('Failed to fetch Transactions: Invalid data format or missing Transactions');
+          setTransactions([]); // Fallback to an empty array
+        }
+  
+        setIsLoading(false);
+  
       } catch (error) {
+        setIsLoading(false);
         console.error('Error fetching transaction data:', error);
       }
     };
-
+  
     fetchTransactionRequest();
-  }, [sortBy, searchTerm]);
-
+  }, [sortBy, searchTerm]); // Re-fetch data if sortBy or searchTerm changes
+  
   // Search functionality
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
