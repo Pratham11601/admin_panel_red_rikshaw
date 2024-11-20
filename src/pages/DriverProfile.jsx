@@ -11,6 +11,7 @@ import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import DriverRides from '../components/Drivers/DriverRides';
 import  defaultUser from "../assets/default_user.png"
 import  blockedUser from "../assets/blocked_user.png"
+import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
@@ -109,7 +110,7 @@ const DriverProfile = ()=>{
             
                 >
               <img
-                   src={ driver.blockStatus ? blockedUser : (driver.data.profile_img || defaultUser)} 
+                   src={driver.profile_img} 
                     alt="Driver"
 
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
@@ -333,7 +334,7 @@ const DriverProfile = ()=>{
                         transition={{ duration: 0.5 }}
                         >
                         
-                        <TransactionTable/>
+                        <DriverTransactionTable driverId={driver._id}/>
                         </motion.div>
                 )}
             </main>
