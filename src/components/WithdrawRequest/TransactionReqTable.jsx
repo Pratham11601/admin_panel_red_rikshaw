@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 import ApiConfig from '../../Consants/ApiConfig';
+import axios from "axios";
 
 const TransactionReqTable = () => {
   const [transactions, setTransactions] = useState([]);
@@ -12,10 +13,15 @@ const TransactionReqTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("newly-added");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState('');
+  const [selectedTransactionId, setSelectedTransactionId] = useState();
   const [updatedStatus, setUpdatedStatus] = useState(null);
   const itemsPerPage = 10;
+  const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [error, setError] = useState(null);
 
+  
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
     setCurrentPage(1);
@@ -44,6 +50,8 @@ const TransactionReqTable = () => {
         });
         const data = await response.json();
         const transaction = data.items;
+        console.log(transaction);
+        
 
         setIsLoading(false);
 
@@ -104,9 +112,17 @@ const TransactionReqTable = () => {
     currentPage * itemsPerPage
   );
 
+  
+  
+  
   const handleViewTransactionDetails = (transaction) => {
+    console.log(transaction)
     setSelectedTransaction(transaction);
     setUpdatedStatus(transaction.status); // Set initial status for editing
+    setSelectedTransactionId(transaction._id)
+   
+    
+
   };
 
   const handleStatusChange = (status) => {
@@ -250,14 +266,14 @@ const TransactionReqTable = () => {
             <div className="mt-4">
               <h3 className="text-md font-semibold">Update Status</h3>
               <div className="flex space-x-2 mt-2">
-                <button className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "completed" ? "bg-green-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("completed")}>
-                  Completed
+                <button className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "Paid" ? "bg-green-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Paid")}>
+                Paid
                 </button>
-                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "pending" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("pending")}>
-                  Pending
+                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Queued" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Queued")}>
+                Queued
                 </button>
-                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("cancelled")}>
-                  Cancelled
+                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Cancelled")}>
+                Cancelled
                 </button>
               </div>
             </div>
@@ -274,3 +290,6 @@ const TransactionReqTable = () => {
 };
 
 export default TransactionReqTable;
+
+
+

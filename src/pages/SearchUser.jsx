@@ -14,8 +14,8 @@ const SearchUser = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-	setLoading(true); // Start loading
-	setError(''); // Clear previous error
+    setLoading(true); // Start loading
+    setError(''); // Clear previous error
     try {
       // Make API call to fetch user by phone number
       const response = await axios.get(
@@ -23,7 +23,7 @@ const SearchUser = () => {
       );
       
       const data = response.data;
-	  
+      
       if (response.status === 200 && data.status === 1) {
         setUserData(data.data); // Store user data (data.data contains the user's details)
         setError(''); // Clear any previous error messages
@@ -34,16 +34,22 @@ const SearchUser = () => {
       setError('User not found or an error occurred.');
       setUserData(null); // Clear user data on error
       console.error(err);
-    }finally {
-		setLoading(false); // Stop loading
-	  }
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(); // Trigger the search when Enter key is pressed
+    }
   };
 
   const renderUserProfile = () => {
     if (userData && userData.role === 'driver') {
-      return <DriversProfile user={userData}  clearUserData={clearUserData}/>;
+      return <DriversProfile user={userData} clearUserData={clearUserData} />;
     } else if (userData && userData.role === 'passenger') {
-      return <PassengersProfile user={userData} clearUserData={clearUserData}/>;
+      return <PassengersProfile user={userData} clearUserData={clearUserData} />;
     } else {
       return <UserProfile user={userData} />;
     }
@@ -54,6 +60,7 @@ const SearchUser = () => {
     setError('');
     setPhoneNumber('');
   };
+
   return (
     <div className='flex-1 overflow-auto relative z-10 bg-white'>
       <Header title={"Search User"} />
@@ -65,6 +72,7 @@ const SearchUser = () => {
             placeholder="Search User by Phone Number..."
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
+            onKeyDown={handleKeyDown}  // Add the keydown handler
             className="border shadow-md px-10 py-2 rounded w-full max-w-lg"
           />
           <button onClick={handleSearch} className="bg-blue-500 text-white py-2 px-8 rounded ml-2 shadow-md">

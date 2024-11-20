@@ -12,7 +12,6 @@ function Driver() {
   const [currentPage, setCurrentPage] = useState(1);
   const bannersPerPage = 10;
 
-  // Fetch banners from the API when the component mounts
   useEffect(() => {
     fetchAdvertisements();
   }, []);
@@ -20,16 +19,18 @@ function Driver() {
   const fetchAdvertisements = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(ApiConfig.getAdvertisementEndpont(),{
+      const response = await axios.get(ApiConfig.getAdvertisementEndpoint(), {
         headers: {
-          'Authorization': `Bearer ${token}`,  // Add token to headers
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
+        },
+        params: {
+          category: 'driver'  // Ensure category is correct
         }
       });
-      // Format createdAt to a readable string
       const formattedBanners = response.data.data.map(banner => ({
         ...banner,
-        createdAt: new Date(banner.createdAt).toLocaleString(), // Formats to a string with date and time
+        createdAt: new Date(banner.createdAt).toLocaleString(),
       }));
       setBanners(formattedBanners);
     } catch (error) {
@@ -39,24 +40,46 @@ function Driver() {
 
   const handleDeleteBanner = async (id) => {
     try {
-      await axios.delete(ApiConfig.deleteAdvertisementEndpont(), { data: { id } });
-      setBanners(banners.filter((banner) => banner._id !== id));
+      if (!id) {
+        console.error("No ID provided for deletion");
+        return;
+      }
+  
+      console.log("Deleting banner with ID:", id);  // Log the ID to check if it's correct
+  
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("Token is missing. Please log in.");
+        return;
+      }
+  
+      const deleteUrl = ApiConfig.deleteAdvertisementEndpoint(id);  // Use the correct URL
+  
+      await axios.delete(deleteUrl, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      setBanners(banners.filter((banner) => banner._id !== id));  // Remove banner from state
     } catch (error) {
       console.error("Failed to delete banner:", error);
     }
   };
+  
 
   const handleUploadImage = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
-  
+
     if (file) {
-      const fileNameWithoutExt = file.name.split('.').slice(0, -1).join('.'); 
+      const fileNameWithoutExt = file.name.split('.').slice(0, -1).join('.');
       formData.append('mediaFile', file);
-      formData.append('advertiseCategory', fileNameWithoutExt); 
-  
+      formData.append('advertiseCategory', fileNameWithoutExt);
+
       try {
-        const response = await axios.post(ApiConfig.postAdvertisementEndpont(), formData, {
+        const response = await axios.post(ApiConfig.postAdvertisementEndpoint(), formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           }
@@ -69,7 +92,6 @@ function Driver() {
       }
     }
   };
-  
 
   const handleEditBanner = (banner) => {
     setIsEditing(true);
@@ -85,9 +107,10 @@ function Driver() {
         formData.append('mediaFile', editBanner.newFile);
       }
 
-      const response = await axios.put(ApiConfig.updateAdvertisementEndpont(), formData, {
+      const response = await axios.put(ApiConfig.updateAdvertisementEndpoint(), formData, {
         params: { id: editBanner._id },
       });
+
       setBanners(banners.map((banner) => (banner._id === editBanner._id ? { ...response.data.data, createdAt: new Date(response.data.data.createdAt).toLocaleString() } : banner)));
       setIsEditing(false);
       setEditBanner(null);
@@ -137,47 +160,46 @@ function Driver() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  // Automatically change the image every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       nextImage();
     }, 3000);
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [currentIndex]);
 
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10">
       <Header title="Driver Advertisement" />
 
-      {/* Success Popup */}
       {uploadSuccess && (
         <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-md">
           Image successfully uploaded!
         </div>
       )}
 
-      {/* Full-width card with inner carousel */}
       <div className="w-full h-auto sm:h-[50vh] bg-white flex items-center justify-center mb-4 mt-5 shadow-2xl rounded-2xl relative">
         {banners.length > 0 && (
           <>
             <div className="absolute left-0 p-2 sm:p-4 cursor-pointer text-black" onClick={prevImage}>
-              &#10094; {/* Left Arrow */}
+              &#10094;
             </div>
 
             <div className="w-11/12 sm:w-3/5 h-auto sm:h-[40vh] flex justify-center items-center">
-              <img
-                src={banners[currentIndex]?.mediaPath}
-                alt={banners[currentIndex]?.advertiseCategory}
-                className="w-full h-full object-contain"
-              />
+              {banners[currentIndex]?.mediaType === 'video' ? (
+                <video src={banners[currentIndex]?.mediaPath} controls className="w-full h-full object-contain" />
+              ) : (
+                <img
+                  src={banners[currentIndex]?.mediaPath}
+                  alt={banners[currentIndex]?.advertiseCategory}
+                  className="w-full h-full object-contain"
+                />
+              )}
             </div>
 
             <div className="absolute right-0 p-2 sm:p-4 cursor-pointer text-black" onClick={nextImage}>
-              &#10095; {/* Right Arrow */}
+              &#10095;
             </div>
 
-            {/* Carousel Dots */}
             <div className="absolute bottom-2 sm:bottom-4 flex space-x-2">
               {banners.map((_, index) => (
                 <div
@@ -191,107 +213,76 @@ function Driver() {
         )}
       </div>
 
-      {/* Advertisement Heading and Image Upload */}
       <div className="flex justify-between items-center mt-6 px-2 md:px-0 text-black mb-6">
         <h1 className="text-xl sm:text-2xl ml-5">Advertisement</h1>
         <label className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer mr-4">
           Upload File
           <input
             type="file"
-            accept="image/*"
+            accept="image/*, video/*"
             onChange={handleUploadImage}
             className="hidden"
           />
         </label>
       </div>
 
-      {/* Cards layout */}
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-black">
         {currentBanners.map((banner) => (
           <div key={banner._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="flex flex-col">
               <div className="h-48 flex justify-center items-center bg-gray-100">
-                <img
-                  src={banner.mediaPath}
-                  alt={banner.advertiseCategory}
-                  className="w-full h-full object-contain"
-                />
+                {banner.mediaType === 'video' ? (
+                  <video src={banner.mediaPath} controls className="w-full h-full object-contain" />
+                ) : (
+                  <img
+                    src={banner.mediaPath}
+                    alt={banner.advertiseCategory}
+                    className="w-full h-full object-contain"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2">{banner.advertiseCategory}</h3>
-                <p className="text-gray-600">Added: {banner.createdAt}</p>
-                <div className="mt-4 flex justify-between">
-                  <button
-                    className="bg-red-500 text-white px-3 py-1 rounded"
-                    onClick={() => handleDeleteBanner(banner._id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                    onClick={() => handleEditBanner(banner)}
-                  >
-                    Edit
-                  </button>
-                </div>
+                <p className="text-gray-500">{banner.createdAt}</p>
+              </div>
+              <div className="p-4 flex justify-between">
+                <button
+                  onClick={() => handleEditBanner(banner)}
+                  className="bg-blue-500 text-white py-1 px-3 rounded"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteBanner(banner._id)}
+                  className="bg-red-500 text-white py-1 px-3 rounded"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-center space-x-2 mt-6">
         <button
           onClick={handlePreviousPage}
+          className="px-4 py-2 bg-gray-400 text-white rounded"
           disabled={currentPage === 1}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded disabled:opacity-50"
         >
           Previous
         </button>
-        <span>{`Page ${currentPage} of ${totalPages}`}</span>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
         <button
           onClick={handleNextPage}
+          className="px-4 py-2 bg-gray-400 text-white rounded"
           disabled={currentPage === totalPages}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded disabled:opacity-50"
         >
           Next
         </button>
       </div>
-
-      {/* Edit Banner Modal */}
-      {isEditing && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-2">Edit Banner</h2>
-            <input
-              type="text"
-              name="advertiseCategory"
-              value={editBanner.advertiseCategory}
-              onChange={handleInputChange}
-              className="border border-gray-300 rounded p-2 w-full mb-2"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUploadEdit}
-              className="mb-2"
-            />
-            <button onClick={handleSaveChanges} className="bg-blue-500 text-white px-4 py-2 rounded">
-              Save Changes
-            </button>
-            <button
-              onClick={() => {
-                setIsEditing(false);
-                setEditBanner(null);
-              }}
-              className="bg-red-500 text-white px-4 py-2 rounded ml-2"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

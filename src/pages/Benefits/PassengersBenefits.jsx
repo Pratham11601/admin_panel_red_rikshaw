@@ -198,10 +198,10 @@ function PassengersBenefits() {
 
   // Fetch benefits from API on component mount
   useEffect(() => {
-    axios.get(ApiConfig.getBenefitsEndpont())
+    axios.get(ApiConfig.getBenefitsEndpoint())
       .then((response) => {
         if (response.data.status === 1 && Array.isArray(response.data.data)) {
-          setBenefits(response.data.data.filter(benefit => benefit.Category === 'passenger'));
+          setBenefits(response.data.data.filter(benefit => benefit.Category === 'Passenger'));
         } else {
           console.error("Fetched benefits are not an array", response.data);
         }
@@ -228,7 +228,7 @@ function PassengersBenefits() {
   // Add new benefit
   const handleAddBenefit = () => {
     if (newBenefit.trim()) {
-      axios.post(ApiConfig.postBenefitsEndpont(), {
+      axios.post(ApiConfig.postBenefitsEndpoint(), {
         text: newBenefit,
         Category: 'passenger',
       })
@@ -257,10 +257,10 @@ function PassengersBenefits() {
     const updatedBenefit = {
       _id: benefits[editingIndex]._id,
       text: editingBenefit,
-      Category: 'passenger',
+      Category: 'Passenger',
     };
 
-    axios.put(ApiConfig.putBenefitsEndpont(updatedBenefit._id), updatedBenefit)
+    axios.put(ApiConfig.putBenefitsEndpoint(updatedBenefit._id), updatedBenefit)
       .then((response) => {
         if (response.data.status === 0) {
           console.error('Failed to save changes:', response.data.message);
@@ -283,7 +283,7 @@ function PassengersBenefits() {
   // Delete benefit
   const handleDeleteBenefit = (index) => {
     const benefitId = benefits[index]._id;  // Extract the benefit ID
-    axios.delete(ApiConfig.deleteBenefitsEndpont(benefitId))
+    axios.delete(ApiConfig.deleteBenefitsEndpoint(benefitId))
       .then((response) => {
         if (response.data.status === 0) {
           console.error('Failed to delete benefit:', response.data.message);

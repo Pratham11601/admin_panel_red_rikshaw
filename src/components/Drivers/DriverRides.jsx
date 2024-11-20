@@ -16,6 +16,8 @@ const DriverRides = ({ driverId }) => {
   const itemsPerPage = 10;
   const [selectedRide, setSelectedRide] = useState(null);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   console.log(driverId);
   
   // Search functionality
@@ -35,41 +37,79 @@ const DriverRides = ({ driverId }) => {
     setCurrentPage(1);
   };
 
-  // Fetch rides for a specific driver by ID
-  useEffect(() => {
-    const fetchRidesByDriver = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
-	
-        const response = await fetch(ApiConfig.getDriverRidesEndpoint(driverId),{
-          method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
-        });
-        const data = await response.json();
-        
-        if (response.ok && data.status === 1) {
-          setRidesData(data.rides);
-         console.log(ridesData);
-         
-         
-         
-        } else {
-          console.error("Failed to fetch rides:", data);
+    // Fetch rides for a specific driver by ID
+    useEffect(() => {
+      const fetchRidesByDriver = async () => {
+        setIsLoading(true);
+        setErrorMessage(''); // Clear any previous error message
+    
+        try {
+          // Ensure driverId is valid
+          if (!driverId) {
+            throw new Error('Driver ID is missing.');
+          }
+    
+          const token = localStorage.getItem('token');
+          if (!token) {
+            throw new Error('Authorization token not found.');
+          }
+    
+          // Construct the URL dynamically
+          const url = ApiConfig.getDriverRidesEndpoint(driverId, currentPage, 15, sortBy, sortOrder);
+          console.log("Requesting rides from:", url); // Log the URL for debugging
+    
+          // Fetch the data
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+    
+          // Handle response errors
+          if (!response.ok) {
+            // Handle different error statuses explicitly
+            if (response.status === 404) {
+              setErrorMessage('Rides not found for this driver.');
+            } else if (response.status === 401) {
+              setErrorMessage('Unauthorized access. Please login again.');
+            } else if (response.status === 500) {
+              setErrorMessage('Server error. Please try again later.');
+            } else {
+              setErrorMessage(`Error fetching rides: ${response.status} - ${response.statusText}`);
+            }
+            throw new Error(`Error fetching rides: ${response.status} - ${response.statusText}`);
+          }
+    
+          const data = await response.json();
+          if (data.status === 1) {
+            if (data.rides && data.rides.length > 0) {
+              setRidesData(data.rides);
+              console.log('Fetched Rides:', data.rides);
+            } else {
+              setErrorMessage('No rides found for this driver.');
+            }
+          } else {
+            setErrorMessage(`Failed to fetch rides: ${data.message || 'Unknown error'}`);
+          }
+        } catch (error) {
+          if (error instanceof TypeError) {
+            // Specific error type handling for network errors or invalid responses
+            setErrorMessage('Network error or invalid response.');
+          } else {
+            // Generic error message for other errors
+            setErrorMessage(`Error fetching rides: ${error.message}`);
+          }
+          console.error("Error fetching rides data:", error);
+        } finally {
+          setIsLoading(false); // Reset loading state
         }
-      } catch (error) {
-        console.error("Error fetching rides data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRidesByDriver();
-  }, [driverId, currentPage, sortBy, sortOrder]);
-
+      };
+    
+      fetchRidesByDriver();
+    }, [driverId, currentPage, sortBy, sortOrder]);
+    
   // Filter and sort the rides data
   const filteredRides = ridesData.filter(
     (ride) =>
@@ -298,7 +338,7 @@ const DriverRides = ({ driverId }) => {
 
             {/* View Invoice Modal */}
             {selectedRide && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-black">
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                     <h2 className="text-xl font-semibold mb-4">Invoice for Ride</h2>
                     <p>Ride ID: {selectedRide._id}</p>

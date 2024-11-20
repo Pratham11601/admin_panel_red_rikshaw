@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft } from 'lucide-react';
@@ -8,6 +9,8 @@ import DocumentPopup from '../components/Drivers/DocumentPopup';
 import RidesTable from '../components/Rides/RideTable';
 import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import DriverRides from '../components/Drivers/DriverRides';
+import  defaultUser from "../assets/default_user.png"
+import  blockedUser from "../assets/blocked_user.png"
 
 const DriverProfile = ()=>{
     const navigate = useNavigate();
@@ -16,13 +19,14 @@ const DriverProfile = ()=>{
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(500); // Initial wallet balance
+    const [walletBalance, setWalletBalance] = useState(0); // Initial wallet balance
+    const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
     const [addAmount, setAddAmount] = useState('');     
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');   
-
+    
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
@@ -104,11 +108,13 @@ const DriverProfile = ()=>{
                 className="flex justify-center md:justify-start"
             
                 >
-                <img
-                    src={driver.img}
-                    alt=""
+              <img
+                   src={ driver.blockStatus ? blockedUser : (driver.data.profile_img || defaultUser)} 
+                    alt="Driver"
+
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                 />
+
                 </motion.div>
 
                 {/*  Name, Phone, Email, Address */}
@@ -137,38 +143,44 @@ const DriverProfile = ()=>{
                     </span>
                     <button
                     onClick={handleDeleteClick}
-                    className="ml-4 px-3 py-1 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
+                    className="ml-4 px-3 py-1 bg-red-600 text-white my-2 font-semibold rounded hover:bg-red-700"
                 >
                     Delete 
                 </button>
+                {driver.blockStatus ? (
+                                    <p className="ml-4 text-red-600 my-2 font-semibold">
+                                        Money can't be added, user is blocked
+                                    </p>
+                                ) : (
+                                    <button
+                                        onClick={togglePopup}
+                                        className="ml-4 px-2 py-1 bg-blue-500 my-2 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Add Money
+                                    </button>
+                                )}
                     {/* <button
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
                         >
                             Change Status
                     </button> */}
-                </div>
-                <div className="flex items-center justify-center md:justify-start pt-3">
-                            <div className="flex items-center">
-                                <div className="bg-white mt-2">
-                                    <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                                    <p className="text-xl mt-2">₹{walletBalance.toFixed(2)}</p>
                                 </div>
-                                {/* Conditionally Render "Add Money" Button */}
-                                {driver.blockStatus ? (
-                                    <p className="ml-4 text-red-600 font-semibold">
-                                        Money can't be added, user is blocked
-                                    </p>
-                                ) : (
-                                    <button
-                                        onClick={togglePopup}
-                                        className="ml-4 px-2 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        Add Money
-                                    </button>
-                                )}
-                            </div>
+                                <div className="flex items-center justify-center md:justify-start pt-3">
+                    <div className="flex w-full flex-col justify-center gap-3 items-start">
+                        <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
+                            <h1 className="text-xl font-semibold">Wallet Balance</h1>
+                            <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.balance ? driver.bankDetails.balance : walletBalance) :walletBalance }</p>
                         </div>
+                        {/* Conditionally Render "Add Money" Button */}
+                        <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
+                            <h1 className="text-xl font-semibold">Lock Balance</h1>
+                            <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.lock_amount ? driver.bankDetails.lock_amount : lockBalance) :lockBalance }</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                
 
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (

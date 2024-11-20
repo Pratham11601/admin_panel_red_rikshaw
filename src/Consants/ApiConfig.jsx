@@ -15,6 +15,10 @@ class ApiConfig {
     //   return `${this.BASE_URL}/api/adminpanel/dashboard`;
     // }
 
+    static getLogin(){
+      return `${this.BASE_URL}/api/admin/login`
+    }
+
     //dashboard
     static getDashboardData() {
       
@@ -52,7 +56,7 @@ class ApiConfig {
     //Transactions
     static getTransactionsEndPoint() {
       
-      return `${this.BASE_URL}/api/walletTranfer/get-all?page=1&limit=15`;
+      return `${this.BASE_URL}/api/walletTransfer/get-all?page=1&limit=15`;
     }    
 
     //Transaction History
@@ -60,15 +64,42 @@ class ApiConfig {
       
       return `${this.BASE_URL}/api/adminpanel/transactionshistory?page=1&limit=10`;
     }
+
+
+
     //Transaction Request
     static getTransactionRequestEndPoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=15`;
+      return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=10`;
     }
+
+    static putTransactionRequestEndPoint() {
+      
+      return `${this.BASE_URL}/api/adminpanel/transactionsRequest-update`;
+    }
+//  static putTransactionRequestEndPoint(id) {
+//     return `${this.BASE_URL}/api/adminpanel/transaction-request/${id}`;
+//   }
+
+
     //Privacy&Policy
     static getPrivacyPolicyEndpoint() {
       
       return `${this.BASE_URL}/api/privacypolicy/getAll`;
+    }
+    static postPrivacyPolicyEndpoint() {
+      
+      return `${this.BASE_URL}/api/privacypolicy/post`;
+    }
+
+    static putPrivacyPolicyEndpoint(id) {
+      
+      return `${this.BASE_URL}/api/privacypolicy/edit/${id}`;
+    }
+
+    static deletePrivacyPolicyEndpoint(id) {
+      
+      return `${this.BASE_URL}/api/privacypolicy/delete/${id}`;
     }
 
     //Terms&Conditions
@@ -81,10 +112,12 @@ class ApiConfig {
     static getTermsAndConditionEndpont() {
         return `${this.BASE_URL}/api/terms/getAll`;
     }
-
+    static deleteTermsAndConditionEndpoint(id) {
+      return `${this.BASE_URL}/api/terms/delete/${id}`;
+    }
     //charges
     static getChargesEndpoint() {
-      return `${this.BASE_URL}/api/Charges`;
+      return `${this.BASE_URL}/api/charges`;
     }
 
     static putChargesEndpoint() {
@@ -105,7 +138,28 @@ static deleteAdvertisementEndpoint(id) {
   return `${this.BASE_URL}/api/advertisement/delete/${id}`;
 }
 
+//Benefis
+static getBenefitsEndpoint() {
+  return `${this.BASE_URL}/api/benifits/fetchForAdmin`;
+}
 
+static postBenefitsEndpoint() {
+  return `${this.BASE_URL}/api/benifits/create`;
+}
+
+static putBenefitsEndpoint(id) {
+  return `${this.BASE_URL}/api/benifits/put/${id}`;
+}
+
+static deleteBenefitsEndpoint(id) {
+  return `${this.BASE_URL}/api/benifits/delete/${id}`;
+}
+
+
+//Delete Users
+static getDeletedUsersEndpoint() {
+  return `${this.BASE_URL}/api/adminpanel/getAllDeleted`;
+}
 
 
 

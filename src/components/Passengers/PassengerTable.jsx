@@ -5,6 +5,8 @@ import UserCard from "./PassengerCard";
 import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerCategoryItem } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
+import StatCard from "../common/StatCard";
+import { Users, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
 
 const PassengerTable = () => {
   const [passengerData, setPassengerData] = useState([]);
@@ -17,22 +19,25 @@ const PassengerTable = () => {
   const totalPages = Math.ceil(passengerData.length / itemsPerPage);
   const maxRetries = 3;  // Max number of retries for failed requests
 
+  // Fetch passengers data from API
   useEffect(() => {
     const fetchPassengers = async (retryCount = 0) => {
       try {
         const token = localStorage.getItem('token'); // Retrieve token from localStorage
-        const response = await fetch(ApiConfig.getPassengersEndpoint(),{
+        const response = await fetch(ApiConfig.getPassengersEndpoint(), {
           method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
+          headers: {
+            'Authorization': `Bearer ${token}`,  // Add token to headers
+            'Content-Type': 'application/json',
+          },
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         const passengers = data.passengers;
+        // console.log("----data----")
+        // console.log(data)
 
         setIsLoading(false);
         if (Array.isArray(passengers)) {
@@ -54,6 +59,7 @@ const PassengerTable = () => {
     fetchPassengers();
   }, []);
 
+  // Filter and sort passengers data
   const filteredData = passengerData
     .filter((record) => {
       const name = record.name ? record.name.toLowerCase() : '';
@@ -67,20 +73,24 @@ const PassengerTable = () => {
       }
     });
 
+  // Toggle sort order
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
+  // Handle search change
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
   };
 
+  // Handle sort change
   const handleSortChange = (e) => {
     setSortField(e.target.value);
     setCurrentPage(1);
   };
 
+  // Pagination handlers
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -93,9 +103,16 @@ const PassengerTable = () => {
     }
   };
 
+  // Pagination logic
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.filter((_, index) => index >= startIndex && index < endIndex);
+
+  // Calculate dynamic stats
+  const totalPassengers = passengerData.length;
+  const newPassengers = passengerData.filter(passenger => passenger.is_new).length;
+  const activePassengers = passengerData.filter(passenger => passenger.is_active).length;
+  const inactivePassengers = totalPassengers - activePassengers;
 
   return (
     <motion.div
@@ -104,6 +121,21 @@ const PassengerTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
+
+      {/* STATS */}
+      <motion.div
+        className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-12 mt-7 mx-3'
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <StatCard name='Total Passengers' icon={Users} value={totalPassengers} color='#6366F1' />
+        <StatCard name='New Passengers' icon={CheckCircle} value={newPassengers} color='#F59E0B' />
+        <StatCard name='Active Passengers' icon={CheckCircle} value={activePassengers} color='#F59E0B' />
+        <StatCard name='Inactive Passengers' icon={XCircle} value={inactivePassengers} color='#EF4444' />
+      </motion.div>
+
+      {/* Search and Sort */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
         <h2 className="text-xl font-semibold text-black">Passengers</h2>
         <div className="relative w-full md:w-1/3">
@@ -134,6 +166,7 @@ const PassengerTable = () => {
         </button>
       </div>
 
+      {/* Display passenger data */}
       {isLoading ? (
         <motion.div
           className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-10'
@@ -148,7 +181,7 @@ const PassengerTable = () => {
           ))}
         </motion.div>
       ) : filteredData.length === 0 ? (
-        <div className="text-black flex flex-col justify-center items-center ">
+        <div className="text-black flex flex-col justify-center items-center">
           <img src={usernotfound} alt="Not Found" className="w-80 h-80" />
           <h1 className="text-lg font-semibold text-gray-600">User Not Found...</h1>
         </div>
@@ -161,48 +194,30 @@ const PassengerTable = () => {
             transition={{ duration: 1 }}
           >
             {currentData.map((passenger, index) => (
-              <UserCard key={passenger.id} passenger={passenger} />
+              <UserCard key={index} passenger={passenger} />
             ))}
           </motion.div>
-
-          <div className="flex justify-center items-center space-x-4 mt-6">
-            <nav aria-label="Page navigation" className="mb-2 sm:mb-0">
-              <ul className="flex space-x-2">
-                <li>
-                  <button
-                    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    aria-label="Previous Page"
-                  >
-                    Previous
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
-                      onClick={() => setCurrentPage(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    aria-label="Next Page"
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </div>
         </div>
       )}
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-6">
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-4"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
+        <span className="px-4 py-2 text-black">{currentPage} of {totalPages}</span>
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </motion.div>
   );
 };
