@@ -14,7 +14,7 @@ const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { passenger } = location.state;
-    const [activeTab, setActiveTab] = useState('profileSummary');
+    const [activeTab, setActiveTab] = useState('Rides');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
     const [walletBalance, setWalletBalance] = useState(0);
@@ -188,31 +188,39 @@ const PassengerProfile = () => {
                 {/* Navbar Section */}
                 <div className="border-b border-gray-300 mb-6">
                     <ul className="flex justify-around">
-                        <li
+                        
+                        {/*<li
                             className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
                             onClick={() => setActiveTab('profileSummary')}
                         >
                             Profile Summary
-                        </li>
-
+                        </li>*/}
                         <li
                             className={`cursor-pointer py-2 ${activeTab === 'Rides' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
                             onClick={() => setActiveTab('Rides')}
                         >
-                            Rides
+                            Trip Summary
                         </li>
+
+                        
+                         <li 
+                        className={`cursor-pointer py-2 ${activeTab === 'transactionHistory' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                        onClick={() => setActiveTab('transactionHistory')}
+                    >
+                        Transaction History
+                    </li>
                     </ul>
                 </div>
-
-                {/* Profile Summary Section */}
+                 
+                {/* Profile Summary Section 
                 {activeTab === 'profileSummary' && (
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
-                    >
-                        {/* Summary */}
+                    >*/}
+                        {/* Summary 
                         <div className="p-4 bg-white shadow-lg rounded-lg">
                             <h3 className="text-xl font-bold mb-3">Summary</h3>
                             <div className="space-y-6 gap-4">
@@ -229,10 +237,10 @@ const PassengerProfile = () => {
                                     <p className="text-gray-600">Email Verified, Phone Verified</p>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
 
-                        {/* Documents */}
+                        {/* Documents
                         <div className="p-4 bg-white shadow-lg rounded-lg">
                             <h3 className="text-xl font-bold mb-3">Documents</h3>
                             <div className='flex space-x-10'>
@@ -241,20 +249,20 @@ const PassengerProfile = () => {
                                     View
                                 </button>
                             </div>
-                        </div>
-
+                        </div> 
                     </motion.div>
-                )}
-                {/* Document Popup */}
+                )}*/}
+
+                {/* Document Popup 
                 <DocumentPopup
                     isOpen={isPopupOpen}
                     onClose={handleClosePopup}
                     documentUrl="https://example.com/document.pdf" // Replace with actual document URL
-                />
+                />*/}
 
 
 
-                {/* TransactionHistory Section */}
+                {/* Ride Section */}
                 {activeTab === 'Rides' && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -262,6 +270,17 @@ const PassengerProfile = () => {
                         transition={{ duration: 0.5 }}
                     >
                         <PassengerRides passengerId={passenger._id} />
+                    </motion.div>
+                )}
+
+                 {/* TransactionHistory Section */}
+                {activeTab === 'transactionHistory' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                       <TransactionTable passengerId={passenger._id} />
                     </motion.div>
                 )}
             </main>
