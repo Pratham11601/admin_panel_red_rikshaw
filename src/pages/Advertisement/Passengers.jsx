@@ -23,6 +23,8 @@ function Passengers() {
     fetchAdvertisements();
   }, []);
 
+  
+
   const fetchAdvertisements = async () => {
     try {
       const response = await axios.get(ApiConfig.getAdvertisementEndpoint(), {
@@ -42,6 +44,7 @@ function Passengers() {
   };
 
   const handleDeleteBanner = async (id) => {
+    console.log("id = ",id)
     if (!id) {
       console.error("Banner ID is missing or undefined");
       return;
@@ -49,35 +52,81 @@ function Passengers() {
 
     // console.log("Deleting banner with ID:", id); // Log to verify ID
 
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.delete(`${ApiConfig.deleteAdvertisementEndpoint()}/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+    // try {
+    //   const token = localStorage.getItem('token');
+    //   const response = await axios.delete(ApiConfig.deleteAdvertisementEndpoint(),{
+    //     "id" : id
+    //   }, {
+    //     headers: {
+    //       'Authorization': `Bearer ${token}`,
+    //       'Content-Type': 'application/json'
+    //     }
+    //   });
 
-      if (response.data.status === 1) {
-        setBanners(banners.filter(banner => banner._id !== id));
-        alert('Advertisement deleted successfully.');
-      } else {
-        console.error('Failed to delete advertisement');
+    //   if (response.data.status === 1) {
+    //     setBanners(banners.filter(banner => banner._id !== id));
+    //     alert('Advertisement deleted successfully.');
+    //   } else {
+    //     console.error('Failed to delete advertisement');
+    //   }
+    // } catch (error) {
+    //   console.error('Error deleting banner:', error);
+    // }
+
+    try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(ApiConfig.deleteAdvertisementEndpoint(), {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }), // Request body with the "id" field
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.status === 1) {
+      // setBanners(banners.filter(banner => banner._id !== id));
+      const updatedBanners = banners.filter(banner => banner._id !== id);
+
+      // Adjust currentIndex if necessary
+      if (currentIndex >= updatedBanners.length) {
+        setCurrentIndex(updatedBanners.length - 1); // Move to the last index if currentIndex is out of bounds
       }
-    } catch (error) {
-      console.error('Error deleting banner:', error);
+
+      setBanners(updatedBanners);
+      alert('Advertisement deleted successfully.');
+      // alert('Advertisement deleted successfully.');
+    } else {
+      console.error('Failed to delete advertisement', result.message || '');
     }
+  } catch (error) {
+    console.error('Error deleting banner:', error);
+  }
   };
 
   const handleUploadImage = async (event) => {
     const file = event.target.files[0];
+    console.log("before")
+    console.log(file)
     const formData = new FormData();
+    
     formData.append('file', file);
-    formData.append('category', 'passenger');
-
+    formData.append('advertiseCategory', 'passenger');
+    console.log("form data")
+//     console.log(formData.get('file')); // Should log the uploaded file
+// console.log(formData.get('advertiseCategory')); // Should log 'passenger'
+console.log('FormData contents:');
+for (let [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+}
     try {
+      console.log(formData)
       const response = await axios.post(ApiConfig.postAdvertisementEndpoint(), formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 
+          'Content-Type': 'multipart/form-data', }
       });
 
       if (response.data.status === 1) {
@@ -106,14 +155,20 @@ function Passengers() {
   const handleImageUploadEdit = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
+    console.log("edit image")
+    console.log(formData)
+    console.log(file)
     formData.append('file', file);
 
     try {
-      const response = await axios.post(ApiConfig.updateAdvertisementEndpoint(editBanner._id), formData, {
+      const response = await axios.post(ApiConfig.postAdvertisementEndpoint(editBanner._id), formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
+      console.log("response")
+      console.log(response.data)
+      setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
       if (response.data.status === 1) {
+        
         setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
       }
     } catch (error) {
@@ -158,12 +213,23 @@ function Passengers() {
               &#10094;
             </div>
 
-            <div className="w-11/12 sm:w-3/5 h-auto sm:h-[40vh] flex justify-center items-center">
+            {/* <div className="w-11/12 sm:w-3/5 h-auto sm:h-[40vh] flex justify-center items-center">
               <img
                 src={banners[currentIndex].mediaPath}
                 alt={banners[currentIndex].name}
                 className="w-full h-full object-contain"
               />
+            </div> */}
+            <div className="w-11/12 sm:w-3/5 h-auto sm:h-[40vh] flex justify-center items-center">
+              {banners[currentIndex]?.mediaType === 'video' ? (
+                <video src={banners[currentIndex]?.mediaPath} controls className="w-full h-full object-contain" />
+              ) : (
+                <img
+                  src={banners[currentIndex]?.mediaPath}
+                  alt={banners[currentIndex]?.advertiseCategory}
+                  className="w-full h-full object-contain"
+                />
+              )}
             </div>
 
             <div className="absolute right-0 p-2 sm:p-4 cursor-pointer text-black" onClick={() => setCurrentIndex((prevIndex) => (prevIndex === banners.length - 1 ? 0 : prevIndex + 1))}>
