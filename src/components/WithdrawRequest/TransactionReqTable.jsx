@@ -253,38 +253,56 @@ const TransactionReqTable = () => {
 
       {/* Popup Modal */}
       {selectedTransaction && (
-        <div className="fixed inset-0 text-black flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Transaction Details</h2>
-            <p><strong>Name:</strong> {selectedTransaction.UserDetails.userName}</p>
-            <p><strong>Account No:</strong> {selectedTransaction._id}</p>
-            <p><strong>Status:</strong> {selectedTransaction.status}</p>
+  <div className="fixed inset-0 text-black flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-semibold mb-4">Transaction Details</h2>
+      <p><strong>Name:</strong> {selectedTransaction.UserDetails.userName}</p>
+      <p><strong>Account No:</strong> {selectedTransaction._id}</p>
+      <p><strong>Status:</strong> {selectedTransaction.status}</p>
+      <p>
+  <strong>Balance:</strong>{" "}
+  {selectedTransaction.bankDetails?.balance !== undefined
+    ? `₹${selectedTransaction.bankDetails.balance}`
+    : "N/A"}
+</p>
 
+<div className="mt-4">
+  <h3 className="text-md font-semibold mb-2">QR Code</h3>
+  {selectedTransaction.bankDetails?.qrCodePhoto ? (
+    <img
+      src={selectedTransaction.bankDetails.qrCodePhoto}
+      alt="QR Code"
+      className="w-32 h-32 object-contain border border-gray-300 rounded"
+    />
+  ) : (
+    <p>No QR Code available</p>
+  )}
+</div>
 
-
-            {/* Edit Status */}
-            <div className="mt-4">
-              <h3 className="text-md font-semibold">Update Status</h3>
-              <div className="flex space-x-2 mt-2">
-                <button className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "Paid" ? "bg-green-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Paid")}>
-                Paid
-                </button>
-                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Queued" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Queued")}>
-                Queued
-                </button>
-                <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Cancelled")}>
-                Cancelled
-                </button>
-              </div>
-            </div>
-
-            <div className="flex justify-end mt-6">
-              <button className="bg-gray-500 text-white px-4 py-2 mr-2" onClick={closeModal}>Cancel</button>
-              <button className="bg-blue-500 text-white px-4 py-2" onClick={handleSave}>Save</button>
-            </div>
-          </div>
+      {/* Edit Status */}
+      <div className="mt-4">
+        <h3 className="text-md font-semibold">Update Status</h3>
+        <div className="flex space-x-2 mt-2">
+          <button className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "Paid" ? "bg-green-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Paid")}>
+            Paid
+          </button>
+          <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Queued" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Queued")}>
+            Queued
+          </button>
+          <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Cancelled")}>
+            Cancelled
+          </button>
         </div>
-      )}
+      </div>
+
+      <div className="flex justify-end mt-6">
+        <button className="bg-gray-500 text-white px-4 py-2 mr-2" onClick={closeModal}>Cancel</button>
+        <button className="bg-blue-500 text-white px-4 py-2" onClick={handleSave}>Save</button>
+      </div>
+    </div>
+  </div>
+)}
+
     </motion.div>
   );
 };
