@@ -27,6 +27,9 @@ const DriverProfile = ()=>{
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');   
+
+    console.log("this is deiver")
+    console.log(driver)
     
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
@@ -110,7 +113,7 @@ const DriverProfile = ()=>{
             
                 >
               <img
-                   src={driver.profile_img} 
+                   src={driver.blockStatus ? blockedUser : (driver.profile_img || defaultUser)} 
                     alt="Driver"
 
                     className="w-40 h-45 md:w-40 md:h-40 rounded-full object-cover shadow-md"
@@ -282,12 +285,12 @@ const DriverProfile = ()=>{
                             
                             <div className="flex flex-col ">
                                 <img 
-                                src={driver.vehicle_img_front}
+                                src={driver.vehicleDetails ?driver.vehicleDetails.vehicle_img_front :driver.vehicle_img_front }
                                 alt="Auto Image Front" 
                                 className="w-50 max-w-xs "
                                 />
                                 <img 
-                                src={driver.vehicle_img_back}
+                                src={driver.vehicleDetails ?driver.vehicleDetails.vehicle_img_back :driver.vehicle_img_back }
                                 alt="Auto Image Back" 
                                 className="w-70 max-w-xs "
                                 />

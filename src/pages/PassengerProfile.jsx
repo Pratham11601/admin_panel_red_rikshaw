@@ -9,7 +9,7 @@ import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import PassengerRides from '../components/Passengers/PassengerRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
-
+import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
 const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -220,8 +220,8 @@ const PassengerProfile = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >*/}
-                        {/* Summary 
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
+                        {/* Summary  */}
+                        {/* <div className="p-4 bg-white shadow-lg rounded-lg">
                             <h3 className="text-xl font-bold mb-3">Summary</h3>
                             <div className="space-y-6 gap-4">
                                 <div>
@@ -237,7 +237,7 @@ const PassengerProfile = () => {
                                     <p className="text-gray-600">Email Verified, Phone Verified</p>
                                 </div>
                             </div>
-                        </div>*/}
+                        </div> */}
 
 
                         {/* Documents
@@ -280,7 +280,8 @@ const PassengerProfile = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                       <TransactionTable passengerId={passenger._id} />
+                       {/* <TransactionTable passengerId={passenger._id} /> */}
+                       <DriverTransactionTable driverId={passenger._id}/>
                     </motion.div>
                 )}
             </main>
