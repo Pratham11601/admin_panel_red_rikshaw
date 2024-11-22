@@ -138,8 +138,8 @@ static postAdvertisementEndpoint() {
   return `${this.BASE_URL}/api/advertisement/upload-ads`;
 }
 
-static deleteAdvertisementEndpoint(id) {
-  return `${this.BASE_URL}/api/advertisement/delete/${id}`;
+static deleteAdvertisementEndpoint() {
+  return `${this.BASE_URL}/api/advertisement/delete`;
 }
 
 //Benefis
