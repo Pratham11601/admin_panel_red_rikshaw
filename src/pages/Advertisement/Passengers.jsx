@@ -95,8 +95,11 @@ function Passengers() {
       if (currentIndex >= updatedBanners.length) {
         setCurrentIndex(updatedBanners.length - 1); // Move to the last index if currentIndex is out of bounds
       }
-
+      
       setBanners(updatedBanners);
+      console.log(id)
+      console.log(banners)
+      
       alert('Advertisement deleted successfully.');
       // alert('Advertisement deleted successfully.');
     } else {
@@ -128,7 +131,7 @@ for (let [key, value] of formData.entries()) {
         headers: { 
           'Content-Type': 'multipart/form-data', }
       });
-
+      setBanners([...banners, response.data.data]);
       if (response.data.status === 1) {
         setBanners([...banners, response.data.data]);
         setUploadSuccess(true);
@@ -287,12 +290,12 @@ for (let [key, value] of formData.entries()) {
                 <p className="text-gray-600">Added Date: {new Date(banner.createdAt).toLocaleDateString()}</p>
                 <p className="text-gray-600">Added Time: {new Date(banner.createdAt).toLocaleTimeString()}</p>
                 <div className="flex justify-between mt-4">
-                  <button
+                  {/* <button
                     className="bg-yellow-400 text-white px-4 py-2 rounded"
                     onClick={() => handleEditBanner(banner)}
                   >
                     Edit
-                  </button>
+                  </button> */}
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded"
                     onClick={() => handleDeleteBanner(banner._id)}  // Pass the banner's _id
@@ -357,13 +360,16 @@ for (let [key, value] of formData.entries()) {
         </div>
       )}
 
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center items-center gap-2 mt-6">
         <button
-          className="bg-gray-500 text-white px-4 py-2 rounded mr-4"
+          className="bg-gray-500 text-white px-4 py-2 rounded"
           onClick={handlePreviousPage}
         >
           Previous
         </button>
+        <span className='font-s text-lg text-gray-900'>
+          Page {currentPage} of {totalPages}
+        </span>
         <button
           className="bg-gray-500 text-white px-4 py-2 rounded"
           onClick={handleNextPage}
