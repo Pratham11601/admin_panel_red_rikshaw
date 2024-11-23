@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 import ApiConfig from '../../Consants/ApiConfig';
+import fetchWithToken from "../../utils/fetchWithToken";
 import axios from "axios";
 
 const TransactionReqTable = () => {
@@ -22,6 +23,9 @@ const TransactionReqTable = () => {
   const [error, setError] = useState(null);
 
   
+//const TransactionDetails = ({ selectedTransaction }) => {
+  //const [updatedStatus, setUpdatedStatus] = useState(null);
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
     setCurrentPage(1);
@@ -35,38 +39,64 @@ const TransactionReqTable = () => {
       setSortOrder("asc");
     }
   };
-
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
         const token = localStorage.getItem('token'); // Retrieve token from localStorage
-	
-        const response = await fetch(ApiConfig.getTransactionRequestEndPoint(),{
+  
+        if (!token) {
+          console.error("No token found");
+          return; // Exit early if no token is available
+        }
+
+  
+        // Fetch the transaction data from the backend
+        const response = await fetch(ApiConfig.getTransactionRequestEndPoint(), {
           method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
+          headers: {
+            'Authorization': `Bearer ${token}`,  // Add token to headers
+            'Content-Type': 'application/json'
+          }
         });
+  
+        // Check if the response is successful
+        if (!response.ok) {
+          console.error("Failed to fetch data:", response.statusText);
+          return;
+        }
+  
+        // Parse the response data
         const data = await response.json();
-        const transaction = data.items;
-        console.log(transaction);
-        
-
+        const transactions = data.items;
+  
+        console.log("Fetched transactions:", transactions);
+  
         setIsLoading(false);
-
-        if (Array.isArray(transaction)) {
-          setTransactions(transaction);
+  
+        if (Array.isArray(transactions)) {
+          setTransactions(transactions);
         } else {
-          console.error('Failed to fetch Transaction Data');
+          console.error('Failed to fetch transaction data');
         }
       } catch (error) {
         console.error('Error fetching transaction data:', error);
+        setIsLoading(false);  // Make sure loading state is updated even on error
       }
     };
-
+  
     fetchTransactionRequest();
-  }, [sortBy, searchTerm]);
+  }, [sortBy, searchTerm]);  // Refetch when sorting or search term changes
+  useEffect(() => {
+    if (selectedTransaction && selectedTransaction._id) {
+      const statusKey = `transaction-status-${selectedTransaction._id}`;
+      const savedStatus = localStorage.getItem(statusKey);
+      if (savedStatus) {
+        setUpdatedStatus(savedStatus);  // Set the saved status if it exists
+      } else {
+        setUpdatedStatus(selectedTransaction.status);  // Fallback to initial status
+      }
+    }
+  }, [selectedTransaction]);  // Run this whenever selectedTransaction changes
 
   const filteredTransaction = transactions.filter(
     (transaction) =>
@@ -120,31 +150,76 @@ const TransactionReqTable = () => {
     setSelectedTransaction(transaction);
     setUpdatedStatus(transaction.status); // Set initial status for editing
     setSelectedTransactionId(transaction._id)
-   
+    console.log("Selected transaction:", transaction);
     
 
   };
 
-  const handleStatusChange = (status) => {
+  /*const handleStatusChange = (status) => {
     setUpdatedStatus(status);
+    console.log("Updated Status:", status);  
+  };*/
+  const handleStatusChange = (status) => {
+    // Save the updated status in localStorage using the transaction ID
+    const statusKey = `transaction-status-${selectedTransaction._id}`;
+    localStorage.setItem(statusKey, status);
+  
+    // Update the state with the new status
+    setUpdatedStatus(status);
+    console.log("Updated Status:", status);
   };
+  
 
   const closeModal = () => {
     setSelectedTransaction(null);
   };
-
-  const handleSave = () => {
-    // Call the onSave function with the updated status
+  const handleSave = async () => {
     if (selectedTransaction) {
-      const updatedTransaction = { ...selectedTransaction, status: updatedStatus };
-      setTransactions((prev) =>
-        prev.map((transaction) =>
-          transaction._id === selectedTransaction._id ? updatedTransaction : transaction
-        )
-      );
+      try {
+        const requestBody = {
+          id: selectedTransaction._id,
+          status: updatedStatus,
+        };
+  
+        const responseData = await fetch(ApiConfig.putTransactionRequestEndPoint(), {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+  
+        if (responseData.ok) {
+          const data = await responseData.json();
+  
+          if (data.status === 1) {
+            setTransactions((prev) =>
+              prev.map((transaction) =>
+                transaction._id === selectedTransaction._id
+                  ? { ...transaction, status: updatedStatus }
+                  : transaction
+              )
+            );
+            setError(null);
+  
+            // Save the updated status in localStorage
+            console.log(`Saving status for transaction ${selectedTransaction._id} to localStorage`);
+            localStorage.setItem(`transaction-status-${selectedTransaction._id}`, updatedStatus);
+          } else {
+            setError(data.message || "Failed to update the transaction status.");
+          }
+        } else {
+          setError("Failed to update the transaction status.");
+        }
+      } catch (err) {
+        setError(`Unexpected error: ${err.message}`);
+      }
     }
+  
     closeModal();
   };
+  
+  
 
   return (
     <motion.div className="bg-white bg-opacity-50 backdrop-blur-md shadow-xl rounded-xl p-6 border-r border-red-400 mb-8">
@@ -197,23 +272,46 @@ const TransactionReqTable = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {currentItems.map((transaction) => (
-                  <motion.tr key={transaction._id} className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg">
-                    <td className="px-6 py-4 text-left text-sm text-black">{transaction.UserDetails.userName}</td>
-                    <td className="px-6 py-4 text-left text-sm text-black">{transaction.UserDetails.userRole}</td>
-                    <td className="px-6 py-4 text-left text-sm text-black">{transaction.value}</td>
-                    <td className="px-6 py-4 text-left text-sm text-black">{new Date(transaction.createdAt).toLocaleString()}</td>
-                    <td className="py-3 px-6 text-left">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.status === "completed" ? "bg-green-200 text-green-900" : transaction.status === "pending" ? "bg-yellow-200 text-pink-900" : "bg-red-200 text-red-900"}`}>
-                        {transaction.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-4 text-center text-sm text-black">
-                      <button className="text-indigo-400 hover:text-indigo-300 mr-2" onClick={() => handleViewTransactionDetails(transaction)}>Edit</button>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
+  {currentItems.map((transaction) => (
+    <motion.tr
+      key={transaction._id}
+      className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg"
+    >
+      <td className="px-6 py-4 text-left text-sm text-black">{transaction.UserDetails.userName}</td>
+      <td className="px-6 py-4 text-left text-sm text-black">{transaction.UserDetails.userRole}</td>
+      <td className="px-6 py-4 text-left text-sm text-black">{transaction.value}</td>
+      <td className="px-6 py-4 text-left text-sm text-black">{new Date(transaction.createdAt).toLocaleString()}</td>
+
+      {/* Status column with dynamic classes based on new schema */}
+      <td className="py-3 px-6 text-left">
+        <span
+          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+            transaction.status === "Paid"
+              ? "bg-green-200 text-green-900"
+              : transaction.status === "Cancelled"
+              ? "bg-red-200 text-red-900"
+              : transaction.status === "Queued"
+              ? "bg-blue-200 text-blue-900"
+              : "bg-yellow-200 text-yellow-900" // Default for Pending
+          }`}
+        >
+          {transaction.status}
+        </span>
+      </td>
+
+      <td className="px-3 py-4 text-center text-sm text-black">
+        <button
+          className="text-indigo-400 hover:text-indigo-300 mr-2"
+          onClick={() => handleViewTransactionDetails(transaction)}
+        >
+          Edit
+        </button>
+      </td>
+    </motion.tr>
+  ))}
+</tbody>
+
+
             </table>
           </motion.div>
 
@@ -281,19 +379,30 @@ const TransactionReqTable = () => {
 
       {/* Edit Status */}
       <div className="mt-4">
-        <h3 className="text-md font-semibold">Update Status</h3>
-        <div className="flex space-x-2 mt-2">
-          <button className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "Paid" ? "bg-green-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Paid")}>
-            Paid
-          </button>
-          <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Queued" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Queued")}>
-            Queued
-          </button>
-          <button className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`} onClick={() => handleStatusChange("Cancelled")}>
-            Cancelled
-          </button>
-        </div>
-      </div>
+  <h3 className="text-md font-semibold">Update Status</h3>
+  <div className="flex space-x-2 mt-2">
+    <button
+      className={`px-3 py-2 text-black shadow-xl ${updatedStatus === "Paid" ? "bg-green-500 shadow-xl" : "bg-white-400"}`}
+      onClick={() => handleStatusChange("Paid")}>
+      Paid
+    </button>
+    <button
+      className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Queued" ? "bg-yellow-500 shadow-xl" : "bg-white-400"}`}
+      onClick={() => handleStatusChange("Queued")}>
+      Queued
+    </button>
+    <button
+      className={`px-3 py-2 text-black shadow-lg ${updatedStatus === "Cancelled" ? "bg-red-500 shadow-xl" : "bg-white-400"}`}
+      onClick={() => handleStatusChange("Cancelled")}>
+      Cancelled
+    </button>
+  </div>
+  <div>
+    {/* Debug log */}
+    <p>Updated Status: {updatedStatus}</p>
+  </div>
+</div>
+
 
       <div className="flex justify-end mt-6">
         <button className="bg-gray-500 text-white px-4 py-2 mr-2" onClick={closeModal}>Cancel</button>
