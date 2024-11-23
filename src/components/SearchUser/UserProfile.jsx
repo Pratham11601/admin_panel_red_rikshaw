@@ -3,13 +3,14 @@ import Header from "../common/Header";
 import { ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion'; 
 import { useLocation,useNavigate } from 'react-router-dom';
-import driverImage from '../../assets/driverimg.jpg';
 import DocumentPopup from '../Drivers/DocumentPopup';
-import RidesTable from '../Rides/RideTable';
-import TransactionTable from '../WithdrawHistory/TransactionTable';
+import DriverRides from '../Drivers/DriverRides';
+import DriverTransactionTable from '../Drivers/DriverTransactionTable';
 
 const UserProfile = ({user}) => {
  // Get user data passed from SearchUser component
+ console.log(user.role);
+ 
   const [activeTab, setActiveTab] = useState('profileSummary');
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [status, setStatus] = useState('Block');
@@ -18,8 +19,11 @@ const UserProfile = ({user}) => {
   const [addAmount, setAddAmount] = useState(''); 
   const navigate = useNavigate();
   const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' }); 
   const [password, setPassword] = useState('');   
 
+  console.log(user.role);
+  
   const toggleStatus = () => {
     const newStatus = status === 'Block' ? 'Unblock' : 'Block';
     setStatus(newStatus);
@@ -46,8 +50,16 @@ const handleAddMoney = () => {
     setAddAmount('');
     togglePopup();
   };
+
+
 const handleViewDocument = () => {
-  setPopupOpen(true);
+    setPopupOpen(true);
+    setDocumentUrls({
+        front: user.adhar_img_front,
+
+        back: user.adhar_img_back
+      });
+  
 };
 
 const handleClosePopup = () => {
@@ -229,12 +241,13 @@ const handleDeleteConfirm = () => {
             {/* Navbar Section */}
                 <div className="border-b border-gray-300 mb-6 mt-6">
                     <ul className="flex justify-around">
-                    <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
-                        onClick={() => setActiveTab('profileSummary')}
-                    >
-                        Profile Summary
-                    </li>
+                    {user.role === 'Driver' && (
+                        <li className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                            onClick={() => setActiveTab('profileSummary')}
+                        >
+                            Profile Summary
+                        </li>
+                    )}
                     <li 
                         className={`cursor-pointer py-2 ${activeTab === 'tripSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
                         onClick={() => setActiveTab('tripSummary')}
@@ -251,49 +264,56 @@ const handleDeleteConfirm = () => {
                 </div>
 
                 {/* Profile Summary Section */}
-                    {activeTab === 'profileSummary' && (
-                        <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                        >
+                    {activeTab === 'profileSummary' &&  user.role === 'Driver' && (
+                       <motion.div
+                       className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
+                       initial={{ opacity: 0 }}
+                       animate={{ opacity: 1 }}
+                       transition={{ duration: 0.5 }}
+                       >
 
 
-                        {/* Auto Details */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
-                            <h3 className="text-xl font-bold mb-3">Auto Details</h3>
-                            <div className="">
-                            <img 
-                                src="https://via.placeholder.com/100" 
-                                alt="Auto Image" 
-                                className="w-200 h-200 object-cover rounded-lg" 
-                            />
-                            <div>
-                                <p className="text-gray-600">Vehicle Number: ABC-1234</p>
-                            </div>
-                            </div>
-                        </div>
+                       {/* Auto Details */}
+                       <div className="p-4 bg-white shadow-lg rounded-lg text-black">
+                           <h3 className="text-xl font-bold mb-3">Auto Details</h3>
+                           <p className="">Vehicle Number: {user.vehicleDetails ? user.vehicleDetails.Vehicle_number : "No Vehicle Number"}</p>
+                           
+                           <div className="flex flex-col ">
+                               <img 
+                               src={user.vehicleDetails ?user.vehicleDetails.vehicle_img_front :user.vehicle_img_front }
+                               alt="Auto Image Front" 
+                               className="w-50 max-w-xs "
+                               />
+                               <img 
+                               src={user.vehicleDetails ?user.vehicleDetails.vehicle_img_back :user.vehicle_img_back }
+                               alt="Auto Image Back" 
+                               className="w-70 max-w-xs "
+                               />
+                           </div>
+                       </div>
 
-                        {/* Documents */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
-                            <h3 className="text-xl font-bold mb-3">Documents</h3>
-                            <div className='flex space-x-10'>
-                                <p className="text-gray-600">Driver's License: Document1.pdf</p>
-                                <button onClick={handleViewDocument} className="text-blue-500 hover:underline">
-                                    View
-                                </button>
-                            </div>
-                        </div>
 
-                        </motion.div>
+                       {/* Documents */}
+                       <div className="p-4 bg-white shadow-lg rounded-lg">
+                           <h3 className="text-xl font-bold mb-3">Documents</h3>
+                           <div className='flex space-x-10'>
+                               <p className="text-gray-600">Aadhar Card</p>
+                               <button onClick={handleViewDocument} className="text-blue-500 hover:underline">
+                                   View
+                               </button>
+                           </div>
+                       </div>
+
+                       </motion.div>
                     )}
                 {/* Document Popup */}
+                        
                         <DocumentPopup
                             isOpen={isPopupOpen}
                             onClose={handleClosePopup}
-                            documentUrl="https://example.com/document.pdf" // Replace with actual document URL
+                            documentUrl={documentUrls} // Replace with actual document URL
                          />
+
 
                 {/* Trip Summary Section */}
                     {activeTab === 'tripSummary' && (
@@ -302,7 +322,10 @@ const handleDeleteConfirm = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                        <RidesTable/>
+                            {
+                                user.role==="Driver"?<DriverRides driverId={user._id} />: <PassengerRides passengerId={user._id} />
+                            }
+                        
                         
                         </motion.div>
                 )}
@@ -314,7 +337,7 @@ const handleDeleteConfirm = () => {
                         transition={{ duration: 0.5 }}
                         >
                         
-                        <TransactionTable/>
+                        <DriverTransactionTable userId={user._id}/>
                         </motion.div>
                 )}
             </main>

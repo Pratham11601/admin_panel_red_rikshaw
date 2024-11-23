@@ -74,10 +74,11 @@ const PassengerRides = ({ passengerId }) => {
 
   // Filter and sort the rides data
   const filteredRides = ridesData.filter(
-    (ride) =>
-      ride.driverId.name.toLowerCase().includes(searchTerm) ||
-      ride.status.toLowerCase().includes(searchTerm)
-  );
+    (ride) =>{
+      const driverName = ride.driverId?.name?.toLowerCase() || "";
+  const passengerName = ride.passengerId?.name?.toLowerCase() || "";
+  const status = ride.status?.toLowerCase() || "";
+});
 
     // Sort the rides based on selected field
     const sortedRides = [...filteredRides].sort((a, b) => {
@@ -220,7 +221,7 @@ const PassengerRides = ({ passengerId }) => {
                             {ride._id}
                         </td> */}
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black ">
-                            {ride.driverId.name}
+                            {ride.driverId?.name}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                             $15.00

@@ -2,8 +2,6 @@ import Header from "../components/common/Header";
 import React, { useState } from 'react';
 import axios from 'axios';
 import UserProfile from "../components/SearchUser/UserProfile";
-import DriversProfile from "../components/SearchUser/DriversProfile";
-import PassengersProfile from "../components/SearchUser/PassengersProfile";
 import usernotfound from '../assets/usernotfound2.jpg';
 import searchuser from '../assets/searchuser.jpg';
 
@@ -46,13 +44,9 @@ const SearchUser = () => {
   };
 
   const renderUserProfile = () => {
-    if (userData && userData.role === 'driver') {
-      return <DriversProfile user={userData} clearUserData={clearUserData} />;
-    } else if (userData && userData.role === 'passenger') {
-      return <PassengersProfile user={userData} clearUserData={clearUserData} />;
-    } else {
-      return <UserProfile user={userData} />;
-    }
+    if (userData ) {
+      return  <UserProfile user={userData} />;
+    } 
   };
 
   const clearUserData = () => {

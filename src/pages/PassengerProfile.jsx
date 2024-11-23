@@ -4,12 +4,10 @@ import { ChevronLeft, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import driverImage from '../assets/driverimg.jpg';
-import DocumentPopup from '../components/Drivers/DocumentPopup';
-import TransactionTable from '../components/WithdrawHistory/TransactionTable';
 import PassengerRides from '../components/Passengers/PassengerRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
-import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
+import PassengerTransactionTable from '../components/Drivers/DriverTransactionTable';
 const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -281,7 +279,7 @@ const PassengerProfile = () => {
                         transition={{ duration: 0.5 }}
                     >
                        {/* <TransactionTable passengerId={passenger._id} /> */}
-                       <DriverTransactionTable driverId={passenger._id}/>
+                       <PassengerTransactionTable driverId={passenger._id}/>
                     </motion.div>
                 )}
             </main>
