@@ -18,7 +18,7 @@ const SIDEBAR_ITEMS = [
   { name: "Deleted users", icon: CreditCard, color: "black", href: "/Home/deletedUsers" },
   { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },
-  { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
+  // { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
 ];
 
 const Sidebar = () => {

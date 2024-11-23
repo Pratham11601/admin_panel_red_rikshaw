@@ -7,7 +7,9 @@ import driverImage from '../assets/driverimg.jpg';
 import PassengerRides from '../components/Passengers/PassengerRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
-import PassengerTransactionTable from '../components/Drivers/DriverTransactionTable';
+
+import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
+
 const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,58 +22,40 @@ const PassengerProfile = () => {
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');
-    console.log("this is passenger")
-    console.log(passenger);
 
     const togglePopup = () => {
-        console.log('button clicked');
-
         setShowAddMoneyPopup(!showAddMoneyPopup);
     };
 
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
-    }
-    const handleViewDocument = () => {
-        setPopupOpen(true);
     };
 
-    const handleClosePopup = () => {
-        setPopupOpen(false);
-    };
-
-    const handleAddMoney = () => {
-        const newAmount = parseFloat(addAmount);
-        if (isNaN(newAmount) || newAmount <= 0) {
-            alert('Please enter a valid amount.');
-            return;
-        }
-        setWalletBalance(walletBalance + newAmount);
-        setAddAmount('');
-        togglePopup();
-    };
-    const handleBackClick = () => {
-        navigate('/Home/passengers');
-    };
     const handleDeleteClick = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
     };
-    const handleDeleteConfirm = () => {
 
+    const handleDeleteConfirm = () => {
         if (password === 'Steve@123') {
             alert("User deleted successfully");
-            setShowDeletePopup(false);
-            setPassword('');
+            setShowDeletePopup(false); // Close the delete popup
+            setPassword(''); // Clear the password input
+            navigate('/Home/drivers'); // Redirect to another page
         } else {
             alert("Incorrect password. Please try again.");
         }
     };
 
     const handleCloseDeletePopup = () => {
-        setShowDeletePopup(false);
-        setPassword('');
+        setShowDeletePopup(false); // Close the popup
+        setPassword(''); // Clear the password input
     };
+
+    const handleBackClick = () => {
+        navigate('/Home/passengers');
+    };
+
     return (
         <div className="flex-1 overflow-auto relative z-10">
             <Header title='Passenger Profile' />
@@ -89,37 +73,28 @@ const PassengerProfile = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    {/*  Profile Image */}
-                    <motion.div
-                        className="flex justify-center md:justify-start"
-
-                    >
+                    <motion.div className="flex justify-center md:justify-start">
                         <img
                             src={passenger.blockStatus ? blockedUser : (passenger.profile_img || defaultUser)}
-                            alt=""
+                            alt="Profile"
                             className="w-50 h-50 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                         />
                     </motion.div>
 
-                    {/* 2nd Div: Name, Phone, Email, Address */}
                     <motion.div className="text-center md:text-left space-y-2">
                         <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
-                        <p className="text-gray-600">📞   {passenger.phone}</p>
-                        
+                        <p className="text-gray-600">📞 {passenger.phone}</p>
                         <p className="text-gray-600">✉️ {passenger.email}</p>
-                        
-                        
                         <p className="text-gray-600">⭐ {passenger.rating} Reviews</p>
-                        <p className="flex  text-gray-600  "><Car style={{ color: 'black', marginRight: '10px' }} /> {passenger.total_rides} Total Rides</p>
+                        <p className="flex text-gray-600">
+                            <Car style={{ color: 'black', marginRight: '10px' }} /> {passenger.total_rides} Total Rides
+                        </p>
                     </motion.div>
 
                     <motion.div className="space-y-3">
-
-                        <div className="flex flex-wrap items-center my-2 justify-center ">
-
+                        <div className="flex flex-wrap items-center my-2 justify-center">
                             <span
-                                className={` flex-wrap px-5 py-1 my-2 rounded-full text-white text-center cursor-pointer ${passenger.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
-
+                                className={`flex-wrap px-5 py-1 my-2 rounded-full text-white text-center cursor-pointer ${passenger.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
                             >
                                 {passenger.blockStatus ? 'Unblock' : 'Block'}
                             </span>
@@ -129,139 +104,77 @@ const PassengerProfile = () => {
                             >
                                 Delete
                             </button>
-                            {/* <button
-
-                            onClick={toggleStatus}
-                            className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
-                        >
-                            Change Status
-                    </button> */}
                         </div>
+
                         <div className="flex items-center justify-center md:justify-start pt-3">
                             <div className="flex w-full flex-col justify-center gap-3 items-start">
-                                <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
+                                <div className="bg-white flex w-full flex-wrap flex-row justify-around">
                                     <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                                    <p className="text-xl ">₹{passenger.bankDetails ? (passenger.bankDetails.balance ? passenger.bankDetails.balance : walletBalance) : walletBalance}</p>
+                                    <p className="text-xl">
+                                        ₹{passenger.bankDetails ? (passenger.bankDetails.balance || walletBalance) : walletBalance}
+                                    </p>
                                 </div>
-                                {/* Conditionally Render "Add Money" Button */}
-                                <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
+                                <div className="bg-white flex w-full flex-wrap flex-row justify-around">
                                     <h1 className="text-xl font-semibold">Lock Balance</h1>
-                                    <p className="text-xl ">₹{passenger.bankDetails ? (passenger.bankDetails.lock_amount ? passenger.bankDetails.lock_amount : lockBalance) : lockBalance}</p>
+                                    <p className="text-xl">
+                                        ₹{passenger.bankDetails ? (passenger.bankDetails.lock_amount || lockBalance) : lockBalance}
+                                    </p>
                                 </div>
-
                             </div>
                         </div>
-
-                        {/* Delete Confirmation Popup */}
-                        {showDeletePopup && (
-                            <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
-                                <div className="bg-white p-6 rounded-lg shadow-md w-80">
-                                    <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
-                                    <p className="mb-2"></p>
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full p-2 border border-gray-300 rounded mb-4"
-                                        placeholder="Enter password"
-                                    />
-                                    <button
-                                        onClick={handleDeleteConfirm}
-                                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                    >
-                                        Confirm Delete
-                                    </button>
-                                    <button
-                                        onClick={handleCloseDeletePopup}
-                                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        )}
                     </motion.div>
                 </motion.div>
 
-                {/* Navbar Section */}
-                <div className="border-b border-gray-300 mb-6">
-                    <ul className="flex justify-around">
-                        
-                        {/*<li
-                            className={`cursor-pointer py-2 ${activeTab === 'profileSummary' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
-                            onClick={() => setActiveTab('profileSummary')}
-                        >
-                            Profile Summary
-                        </li>*/}
-                        <li
-                            className={`cursor-pointer py-2 ${activeTab === 'Rides' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
-                            onClick={() => setActiveTab('Rides')}
-                        >
-                            Trip Summary
-                        </li>
+                {/* Delete Confirmation Popup */}
+                {showDeletePopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                            <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter password"
+                            />
+                            <button
+                                onClick={handleDeleteConfirm}
+                                className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            >
+                                Confirm Delete
+                            </button>
+                            <button
+                                onClick={handleCloseDeletePopup}
+                                className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
 
-                        
-                         <li 
-                        className={`cursor-pointer py-2 ${activeTab === 'transactionHistory' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
-                        onClick={() => setActiveTab('transactionHistory')}
-                    >
-                        Transaction History
-                    </li>
-                    </ul>
-                </div>
-                 
-                {/* Profile Summary Section 
-                {activeTab === 'profileSummary' && (
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-lg rounded-lg p-6 text-black"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >*/}
-                        {/* Summary  */}
-                        {/* <div className="p-4 bg-white shadow-lg rounded-lg">
-                            <h3 className="text-xl font-bold mb-3">Summary</h3>
-                            <div className="space-y-6 gap-4">
-                                <div>
-                                    <h4 className="font-semibold text-gray-800">About </h4>
-                                    <p className="text-gray-600">Lorem ipsum dolor sit amet...</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-gray-800">Languages Spoken</h4>
-                                    <p className="text-gray-600">English, Spanish</p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold text-gray-800">Verifications</h4>
-                                    <p className="text-gray-600">Email Verified, Phone Verified</p>
-                                </div>
-                            </div>
-                        </div> */}
+                {/* Tab Selection */}
+                {!showDeletePopup && (
+                    <div className="border-b border-gray-300 mb-6">
+                        <ul className="flex justify-around">
+                            <li
+                                className={`cursor-pointer py-2 ${activeTab === 'Rides' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-600'}`}
+                                onClick={() => setActiveTab('Rides')}
+                            >
+                                Trip Summary
+                            </li>
+                            <li
+                                className={`cursor-pointer py-2 ${activeTab === 'transactionHistory' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                                onClick={() => setActiveTab('transactionHistory')}
+                            >
+                                Transaction History
+                            </li>
+                        </ul>
+                    </div>
+                )}
 
-
-                        {/* Documents
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
-                            <h3 className="text-xl font-bold mb-3">Documents</h3>
-                            <div className='flex space-x-10'>
-                                <p className="text-gray-600">Driver's License: Document1.pdf</p>
-                                <button onClick={handleViewDocument} className="text-blue-500 hover:underline">
-                                    View
-                                </button>
-                            </div>
-                        </div> 
-                    </motion.div>
-                )}*/}
-
-                {/* Document Popup 
-                <DocumentPopup
-                    isOpen={isPopupOpen}
-                    onClose={handleClosePopup}
-                    documentUrl="https://example.com/document.pdf" // Replace with actual document URL
-                />*/}
-
-
-
-                {/* Ride Section */}
-                {activeTab === 'Rides' && (
+                {/* Active Tab Content */}
+                {!showDeletePopup && activeTab === 'Rides' && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -271,21 +184,21 @@ const PassengerProfile = () => {
                     </motion.div>
                 )}
 
-                 {/* TransactionHistory Section */}
-                {activeTab === 'transactionHistory' && (
+                {!showDeletePopup && activeTab === 'transactionHistory' && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                       {/* <TransactionTable passengerId={passenger._id} /> */}
-                       <PassengerTransactionTable driverId={passenger._id}/>
+
+                        <DriverTransactionTable driverId={passenger._id} />
+
                     </motion.div>
                 )}
             </main>
-
         </div>
-    )
-}
+    );
+};
 
 export default PassengerProfile;
+
