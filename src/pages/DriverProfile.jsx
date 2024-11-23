@@ -121,6 +121,7 @@ const DriverProfile = ()=>{
             setShowDeletePopup(false);
             setPassword('');
             navigate('/Home/drivers'); // Redirect after deletion
+            
         } catch (error) {
             console.error('Error deleting user:', error);
             alert('An error occurred while deleting the user. Please try again.');
