@@ -1,5 +1,3 @@
-
-
 import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -10,14 +8,13 @@ import { UserCheck, UserPlus, UsersIcon, UserX } from "lucide-react";
 import fetchWithToken from '../../utils/fetchWithToken'; 
 import ApiConfig from '../../Consants/ApiConfig';
 
-
 const RideTable = () => {
   const [ridesData, setRidesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added"); 
-  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [sortBy, setSortBy] = useState("newly-added"); // Default to sorting by newly-added
+  const [sortOrder, setSortOrder] = useState("desc"); // Default to descending for the latest data on top
   const [selectedRide, setSelectedRide] = useState(null);
   const itemsPerPage = 10;
 
@@ -33,9 +30,9 @@ const RideTable = () => {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(field);
-      setSortOrder("asc"); 
+      setSortOrder("asc"); // Default to ascending when changing the field
     }
-    setCurrentPage(1); 
+    setCurrentPage(1); // Reset to the first page when sorting changes
   };
 
   // Fetch ride data using fetchWithToken
@@ -64,7 +61,7 @@ const RideTable = () => {
     };
 
     fetchRides();
-  }, [sortBy, searchTerm]);
+  }, [sortBy, searchTerm]); // Re-fetch when sorting or search term changes
 
   // Filter and sort the ride data
   const filteredRides = ridesData.filter(
@@ -80,6 +77,12 @@ const RideTable = () => {
     }
     if (sortBy === "fare") {
       return sortOrder === "asc" ? a.totalCost - b.totalCost : b.totalCost - a.totalCost;
+    }
+    if (sortBy === "newly-added") {
+      // Sort by newly-added (assuming this is a timestamp or creation date)
+      const aDate = new Date(a.newlyAdded); // Replace 'newlyAdded' with your actual field name
+      const bDate = new Date(b.newlyAdded);
+      return sortOrder === "asc" ? aDate - bDate : bDate - aDate;
     }
     return 0;
   });
@@ -214,10 +217,10 @@ const RideTable = () => {
                           {ride.totalCost ? `₹ ${ride.totalCost}` : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {ride.pickupLocation.place}
+                          {ride.pickupLocation?.place || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {ride.dropoffLocation.place}
+                          {ride.dropoffLocation?.place || "N/A"}
                         </td>
                       </motion.tr>
                     ))}
@@ -226,21 +229,16 @@ const RideTable = () => {
               </motion.div>
 
               {/* Pagination */}
-              <div className="flex justify-between items-center my-4">
+              <div className="flex justify-center mt-6">
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                  onClick={() => paginate(currentPage - 1)}
-                  disabled={currentPage === 1}
+                  className="py-2 px-4 bg-blue-500 text-white rounded-lg mx-1"
+                  onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
                 >
                   Previous
                 </button>
-                <div>
-                  Page {currentPage} of {totalPages}
-                </div>
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                  onClick={() => paginate(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  className="py-2 px-4 bg-blue-500 text-white rounded-lg mx-1"
+                  onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
                 >
                   Next
                 </button>
@@ -254,3 +252,4 @@ const RideTable = () => {
 };
 
 export default RideTable;
+
