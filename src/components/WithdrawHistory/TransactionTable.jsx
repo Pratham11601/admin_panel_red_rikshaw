@@ -11,8 +11,8 @@ const TransactionTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added"); // Default sort
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
+  const [sortBy, setSortBy] = useState("datetime"); // Default sort
+  const [sortOrder, setSortOrder] = useState("desc"); // Default sort order
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const itemsPerPage = 10;
   useEffect(() => {
@@ -23,7 +23,7 @@ const TransactionTable = () => {
         const response = await fetch(ApiConfig.getTransactionHistoryEndPoint(), {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`, // Add token to headers
+            Authorization: `Bearer ${token}`, // Add token to headers
             'Content-Type': 'application/json',
           },
         });
@@ -35,21 +35,27 @@ const TransactionTable = () => {
         }
   
         const data = await response.json();
-        console.log("API Response:", data); // Log the response to check its structure
+        console.log('API Response:', data); // Log the response to check its structure
   
         // Ensure the response contains the 'Transactions' array
         if (data && Array.isArray(data.items)) {
-          setTransactions(data.items); // Set transactions if the 'Transactions' array exists
+          // Sort the transactions by createdAt (default)
+          const sortedData = data.items.sort((a, b) => 
+            new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setTransactions(sortedData); // Set sorted transactions
         } else if (data && data.result && Array.isArray(data.result.items)) {
-          // Handle nested response structure
-          setTransactions(data.result.items);
+          // Handle nested response structure and sort
+          const sortedData = data.result.items.sort((a, b) => 
+            new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          setTransactions(sortedData);
         } else {
           console.error('Failed to fetch Transactions: Invalid data format or missing Transactions');
           setTransactions([]); // Fallback to an empty array
         }
   
         setIsLoading(false);
-  
       } catch (error) {
         setIsLoading(false);
         console.error('Error fetching transaction data:', error);
@@ -58,6 +64,7 @@ const TransactionTable = () => {
   
     fetchTransactionRequest();
   }, [sortBy, searchTerm]); // Re-fetch data if sortBy or searchTerm changes
+  
   
   // Search functionality
   const handleSearch = (e) => {
@@ -69,11 +76,11 @@ const TransactionTable = () => {
   const handleSortChange = (field) => {
     if (sortBy === field) {
       // Toggle the sort order if the same field is clicked again
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
     } else {
       // Set the new field and default sort order to ascending
       setSortBy(field);
-      setSortOrder("asc");
+      setSortOrder("desc");
     }
   };
 
@@ -89,25 +96,25 @@ const TransactionTable = () => {
 
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "name") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.UserDetails.userName.localeCompare(b.UserDetails.userName)
         : b.UserDetails.userName.localeCompare(a.UserDetails.userName);
     }
     if (sortBy === "role") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.UserDetails.userRole.localeCompare(b.UserDetails.userRole)
         : b.UserDetails.userRole.localeCompare(a.UserDetails.userRole);
     }
     if (sortBy === "value") {
-      return sortOrder === "asc" ? a.value - b.value : b.value - a.value;
+      return sortOrder === "desc" ? a.value - b.value : b.value - a.value;
     }
     if (sortBy === "status") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.status.localeCompare(b.status)
         : b.status.localeCompare(a.status);
     }
     if (sortBy === "datetime") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.createdAt.localeCompare(b.createdAt)
         : b.createdAt.localeCompare(a.createdAt);
     }

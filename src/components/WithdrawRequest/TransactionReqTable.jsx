@@ -12,8 +12,8 @@ const TransactionReqTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("datetime");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [selectedTransaction, setSelectedTransaction] = useState('');
   const [selectedTransactionId, setSelectedTransactionId] = useState();
   const [updatedStatus, setUpdatedStatus] = useState(null);
@@ -33,10 +33,10 @@ const TransactionReqTable = () => {
 
   const handleSortChange = (field) => {
     if (sortBy === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
     } else {
       setSortBy(field);
-      setSortOrder("asc");
+      setSortOrder("desc");
     }
   };
   useEffect(() => {
@@ -109,25 +109,25 @@ const TransactionReqTable = () => {
 
   const sortedTransactions = [...filteredTransaction].sort((a, b) => {
     if (sortBy === "name") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.UserDetails.userName.localeCompare(b.name)
         : b.UserDetails.userName.localeCompare(a.name);
     }
     if (sortBy === "role") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.UserDetails.userRole.localeCompare(b.role)
         : b.UserDetails.userRole.localeCompare(a.role);
     }
     if (sortBy === "value") {
-      return sortOrder === "asc" ? a.value - b.value : b.value - a.value;
+      return sortOrder === "desc" ? a.value - b.value : b.value - a.value;
     }
     if (sortBy === "status") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.status.localeCompare(b.status)
         : b.status.localeCompare(a.status);
     }
     if (sortBy === "datetime") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? a.createdAt.localeCompare(b.status)
         : b.createdAt.localeCompare(a.status);
     }
