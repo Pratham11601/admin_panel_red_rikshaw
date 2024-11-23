@@ -115,8 +115,8 @@ const TransactionTable = () => {
     }
     if (sortBy === "datetime") {
       return sortOrder === "desc"
-        ? a.createdAt.localeCompare(b.createdAt)
-        : b.createdAt.localeCompare(a.createdAt);
+        ? new Date(b.createdAt) - new Date(a.createdAt) // Latest first
+        : new Date(a.createdAt) - new Date(b.createdAt); // Oldest first
     }
     return 0;
   });
