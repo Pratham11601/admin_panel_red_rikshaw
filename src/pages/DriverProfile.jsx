@@ -75,21 +75,64 @@ const DriverProfile = ()=>{
         setShowDeletePopup(true); // Open delete confirmation popup
         
     };
-    const handleDeleteConfirm = () => {
-       
-        if (password === 'Steve@123') { 
-            alert("User deleted successfully");
+    const handleDeleteConfirm = async () => {
+        try {
+            // Step 1: Fetch admin login details
+            const loginResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone: "7768860976", // Use admin phone number
+                    password: password, // Password entered in the confirmation popup
+                }),
+            });
+    
+            if (!loginResponse.ok) {
+                alert('Incorrect password. Please try again.');
+                return;
+            }
+    
+            const loginData = await loginResponse.json();
+            const adminToken = loginData.token;
+    
+            // Step 2: Make delete user request
+            const deleteResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/delete-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({
+                    userId: driver._id, // ID of the user to be deleted
+                    adminPassword: password, // Password entered in the confirmation popup
+                    role: driver.role, // Role of the user (Driver/Passenger)
+                }),
+            });
+    
+            if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json();
+                alert(`Failed to delete user: ${errorData.message}`);
+                return;
+            }
+    
+            alert('User deleted successfully!');
             setShowDeletePopup(false);
             setPassword('');
-        } else {
-          alert("Incorrect password. Please try again.");
+            navigate('/Home/drivers'); // Redirect after deletion
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('An error occurred while deleting the user. Please try again.');
         }
-      };
-    
-      const handleCloseDeletePopup = () => {
+        
+    };
+    const handleCloseDeletePopup = () => {
+        console.log('Popup closed');
         setShowDeletePopup(false);
         setPassword('');
-      };
+    };
+
     return(
         <div className="flex-1 overflow-auto relative z-10">
             <Header title='Drivers Profile' />
@@ -188,30 +231,29 @@ const DriverProfile = ()=>{
 
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (
-                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-md w-80">
-                        <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
-                        <p className="mb-2"></p>
-                        <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded mb-4"
-                        placeholder="Enter password"
-                        />
-                        <button
-                        onClick={handleDeleteConfirm}
-                        className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                        Confirm Delete
-                        </button>
-                        <button
-                        onClick={handleCloseDeletePopup}
-                        className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                        >
-                        Cancel
-                        </button>
-                    </div>
+                        <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                            <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter password"
+                            />
+                            <button
+                                onClick={handleDeleteConfirm}
+                                className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            >
+                                Confirm Delete
+                            </button>
+                            <button
+                                onClick={handleCloseDeletePopup}
+                                className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                            >
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 )}
                 </motion.div>
@@ -279,9 +321,9 @@ const DriverProfile = ()=>{
 
 
                         {/* Auto Details */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg">
+                        <div className="p-4 bg-white shadow-lg rounded-lg text-black">
                             <h3 className="text-xl font-bold mb-3">Auto Details</h3>
-                            <p className="text-gray-600">Vehicle Number: ABC-1234</p>
+                            <p className="">Vehicle Number: {driver.vehicleDetails ? driver.vehicleDetails.Vehicle_number : "No Vehicle Number"}</p>
                             
                             <div className="flex flex-col ">
                                 <img 

@@ -74,7 +74,7 @@ class ApiConfig {
     //Transaction Request
     static getTransactionRequestEndPoint() {
       
-      return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=10`;
+      return `${this.BASE_URL}/api/adminpanel/transactionsRequest?page=1&limit=15`;
     }
 
     static putTransactionRequestEndPoint() {

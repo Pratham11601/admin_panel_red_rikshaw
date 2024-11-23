@@ -5,8 +5,9 @@ import rikshawicon from '../../assets/rickshaw.png';
 import { BadgeCheck,PhoneCall ,ArrowRightToLine} from 'lucide-react';
 import  defaultUser from "../../assets/default_user.png"
 import  blockedUser from "../../assets/blocked_user.png"
+
 const UserCard= ({driver})=>{
-  console.log(driver)
+
   const navigate = useNavigate();
   
   const handleViewProfile = () => {
@@ -14,6 +15,8 @@ const UserCard= ({driver})=>{
     navigate(`/Home/driverProfile`, { state: { driver: driver } });
 
   };
+
+  console.log(driver)
     return(
         <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
           <div className="relative bg-white  rounded-lg ">
@@ -29,7 +32,7 @@ const UserCard= ({driver})=>{
               <h2 className="text-m font-bold text-gray-900 pl-4 my-2">{driver.name}</h2>
               <p className="text-sm flex font-medium text-gray-600 mt-2 ml-3">
                 <img src={rikshawicon} alt="" className="w-6 h-6 mr-2"/>
-                {driver.vehicle_number}
+                {driver.vehicleDetails ? driver.vehicleDetails.Vehicle_number : "No Vehicle Number"}
               </p>
               <p className="text-sm  flex font-medium text-gray-600 ml-3">
                 <PhoneCall className="h-4 w-4 mr-4 color-black-900"/>

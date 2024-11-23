@@ -30,15 +30,13 @@ const Drivers = () => {
 	
 				if (response.ok) {
 					const data = await response.json();
-					console.log('API Response:', data);
-	
+					
 					setTotalDriver(data.totalUsers || 0);
 	
 					const active = data.data?.filter(driver => driver.isActive) || [];
 					const inactive = data.data?.filter(driver => !driver.isActive) || [];
 	
-					console.log('Active Drivers:', active);
-					console.log('Inactive Drivers:', inactive);
+					
 	
 					setActiveDriver(active.length);
 					setInactiveDriver(inactive.length);
@@ -90,7 +88,7 @@ const Drivers = () => {
 						color='#EF4444' 
 					/>
 				</motion.div>
-				{/* <Demo/>	 */}
+				
 
 
 				<UsersTable />
