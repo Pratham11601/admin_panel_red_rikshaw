@@ -11,10 +11,10 @@ const TransactionTable = () => {
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] = useState('createdAt'); // Default sort field
-  const [sortOrder, setSortOrder] = useState('asc'); // Default sort order
+  const [sortField, setSortField] = useState('createdAt'); 
+  const [sortOrder, setSortOrder] = useState('asc'); 
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10; // Number of transactions per page
+  const itemsPerPage = 10; 
 
   // Fetch data from the API
   useEffect(() => {

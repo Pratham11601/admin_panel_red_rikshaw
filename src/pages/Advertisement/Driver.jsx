@@ -32,7 +32,9 @@ function Driver() {
         ...banner,
         createdAt: new Date(banner.createdAt).toLocaleString(),
       }));
+      
       setBanners(formattedBanners);
+      
     } catch (error) {
       console.error("Failed to fetch banners:", error);
     }
@@ -85,13 +87,15 @@ function Driver() {
     if (response.ok && result.status === 1) {
       // setBanners(banners.filter(banner => banner._id !== id));
       const updatedBanners = banners.filter(banner => banner._id !== id);
-
+      console.log("success")
       // Adjust currentIndex if necessary
       if (currentIndex >= updatedBanners.length) {
         setCurrentIndex(updatedBanners.length - 1); // Move to the last index if currentIndex is out of bounds
       }
-
+      console.log(updatedBanners)
       setBanners(updatedBanners);
+      console.log(banners)
+      fetchAdvertisements()
       alert('Advertisement deleted successfully.');
       // alert('Advertisement deleted successfully.');
     } else {
@@ -148,7 +152,8 @@ for (let [key, value] of formData.entries()) {
         headers: { 
           'Content-Type': 'multipart/form-data', }
       });
-
+      setBanners([...banners, response.data.data]);
+      fetchAdvertisements()
       if (response.data.status === 1) {
         setBanners([...banners, response.data.data]);
         setUploadSuccess(true);
@@ -193,29 +198,29 @@ for (let [key, value] of formData.entries()) {
     setEditBanner(null);
   };
 
-  const handleImageUploadEdit = async (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    console.log("edit image")
-    console.log(formData)
-    console.log(file)
-    formData.append('file', file);
+  // const handleImageUploadEdit = async (event) => {
+  //   const file = event.target.files[0];
+  //   const formData = new FormData();
+  //   console.log("edit image")
+  //   console.log(formData)
+  //   console.log(file)
+  //   formData.append('file', file);
 
-    try {
-      const response = await axios.post(ApiConfig.postAdvertisementEndpoint(editBanner._id), formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      console.log("response")
-      console.log(response.data)
-      setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
-      if (response.data.status === 1) {
+  //   try {
+  //     const response = await axios.post(ApiConfig.postAdvertisementEndpoint(editBanner._id), formData, {
+  //       headers: { 'Content-Type': 'multipart/form-data' }
+  //     });
+  //     console.log("response")
+  //     console.log(response.data)
+  //     setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
+  //     if (response.data.status === 1) {
         
-        setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
-      }
-    } catch (error) {
-      console.error('Error uploading new image during edit:', error);
-    }
-  };
+  //       setEditBanner({ ...editBanner, mediaPath: response.data.data.mediaPath });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading new image during edit:', error);
+  //   }
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -333,12 +338,12 @@ for (let [key, value] of formData.entries()) {
                 <p className="text-gray-500">{banner.createdAt}</p>
               </div>
               <div className="p-4 flex justify-between">
-                <button
+                {/* <button
                   onClick={() => handleEditBanner(banner)}
                   className="bg-blue-500 text-white py-1 px-3 rounded"
                 >
                   Edit
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleDeleteBanner(banner._id)}
                   className="bg-red-500 text-white py-1 px-3 rounded"
@@ -410,7 +415,7 @@ for (let [key, value] of formData.entries()) {
         >
           Previous
         </button>
-        <span>
+        <span className='font-s text-lg text-gray-900'>
           Page {currentPage} of {totalPages}
         </span>
         <button
