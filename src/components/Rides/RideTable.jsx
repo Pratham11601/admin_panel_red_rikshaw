@@ -1,20 +1,23 @@
+
+
 import { motion } from "framer-motion";
 import { Search, ArrowDownUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FadeLoader } from "react-spinners";
-import ApiConfig from '../../Consants/ApiConfig';
 import { ShimmerTable } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 import StatCard from "../common/StatCard";
 import { UserCheck, UserPlus, UsersIcon, UserX } from "lucide-react";
+import fetchWithToken from '../../utils/fetchWithToken'; 
+import ApiConfig from '../../Consants/ApiConfig';
+
 
 const RideTable = () => {
   const [ridesData, setRidesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState("newly-added"); // Default sort
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order
+  const [sortBy, setSortBy] = useState("newly-added"); 
+  const [sortOrder, setSortOrder] = useState("asc"); 
   const [selectedRide, setSelectedRide] = useState(null);
   const itemsPerPage = 10;
 
@@ -30,25 +33,22 @@ const RideTable = () => {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(field);
-      setSortOrder("asc"); // Default to ascending order
+      setSortOrder("asc"); 
     }
-    setCurrentPage(1); // Reset to first page on sort change
+    setCurrentPage(1); 
   };
 
-  // Fetch ride data
+  // Fetch ride data using fetchWithToken
   useEffect(() => {
     const fetchRides = async () => {
       try {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
-
-        const response = await fetch(ApiConfig.getAllRidesEndpoint(),{
+        const data = await fetchWithToken(ApiConfig.getAllRidesEndpoint(), {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
-        const data = await response.json();
+
         const Rides = data.data;
 
         setIsLoading(false);
@@ -127,6 +127,7 @@ const RideTable = () => {
           value={totalRides}
           color='#6366F1'
         />
+        
       </motion.div>
 
       {/* Header Section */}
@@ -225,17 +226,19 @@ const RideTable = () => {
               </motion.div>
 
               {/* Pagination */}
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-between items-center my-4">
                 <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
                   onClick={() => paginate(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
-                  Prev
+                  Previous
                 </button>
-                <span className="px-4 py-2 text-black">{currentPage} of {totalPages}</span>
+                <div>
+                  Page {currentPage} of {totalPages}
+                </div>
                 <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
                   onClick={() => paginate(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >
