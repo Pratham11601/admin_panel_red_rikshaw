@@ -7,8 +7,9 @@ import driverImage from '../assets/driverimg.jpg';
 import PassengerRides from '../components/Passengers/PassengerRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
-
+import ApiConfig from '../Consants/ApiConfig';
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
+import axios from 'axios';
 
 const PassengerProfile = () => {
     const navigate = useNavigate();
@@ -22,6 +23,8 @@ const PassengerProfile = () => {
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');
+    const [addAmount,setAddAmount] = useState(0)
+    console.log(passenger)
 
     const togglePopup = () => {
         setShowAddMoneyPopup(!showAddMoneyPopup);
@@ -55,6 +58,44 @@ const PassengerProfile = () => {
     const handleBackClick = () => {
         navigate('/Home/passengers');
     };
+
+    const handleAddMoney = async()=>{
+        const newAmount = parseFloat(addAmount);
+        if (isNaN(newAmount) || newAmount <= 0) {
+          alert('Please enter a valid amount.');
+          return;
+        }
+        
+        const postData={
+            userId : passenger._id,
+            amount : newAmount
+        }
+        console.log(postData)
+        try {
+            const response = await axios.post(ApiConfig.postAddMoneyEndpoint(),postData,{
+                headers: { 
+                  'Content-Type': 'application/json', }
+              })
+            console.log("response ----")
+            console.log(response)
+            if(response.status == 200){
+                alert(response.data.message)
+              setWalletBalance(response.data.data.balance)
+            }
+            else{
+                alert("failed to add money")
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
+        // setWalletBalance(walletBalance + newAmount);
+        setAddAmount(0)
+        togglePopup()
+        setActiveTab('Rides')
+    }
+    
+   
 
     return (
         <div className="flex-1 overflow-auto relative z-10">
@@ -104,6 +145,21 @@ const PassengerProfile = () => {
                             >
                                 Delete
                             </button>
+
+
+                            {passenger.blockStatus ? (
+                                <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
+                            ):(
+                                <button
+                                onClick={()=>{setShowAddMoneyPopup(true)
+                                    setActiveTab("")
+                                }}
+                                className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
+                            >
+                                Add Money
+                            </button>
+                            )}
+
                         </div>
 
                         <div className="flex items-center justify-center md:justify-start pt-3">
@@ -153,6 +209,39 @@ const PassengerProfile = () => {
                     </div>
                 )}
 
+
+                {showAddMoneyPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                            <h2 className="text-xl font-semibold mb-4">Please enter your amount to confirm:</h2>
+                            <input
+                                type="text"
+                                value={addAmount}
+                                onChange={(e) => setAddAmount(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter amount"
+                            />
+                            
+                            <button
+                                onClick={handleAddMoney}
+                                className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            >
+                                Add amount
+                            </button>
+                            <button
+                                onClick={()=>{
+                                    togglePopup()
+                                    setActiveTab("Rides")
+                                }}
+                                className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+
                 {/* Tab Selection */}
                 {!showDeletePopup && (
                     <div className="border-b border-gray-300 mb-6">
@@ -201,4 +290,3 @@ const PassengerProfile = () => {
 };
 
 export default PassengerProfile;
-

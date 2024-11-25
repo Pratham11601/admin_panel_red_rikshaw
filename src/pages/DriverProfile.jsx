@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft } from 'lucide-react';
@@ -12,7 +11,8 @@ import DriverRides from '../components/Drivers/DriverRides';
 import  defaultUser from "../assets/default_user.png"
 import  blockedUser from "../assets/blocked_user.png"
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
-
+import axios from 'axios';
+import ApiConfig from '../Consants/ApiConfig';
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,10 +23,11 @@ const DriverProfile = ()=>{
     const [walletBalance, setWalletBalance] = useState(0); // Initial wallet balance
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
-    const [addAmount, setAddAmount] = useState('');     
+    const [addAmount, setAddAmount] = useState(0);     
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');   
+    
 
     console.log("this is deiver")
     console.log(driver)
@@ -42,16 +43,52 @@ const DriverProfile = ()=>{
         setShowAddMoneyPopup(!showAddMoneyPopup);
       };
 
-    const handleAddMoney = () => {
+    // const handleAddMoney = () => {
+    //     const newAmount = parseFloat(addAmount);
+    //     if (isNaN(newAmount) || newAmount <= 0) {
+    //       alert('Please enter a valid amount.');
+    //       return;
+    //     }
+    //     setWalletBalance(walletBalance + newAmount);
+    //     setAddAmount('');
+    //     togglePopup();
+    //   };
+
+    const handleAddMoney = async()=>{
         const newAmount = parseFloat(addAmount);
         if (isNaN(newAmount) || newAmount <= 0) {
           alert('Please enter a valid amount.');
           return;
         }
-        setWalletBalance(walletBalance + newAmount);
-        setAddAmount('');
-        togglePopup();
-      };
+        
+        const postData={
+            userId : driver._id,
+            amount : newAmount
+        }
+        console.log(postData)
+        try {
+            const response = await axios.post(ApiConfig.postAddMoneyEndpoint(),postData,{
+                headers: { 
+                  'Content-Type': 'application/json', }
+              })
+            console.log("response ----")
+            console.log(response.data)
+            if(response.status == 200){
+                alert(response.data.message)
+              setWalletBalance(response.data.data.balance)
+            }
+            else{
+                alert("failed to add money")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        // setWalletBalance(walletBalance + newAmount);
+        setAddAmount(0)
+        togglePopup()
+        setActiveTab('profileSummary')
+    }
+
     const handleViewDocument = () => {
         setPopupOpen(true);
         setDocumentUrls({
@@ -133,6 +170,7 @@ const DriverProfile = ()=>{
         setShowDeletePopup(false);
         setPassword('');
     };
+    
 
     return(
         <div className="flex-1 overflow-auto relative z-10">
@@ -196,17 +234,17 @@ const DriverProfile = ()=>{
                     Delete 
                 </button>
                 {driver.blockStatus ? (
-                                    <p className="ml-4 text-red-600 my-2 font-semibold">
-                                        Money can't be added, user is blocked
-                                    </p>
-                                ) : (
-                                    <button
-                                        onClick={togglePopup}
-                                        className="ml-4 px-2 py-1 bg-blue-500 my-2 text-white rounded-lg hover:bg-blue-600"
-                                    >
-                                        Add Money
-                                    </button>
-                                )}
+                                <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
+                            ):(
+                                <button
+                                onClick={()=>{setShowAddMoneyPopup(true)
+                                    setActiveTab("")
+                                }}
+                                className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
+                            >
+                                Add Money
+                            </button>
+                            )}
                     {/* <button
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
@@ -261,14 +299,14 @@ const DriverProfile = ()=>{
                 </motion.div>
 
       {/* Popup for adding money */}
-      {showAddMoneyPopup && (
+      {/* {showAddMoneyPopup && (
         <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
 
             <img src={driver.qr_code} alt=""  className='p-10'/>
 
-            {/* Add Money Button */}
+            
             <button
               onClick={handleAddMoney}
               className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 w-full"
@@ -276,7 +314,7 @@ const DriverProfile = ()=>{
               Add
             </button>
 
-            {/* Cancel Button */}
+            
             <button
               onClick={togglePopup}
               className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 w-full"
@@ -285,7 +323,38 @@ const DriverProfile = ()=>{
             </button>
           </div>
         </div>
-      )}
+      )} */}
+
+{showAddMoneyPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                            <h2 className="text-xl font-semibold mb-4">Please enter your amount to confirm:</h2>
+                            <input
+                                type="text"
+                                value={addAmount}
+                                onChange={(e) => setAddAmount(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter amount"
+                            />
+                            
+                            <button
+                                onClick={handleAddMoney}
+                                className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                            >
+                                Add amount
+                            </button>
+                            <button
+                                onClick={()=>{
+                                    togglePopup()
+                                    setActiveTab("profileSummary")
+                                }}
+                                className="mt-2 w-full px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                )}
 
             {/* Navbar Section */}
                 <div className="border-b border-gray-300 mb-6 mt-6">

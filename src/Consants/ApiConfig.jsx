@@ -170,7 +170,9 @@ static getDeletedUsersEndpoint() {
   return `${this.BASE_URL}/api/adminpanel/getAllDeleted`;
 }
 
-
+static postAddMoneyEndpoint() {
+  return `${this.BASE_URL}/api/adminpanel/add-money`;
+}
 
     
 }
