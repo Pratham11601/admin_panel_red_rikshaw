@@ -78,6 +78,18 @@ const DriverTransactionTable = ({ driverId }) => {
       transaction.transactionType.toLowerCase().includes(searchTerm)
   );
 
+  // Handle pagination logic
+  const paginate = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
+  // Get current transactions for the current page
+  const currentItems = transactions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   // Sort transactions
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "amount") {
@@ -178,7 +190,7 @@ const DriverTransactionTable = ({ driverId }) => {
         </div>
       )}
 
-      {/* Pagination */}
+      {/* Pagination 
       <div className="flex justify-end mt-4">
         {[...Array(totalPages).keys()].map((page) => (
           <button
@@ -191,7 +203,17 @@ const DriverTransactionTable = ({ driverId }) => {
             {page + 1}
           </button>
         ))}
-      </div>
+      </div>*/}
+         {/* Pagination */}
+         <div className="flex justify-center mt-4">
+            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+              Prev
+            </button>
+            <span className="px-4 py-2">{currentPage} of {totalPages}</span>
+            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+              Next
+            </button>
+          </div>
     </motion.div>
   );
 };
