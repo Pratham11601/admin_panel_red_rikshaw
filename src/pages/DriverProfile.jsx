@@ -16,7 +16,8 @@ import ApiConfig from '../Consants/ApiConfig';
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
-    const { driver } = location.state; // Get user data passed from SearchUser component
+    const [driver, setDriver] = useState(location.state.driver); // State for driver data
+    const [loading, setLoading] = useState(false); // Loading state for API call
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
@@ -42,6 +43,52 @@ const DriverProfile = ()=>{
     const togglePopup = () => {
         setShowAddMoneyPopup(!showAddMoneyPopup);
       };
+
+
+      const handleBlockToggle = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(ApiConfig.putBlockStatus(driver._id), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    blockStatus: !driver.blockStatus,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Block status updated:', data);
+                setDriver({ ...driver, blockStatus: !driver.blockStatus });
+                fetchDriverData();
+            } else {
+                alert('Failed to update block status. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error toggling block status:', error);
+            alert('An error occurred while updating the block status.');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const fetchDriverData = async () => {
+        try {
+            const response = await fetch(ApiConfig.getDriverDetails(driver._id)); 
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Fetched driver data:", data); // Debugging log
+                setDriver(data.user); // Update the state with the updated user data
+            } else {
+                console.error('Failed to fetch driver data');
+            }
+        } catch (error) {
+            console.error('Error fetching driver data:', error);
+        }
+    };
+
 
     // const handleAddMoney = () => {
     //     const newAmount = parseFloat(addAmount);
@@ -221,12 +268,13 @@ const DriverProfile = ()=>{
             
                 <div className="flex items-center justify-center md:justify-start">
                     
-                    <span
-                        className={`w-30 px-5 py-1 rounded-full text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
-     
-                    >
-                        {driver.blockStatus ? 'Unblock' : 'Block'}
-                    </span>
+                <button
+                                onClick={handleBlockToggle}
+                                className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${driver.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                                disabled={loading} // Disable button while API call is in progress
+                            >
+                                {loading ? 'Processing...' : driver.blockStatus ? 'Unblock' : 'Block'}
+                            </button>
                     <button
                     onClick={handleDeleteClick}
                     className="ml-4 px-3 py-1 bg-red-600 text-white my-2 font-semibold rounded hover:bg-red-700"

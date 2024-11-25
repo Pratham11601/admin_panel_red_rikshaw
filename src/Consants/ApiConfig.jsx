@@ -35,6 +35,14 @@ class ApiConfig {
     static getPassengerRidesEndpoint(passengerId) {
       return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
     }
+    
+
+    //Block passenger or driver
+static putBlockStatus(id) {
+  return `${this.BASE_URL}/api/adminpanel/block-status/${id}`;
+}
+
+    
 
     //drivers
     static getDriversEndpoint() {

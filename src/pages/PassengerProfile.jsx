@@ -14,7 +14,8 @@ import axios from 'axios';
 const PassengerProfile = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { passenger } = location.state;
+    const [passenger, setPassenger] = useState(location.state.passenger); // State for passenger data
+    const [loading, setLoading] = useState(false); // Loading state for API call
     const [activeTab, setActiveTab] = useState('Rides');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
@@ -35,6 +36,80 @@ const PassengerProfile = () => {
         setStatus(newStatus);
     };
 
+    // const handleBlockToggle = async () => {
+    //     setLoading(true);
+    //     try {
+    //         // Sending the PUT request to toggle block status on the backend
+    //         const response = await fetch(ApiConfig.putBlockStatus(passenger._id), {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 blockStatus: !passenger.blockStatus, 
+    //             }),
+    //         });
+    
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             console.log('Block status updated:', data); // Debugging log
+    //             setPassenger({ ...passenger, blockStatus: !passenger.blockStatus }); // Update passenger state
+    //             fetchPassengerData(); // Refetch data to get the latest block status
+    //         } else {
+    //             alert('Failed to update block status. Please try again.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error toggling block status:', error);
+    //         alert('An error occurred while updating the block status.');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    
+    const handleBlockToggle = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(ApiConfig.putBlockStatus(passenger._id), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    blockStatus: !passenger.blockStatus,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Block status updated:', data);
+                setPassenger({ ...passenger, blockStatus: !passenger.blockStatus });
+                fetchPassengerData();
+            } else {
+                alert('Failed to update block status. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error toggling block status:', error);
+            alert('An error occurred while updating the block status.');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const fetchPassengerData = async () => {
+        try {
+            const response = await fetch(ApiConfig.getPassengerDetails(passenger._id)); 
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Fetched passenger data:", data); // Debugging log
+                setPassenger(data.user); // Update the state with the updated user data
+            } else {
+                console.error('Failed to fetch passenger data');
+            }
+        } catch (error) {
+            console.error('Error fetching passenger data:', error);
+        }
+    };
+    
     const handleDeleteClick = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
     };
@@ -134,11 +209,14 @@ const PassengerProfile = () => {
 
                     <motion.div className="space-y-3">
                         <div className="flex flex-wrap items-center my-2 justify-center">
-                            <span
-                                className={`flex-wrap px-5 py-1 my-2 rounded-full text-white text-center cursor-pointer ${passenger.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+                          <button
+                                onClick={handleBlockToggle}
+                                className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${passenger.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
+                                disabled={loading} // Disable button while API call is in progress
                             >
-                                {passenger.blockStatus ? 'Unblock' : 'Block'}
-                            </span>
+                                {loading ? 'Processing...' : passenger.blockStatus ? 'Unblock' : 'Block'}
+                            </button>
+
                             <button
                                 onClick={handleDeleteClick}
                                 className="ml-4 px-3 py-1 my-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700"
