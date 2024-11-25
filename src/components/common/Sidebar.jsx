@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import logo from '../../assets/logo2.png';
 
 const SIDEBAR_ITEMS = [
-  { name: "SearchUser", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
+  { name: "Search User", icon: UserSearchIcon, color: "black", href: "/Home/searchuser" },
   { name: "Passengers", icon: Users, color: "black", href: "/Home/passengers" },
   { name: "Drivers", icon: Users, color: "black", href: "/Home/drivers" },
   { name: "Rides", icon: Car, color: "black", href: "/Home/rides" },
