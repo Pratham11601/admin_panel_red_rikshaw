@@ -6,6 +6,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 import DocumentPopup from '../Drivers/DocumentPopup';
 import DriverRides from '../Drivers/DriverRides';
 import DriverTransactionTable from '../Drivers/DriverTransactionTable';
+import PassengerRides from '../Passengers/PassengerRides';
+
+
 
 const UserProfile = ({user}) => {
  // Get user data passed from SearchUser component
