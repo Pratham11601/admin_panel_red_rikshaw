@@ -31,10 +31,10 @@ const PassengerCard= ({passenger })=>{
 
             <div className="flex flex-col text-black ">
               <h1 className="text-m font-bold  text-gray-900 pl-4 my-2">{passenger.name}</h1>
-              <p className="text-sm flex font-medium text-gray-700 my-2 ml-3">
+             {/* <p className="text-sm flex font-medium text-gray-700 my-2 ml-3">
                 <IndianRupee className="h-5 w-5 mr-4 color-black-900 "/>
                 {passenger.bankDetails ? passenger.bankDetails.balance.toFixed(2) : walletBalance}
-              </p>
+              </p>*/} 
               <p className="text-sm  flex font-medium text-gray-700 ml-3">
                 <PhoneCall className="h-4 w-4 mr-4 color-black-900"/>
                 {passenger.phone}

@@ -163,9 +163,7 @@ const TransactionTable = () => {
                   <th onClick={() => handleSort("userId")} className="py-3 px-6 text-left cursor-pointer">
                     <span className="flex">User ID<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
-                  <th onClick={() => handleSort("transactionID")} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">Transaction ID<ArrowDownUpIcon className="pl-2" /></span>
-                  </th>
+                 
                   <th onClick={() => handleSort("transactionType")} className="py-3 px-6 text-left cursor-pointer">
                     <span className="flex">Transaction Type<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
@@ -189,7 +187,7 @@ const TransactionTable = () => {
                     className="border-b border-gray-200 hover:bg-gray-100"
                   >
                     <td className="py-3 px-6 text-left">{transaction.userId || "N/A"}</td>
-                    <td className="py-3 px-6 text-left">{transaction.transactionID || "N/A"}</td>
+                    
                     <td className="py-3 px-6 text-left">{transaction.transactionType || "N/A"}</td>
                     <td className="py-3 px-6 text-left">{transaction.amount.toFixed(2) || "N/A"}</td>
                     <td className="py-3 px-6 text-left">{transaction.message || "N/A"}</td>
