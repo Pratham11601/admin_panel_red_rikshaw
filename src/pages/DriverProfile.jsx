@@ -279,7 +279,7 @@ const DriverProfile = ()=>{
             
                 <div className="flex items-center justify-center md:justify-start">
                     
-<<<<<<< HEAD
+
                 <button
                                 onClick={handleBlockToggle}
                                 className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${driver.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
@@ -287,14 +287,8 @@ const DriverProfile = ()=>{
                             >
                                 {loading ? 'Processing...' : driver.blockStatus ? 'Unblock' : 'Block'}
                             </button>
-=======
-                    <span
-                        className={`w-30 px-5 py-1 rounded-full text-center text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
-     
-                    >
-                        {driver.blockStatus ? 'Unblock' : 'Block'}
-                    </span>
->>>>>>> aadb215527d5cd542058261b5372eb219524dee5
+
+                
                     <button
                     onClick={handleDeleteClick}
                     className="ml-4 px-3 py-1 bg-red-600 text-white my-2 font-semibold rounded hover:bg-red-700"

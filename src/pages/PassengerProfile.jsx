@@ -19,7 +19,7 @@ const PassengerProfile = () => {
     const [activeTab, setActiveTab] = useState('Rides');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(passenger.bankDetails ? passenger.bankDetails.balance :0);
+    const [walletBalance, setWalletBalance] = useState(0);
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -36,36 +36,7 @@ const PassengerProfile = () => {
         setStatus(newStatus);
     };
 
-    // const handleBlockToggle = async () => {
-    //     setLoading(true);
-    //     try {
-    //         // Sending the PUT request to toggle block status on the backend
-    //         const response = await fetch(ApiConfig.putBlockStatus(passenger._id), {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 blockStatus: !passenger.blockStatus, 
-    //             }),
-    //         });
-    
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             console.log('Block status updated:', data); // Debugging log
-    //             setPassenger({ ...passenger, blockStatus: !passenger.blockStatus }); // Update passenger state
-    //             fetchPassengerData(); // Refetch data to get the latest block status
-    //         } else {
-    //             alert('Failed to update block status. Please try again.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error toggling block status:', error);
-    //         alert('An error occurred while updating the block status.');
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    
+
     const handleBlockToggle = async () => {
         setLoading(true);
         try {
@@ -155,7 +126,7 @@ const PassengerProfile = () => {
             console.log(response)
             if(response.status == 200){
                 alert(response.data.message)
-                setWalletBalance(walletBalance + newAmount);
+              setWalletBalance(response.data.data.balance)
             }
             else{
                 alert("failed to add money")
@@ -168,17 +139,6 @@ const PassengerProfile = () => {
         setAddAmount(0)
         togglePopup()
         setActiveTab('Rides')
-    }
-
-    const handleBankdetails=()=>{
-        if(passenger.bankDetails){
-            setShowAddMoneyPopup(true)
-                setActiveTab("")
-            
-        }
-        else{
-            alert("The user has not provided their bank details, Money can not be added")
-        }
     }
     
    
@@ -240,7 +200,9 @@ const PassengerProfile = () => {
                                 <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
                             ):(
                                 <button
-                                onClick={handleBankdetails}
+                                onClick={()=>{setShowAddMoneyPopup(true)
+                                    setActiveTab("")
+                                }}
                                 className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
                             >
                                 Add Money
@@ -253,11 +215,9 @@ const PassengerProfile = () => {
                             <div className="flex w-full flex-col justify-center gap-3 items-start">
                                 <div className="bg-white flex w-full flex-wrap flex-row justify-around">
                                     <h1 className="text-xl font-semibold">Wallet Balance</h1>
-
-                                    {/* <p className="text-xl">
+                                    <p className="text-xl">
                                         ₹{passenger.bankDetails ? (passenger.bankDetails.balance || walletBalance) : walletBalance}
-                                    </p> */}
-                                    <p className='text-xl'>₹ {walletBalance || 0} </p>
+                                    </p>
                                 </div>
                                 <div className="bg-white flex w-full flex-wrap flex-row justify-around">
                                     <h1 className="text-xl font-semibold">Lock Balance</h1>
