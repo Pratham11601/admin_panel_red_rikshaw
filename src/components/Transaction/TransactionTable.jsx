@@ -12,7 +12,7 @@ const TransactionTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState('createdAt'); 
-  const [sortOrder, setSortOrder] = useState('asc'); 
+  const [sortOrder, setSortOrder] = useState('desc'); 
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10; 
 
@@ -23,35 +23,48 @@ const TransactionTable = () => {
 
   const fetchTransactions = async () => {
     const token = localStorage.getItem('token'); // Retrieve token from localStorage
-    
-    setIsLoading(true);
-    const response = await fetch(ApiConfig.getTransactionsEndPoint(), {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,  // Add token to headers
-        'Content-Type': 'application/json'
-      }
-    });
-    const data = await response.json();
   
-    
-
-    // Apply sorting to the fetched transactions based on the sortField and sortOrder
-    const sortedData = data.transfers.sort((a, b) => {
-      const fieldA = getNestedField(a, sortField);
-      const fieldB = getNestedField(b, sortField);
-
-      if (sortOrder === "asc") {
-        return fieldA > fieldB ? 1 : -1;
+    setIsLoading(true);
+    try {
+      const response = await fetch(ApiConfig.getTransactionsEndPoint(), {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Add token to headers
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        // Access the correct field based on the Swagger response
+        const transactionsData = result.data || []; 
+  
+        // Apply sorting to the fetched transactions based on the sortField and sortOrder
+        const sortedData = transactionsData.sort((a, b) => {
+          const fieldA = new Date(getNestedField(a, sortField));
+          const fieldB = new Date(getNestedField(b, sortField));
+        
+          if (sortOrder === "desc") {
+            return fieldB - fieldA; // Latest first
+          } else {
+            return fieldA - fieldB; // Oldest first
+          }
+        });
+        
+  
+        setTransactions(sortedData);
+        setTotalPages(Math.ceil(result.pagination.totalCount / itemsPerPage)); // Calculate total pages
       } else {
-        return fieldA < fieldB ? 1 : -1;
+        console.error("Error fetching transactions:", result.message);
       }
-    });
-
-    setTransactions(sortedData);
-    setTotalPages(Math.ceil(data.transfers.length / itemsPerPage)); // Calculate total pages
-    setIsLoading(false);
+    } catch (error) {
+      console.error("Error during API call:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   // Helper function to access nested fields (e.g., 'from.name')
   const getNestedField = (obj, fieldPath) => {
@@ -60,10 +73,10 @@ const TransactionTable = () => {
 
   const handleSort = (field) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc'); // Toggle sort order
+      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); // Toggle sort order
     } else {
       setSortField(field); // Change sort field
-      setSortOrder('asc'); // Reset to ascending order for new field
+      setSortOrder('desc'); // Reset to ascending order for new field
     }
   };
 
@@ -145,24 +158,24 @@ const TransactionTable = () => {
         <div className="TransactionRequestData">
           <motion.div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-300 shadow-lg">
-              <thead>
+            <thead>
                 <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                  <th onClick={() => handleSort('from.name')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">From Name<ArrowDownUpIcon className="pl-2" /></span>
+                  <th onClick={() => handleSort("userId")} className="py-3 px-6 text-left cursor-pointer">
+                    <span className="flex">User ID<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
-                  <th onClick={() => handleSort('from.userType')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">From Role<ArrowDownUpIcon className="pl-2" /></span>
+                  <th onClick={() => handleSort("transactionID")} className="py-3 px-6 text-left cursor-pointer">
+                    <span className="flex">Transaction ID<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
-                  <th onClick={() => handleSort('to.name')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">To Name<ArrowDownUpIcon className="pl-2" /></span>
+                  <th onClick={() => handleSort("transactionType")} className="py-3 px-6 text-left cursor-pointer">
+                    <span className="flex">Transaction Type<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
-                  <th onClick={() => handleSort('to.userType')} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">To Role<ArrowDownUpIcon className="pl-2" /></span>
-                  </th>
-                  <th onClick={() => handleSort('amount')} className="py-3 px-6 text-left cursor-pointer">
+                  <th onClick={() => handleSort("amount")} className="py-3 px-6 text-left cursor-pointer">
                     <span className="flex">Amount<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
-                  <th onClick={() => handleSort('createdAt')} className="py-3 px-6 text-left cursor-pointer">
+                  <th onClick={() => handleSort("message")} className="py-3 px-6 text-left cursor-pointer">
+                    <span className="flex">Message<ArrowDownUpIcon className="pl-2" /></span>
+                  </th>
+                  <th onClick={() => handleSort("createdAt")} className="py-3 px-6 text-left cursor-pointer">
                     <span className="flex">Date/Time<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                 </tr>
@@ -170,27 +183,17 @@ const TransactionTable = () => {
               <tbody className="divide-y divide-gray-200">
                 {currentItems.map((transaction) => (
                   <motion.tr
-                    key={transaction._id}
+                    key={transaction.transactionID}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="border-b border-gray-200 hover:bg-gray-100"
                   >
-                    <td className="py-3 px-6 text-left">
-                      {transaction.from.userId ? transaction.from.userId.name : "N/A"}
-                    </td>
-                    <td className="py-3 px-6 text-left">
-                      {transaction.from.userType || "N/A"}
-                    </td>
-                    <td className="py-3 px-6 text-left">
-                      {transaction.to.userId ? transaction.to.userId.name : "N/A"}
-                    </td>
-                    <td className="py-3 px-6 text-left">
-                      {transaction.to.userType || "N/A"}
-                    </td>
-                    <td className="py-3 px-6 text-left">{transaction.amount}</td>
-                    <td className="py-3 px-6 text-left">
-                      {formatDateTime(transaction.createdAt)}
-                    </td>
+                    <td className="py-3 px-6 text-left">{transaction.userId || "N/A"}</td>
+                    <td className="py-3 px-6 text-left">{transaction.transactionID || "N/A"}</td>
+                    <td className="py-3 px-6 text-left">{transaction.transactionType || "N/A"}</td>
+                    <td className="py-3 px-6 text-left">{transaction.amount.toFixed(2) || "N/A"}</td>
+                    <td className="py-3 px-6 text-left">{transaction.message || "N/A"}</td>
+                    <td className="py-3 px-6 text-left">{new Date(transaction.createdAt).toLocaleString()}</td>
                   </motion.tr>
                 ))}
               </tbody>

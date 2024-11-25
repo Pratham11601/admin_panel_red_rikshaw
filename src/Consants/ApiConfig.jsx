@@ -58,10 +58,15 @@ class ApiConfig {
 
 
     //Transactions
-    static getTransactionsEndPoint() {
+    /*static getTransactionsEndPoint() {
       
       return `${this.BASE_URL}/api/walletTransfer/get-all?page=1&limit=15`;
-    }    
+    } */
+    static getTransactionsEndPoint() {
+      
+      return `${this.BASE_URL}/api/adminpanel/all-transactions?page=1&limit=15`;
+    }
+
 
     //Transaction History
     static getTransactionHistoryEndPoint() {
