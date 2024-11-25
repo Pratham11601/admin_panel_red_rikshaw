@@ -340,7 +340,7 @@ const handleDeleteConfirm = () => {
                         transition={{ duration: 0.5 }}
                         >
                         
-                        <DriverTransactionTable userId={user._id}/>
+                        <DriverTransactionTable driverId={user._id}/>
                         </motion.div>
                 )}
             </main>
