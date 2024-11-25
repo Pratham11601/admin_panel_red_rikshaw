@@ -74,11 +74,23 @@ const PassengerRides = ({ passengerId }) => {
 
   // Filter and sort the rides data
 
-  const filteredRides = ridesData.filter(
-    (ride) =>{
-      const driverName = ride.driverId?.name?.toLowerCase() || "";
+//   const filteredRides = ridesData.filter(
+//     (ride) =>{
+//       const driverName = ride.driverId?.name?.toLowerCase() || "";
+//   const passengerName = ride.passengerId?.name?.toLowerCase() || "";
+//   const status = ride.status?.toLowerCase() || "";
+// });
+const filteredRides = ridesData.filter((ride) => {
+  const driverName = ride.driverId?.name?.toLowerCase() || "";
   const passengerName = ride.passengerId?.name?.toLowerCase() || "";
   const status = ride.status?.toLowerCase() || "";
+
+  // Check if the search term matches the driver, passenger, or status
+  return (
+    driverName.includes(searchTerm) ||
+    passengerName.includes(searchTerm) ||
+    status.includes(searchTerm)
+  );
 });
     // Sort the rides based on selected field
     const sortedRides = [...filteredRides].sort((a, b) => {
