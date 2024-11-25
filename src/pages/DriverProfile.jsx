@@ -21,7 +21,7 @@ const DriverProfile = ()=>{
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(0); // Initial wallet balance
+    const [walletBalance, setWalletBalance] = useState(driver.bankDetails ? driver.bankDetails.balance :0); // Initial wallet balance
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);       // State to control popup visibility
     const [addAmount, setAddAmount] = useState(0);     
@@ -122,7 +122,7 @@ const DriverProfile = ()=>{
             console.log(response.data)
             if(response.status == 200){
                 alert(response.data.message)
-              setWalletBalance(response.data.data.balance)
+                setWalletBalance(walletBalance + newAmount);
             }
             else{
                 alert("failed to add money")
@@ -217,6 +217,17 @@ const DriverProfile = ()=>{
         setShowDeletePopup(false);
         setPassword('');
     };
+
+    const handleBankdetails=()=>{
+        if(driver.bankDetails){
+            setShowAddMoneyPopup(true)
+                setActiveTab("")
+            
+        }
+        else{
+            alert("The user has not provided their bank details, Money can not be added")
+        }
+    }
     
 
     return(
@@ -268,6 +279,7 @@ const DriverProfile = ()=>{
             
                 <div className="flex items-center justify-center md:justify-start">
                     
+<<<<<<< HEAD
                 <button
                                 onClick={handleBlockToggle}
                                 className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${driver.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
@@ -275,6 +287,14 @@ const DriverProfile = ()=>{
                             >
                                 {loading ? 'Processing...' : driver.blockStatus ? 'Unblock' : 'Block'}
                             </button>
+=======
+                    <span
+                        className={`w-30 px-5 py-1 rounded-full text-center text-white cursor-pointer ${driver.blockStatus ? 'bg-green-600' : 'bg-red-600'}`}
+     
+                    >
+                        {driver.blockStatus ? 'Unblock' : 'Block'}
+                    </span>
+>>>>>>> aadb215527d5cd542058261b5372eb219524dee5
                     <button
                     onClick={handleDeleteClick}
                     className="ml-4 px-3 py-1 bg-red-600 text-white my-2 font-semibold rounded hover:bg-red-700"
@@ -285,9 +305,7 @@ const DriverProfile = ()=>{
                                 <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
                             ):(
                                 <button
-                                onClick={()=>{setShowAddMoneyPopup(true)
-                                    setActiveTab("")
-                                }}
+                                onClick={handleBankdetails}
                                 className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
                             >
                                 Add Money
@@ -304,7 +322,8 @@ const DriverProfile = ()=>{
                     <div className="flex w-full flex-col justify-center gap-3 items-start">
                         <div className="bg-white flex w-full flex-wrap flex-row justify-around ">
                             <h1 className="text-xl font-semibold">Wallet Balance</h1>
-                            <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.balance ? driver.bankDetails.balance : walletBalance) :walletBalance }</p>
+                            {/* <p className="text-xl ">₹{driver.bankDetails ? (driver.bankDetails.balance ? driver.bankDetails.balance : walletBalance) :walletBalance }</p> */}
+                            <p className='text-xl'>₹ {walletBalance || 0} </p>
                         </div>
                         {/* Conditionally Render "Add Money" Button */}
                         <div className="bg-white flex w-full flex-wrap flex-row justify-around ">

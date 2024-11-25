@@ -178,12 +178,12 @@ const RideTable = () => {
                       >
                         <span className="flex">Driver<ArrowDownUp className="pl-2" /></span>
                       </th>
-                      <th
+                      {/* <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("fare")}
                       >
                         <span className="flex">Fare<ArrowDownUp className="pl-2" /></span>
-                      </th>
+                      </th> */}
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("fromplace")}
@@ -213,9 +213,9 @@ const RideTable = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.driverId ? ride.driverId.name : "N/A"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.totalCost ? `₹ ${ride.totalCost}` : "N/A"}
-                        </td>
+                        </td> */}
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.pickupLocation?.place || "N/A"}
                         </td>

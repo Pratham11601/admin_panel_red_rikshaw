@@ -6,6 +6,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 import DocumentPopup from '../Drivers/DocumentPopup';
 import DriverRides from '../Drivers/DriverRides';
 import DriverTransactionTable from '../Drivers/DriverTransactionTable';
+import PassengerRides from '../Passengers/PassengerRides';
+
+
 
 const UserProfile = ({user}) => {
  // Get user data passed from SearchUser component
@@ -337,7 +340,7 @@ const handleDeleteConfirm = () => {
                         transition={{ duration: 0.5 }}
                         >
                         
-                        <DriverTransactionTable userId={user._id}/>
+                        <DriverTransactionTable driverId={user._id}/>
                         </motion.div>
                 )}
             </main>
