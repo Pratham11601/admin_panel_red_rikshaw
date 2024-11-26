@@ -342,9 +342,9 @@ const DriverRides = ({ driverId }) => {
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                     <h2 className="text-xl font-semibold mb-4">Invoice for Ride</h2>
                     <p>Ride ID: {selectedRide._id}</p>
-                    <p>Driver Name: {selectedRide.driverId.name}</p>
+                    {/* <p>Driver Name: {selectedRide.driverId.name}</p> */}
                     <p>Passenger Name: {selectedRide.passengerId.name}</p>
-                    <p>Total Fare: ${selectedRide.totalCost}</p>
+                    <p>Total Fare: ${selectedRide.fare.$numberDecimal}</p>
                     <button
                     className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
                     onClick={closeModal}

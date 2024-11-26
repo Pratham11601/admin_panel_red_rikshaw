@@ -84,14 +84,18 @@ const filteredRides = ridesData.filter((ride) => {
   const driverName = ride.driverId?.name?.toLowerCase() || "";
   const passengerName = ride.passengerId?.name?.toLowerCase() || "";
   const status = ride.status?.toLowerCase() || "";
-
+  const dropoffLocation = ride.dropoffLocation.place?.toLowerCase() || "";
+  const pickupLocation = ride.pickupLocation.place?.toLowerCase() || "";
   // Check if the search term matches the driver, passenger, or status
   return (
     driverName.includes(searchTerm) ||
     passengerName.includes(searchTerm) ||
-    status.includes(searchTerm)
+    status.includes(searchTerm)||
+    dropoffLocation.includes(searchTerm)||
+    pickupLocation.includes(searchTerm)
   );
 });
+console.log(filteredRides)
     // Sort the rides based on selected field
     const sortedRides = [...filteredRides].sort((a, b) => {
         
@@ -315,13 +319,13 @@ const filteredRides = ridesData.filter((ride) => {
 
             {/* View Invoice Modal */}
             {selectedRide && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 text-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                     <h2 className="text-xl font-semibold mb-4">Invoice for Ride</h2>
                     <p>Ride ID: {selectedRide._id}</p>
                     <p>Driver Name: {selectedRide.driverId.name}</p>
-                    <p>Passenger Name: {selectedRide.passengerId.name}</p>
-                    <p>Total Fare: ${selectedRide.totalCost}</p>
+                    {/* <p>Passenger Name: {selectedRide.passengerId.name}</p> */}
+                    <p>Total Fare: ${selectedRide.fare.$numberDecimal}</p>
                     <button
                     className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
                     onClick={closeModal}
