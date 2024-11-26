@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/common/Header';
 import { motion } from "framer-motion";
 import StatCard from "../components/common/StatCard";
-import { UsersIcon, UserX } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 import ApiConfig from '../Consants/ApiConfig';
-import axios from 'axios';
+import fetchWithToken from '../utils/fetchWithToken'; // Import fetchWithToken
 
 const DeletedUsers = () => {
   const [filter, setFilter] = useState("all"); // Default filter is "all"
@@ -18,17 +18,27 @@ const DeletedUsers = () => {
   // API endpoint for fetching deleted users
   const fetchDeletedUsers = async () => {
     try {
-      const response = await axios.get(`${ApiConfig.getDeletedUsersEndpoint()}`, {
-        params: {
-          page,
-          limit,
-          search,
-          category: filter !== "all" ? filter : undefined,
-        },
+      const params = new URLSearchParams({
+        page,
+        limit,
+        search,
       });
-      if (response.data.status === "success") {
-        setDeletedUsers(response.data.data);
-        setTotal(response.data.total);
+  
+      // Add the filter to the query params only if it's not "all"
+      if (filter !== "all") {
+        params.append('category', filter);
+      }
+  
+      const response = await fetchWithToken(`${ApiConfig.getDeletedUsersEndpoint()}?${params.toString()}`, {
+        method: 'GET',
+      });
+  
+      if (response.status === "success") {
+        // Sort the users by deletedAt in descending order
+        const sortedUsers = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
+        
+        setDeletedUsers(sortedUsers); // Set sorted users
+        setTotal(response.total);
       }
     } catch (error) {
       console.error("Error fetching deleted users:", error);
@@ -58,18 +68,6 @@ const DeletedUsers = () => {
             value={total.toString()}
             color="#6366F1"
           />
-          {/* <StatCard
-            name="Total Passengers Deleted"
-            icon={UserX}
-            value={deletedUsers.filter(user => user.role === "Passenger").length}
-            color="#F59E0B"
-          />
-          <StatCard
-            name="Total Drivers Deleted"
-            icon={UserX}
-            value={deletedUsers.filter(user => user.role === "Driver").length}
-            color="#EF4444"
-          /> */}
         </motion.div>
 
         {/* Search */}
