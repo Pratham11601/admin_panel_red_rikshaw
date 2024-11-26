@@ -19,7 +19,7 @@ const PassengerProfile = () => {
     const [activeTab, setActiveTab] = useState('Rides');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(0);
+    const [walletBalance, setWalletBalance] = useState(passenger.bankDetails ? passenger.bankDetails.balance :0);
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -126,7 +126,7 @@ const PassengerProfile = () => {
             console.log(response)
             if(response.status == 200){
                 alert(response.data.message)
-              setWalletBalance(response.data.data.balance)
+                setWalletBalance(walletBalance + newAmount);
             }
             else{
                 alert("failed to add money")
@@ -140,7 +140,16 @@ const PassengerProfile = () => {
         togglePopup()
         setActiveTab('Rides')
     }
-    
+    const handleBankdetails=()=>{
+        if(passenger.bankDetails){
+            setShowAddMoneyPopup(true)
+                setActiveTab("")
+            
+        }
+        else{
+            alert("The user has not provided their bank details, Money can not be added")
+        }
+    } 
    
 
     return (
@@ -196,18 +205,16 @@ const PassengerProfile = () => {
                             </button>
 
 
-                            {passenger.blockStatus ? (
+                            {passenger.bankDetails ? passenger.blockStatus ? (
                                 <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
                             ):(
                                 <button
-                                onClick={()=>{setShowAddMoneyPopup(true)
-                                    setActiveTab("")
-                                }}
+                                onClick={handleBankdetails}
                                 className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
                             >
                                 Add Money
                             </button>
-                            )}
+                            ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user did not provided their bank details</p>}
 
                         </div>
 
@@ -216,7 +223,7 @@ const PassengerProfile = () => {
                                 <div className="bg-white flex w-full flex-wrap flex-row justify-around">
                                     <h1 className="text-xl font-semibold">Wallet Balance</h1>
                                     <p className="text-xl">
-                                        ₹{passenger.bankDetails ? (passenger.bankDetails.balance || walletBalance) : walletBalance}
+                                        ₹{walletBalance || 0}
                                     </p>
                                 </div>
                                 <div className="bg-white flex w-full flex-wrap flex-row justify-around">

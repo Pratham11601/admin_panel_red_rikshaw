@@ -295,7 +295,7 @@ const DriverProfile = ()=>{
                 >
                     Delete 
                 </button>
-                {driver.blockStatus ? (
+                {driver.bankDetails ? driver.blockStatus ? (
                                 <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
                             ):(
                                 <button
@@ -304,7 +304,8 @@ const DriverProfile = ()=>{
                             >
                                 Add Money
                             </button>
-                            )}
+                            ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user did not provided their bank details</p>}
+                            
                     {/* <button
                             onClick={toggleStatus}
                             className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
