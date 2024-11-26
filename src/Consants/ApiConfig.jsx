@@ -25,6 +25,11 @@ class ApiConfig {
       return `${this.BASE_URL}/api/adminpanel/dashboard`;
     }
 
+    //Search user
+    static getSearchUserEndpoint(phone) {
+      return `${this.BASE_URL}/api/adminpanel/search/${phone}`;
+    }
+
     //passengers
     static getPassengersEndpoint() {
       

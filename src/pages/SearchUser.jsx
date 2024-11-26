@@ -2,6 +2,7 @@ import Header from "../components/common/Header";
 import React, { useState } from 'react';
 import axios from 'axios';
 import UserProfile from "../components/SearchUser/UserProfile";
+import ApiConfig from '../Consants/ApiConfig';
 import usernotfound from '../assets/usernotfound2.jpg';
 import searchuser from '../assets/searchuser.jpg';
 
@@ -14,14 +15,16 @@ const SearchUser = () => {
   const handleSearch = async () => {
     setLoading(true); // Start loading
     setError(''); // Clear previous error
+
     try {
+      // Construct API endpoint using ApiConfig
+      const endpoint = ApiConfig.getSearchUserEndpoint(phoneNumber);
+
       // Make API call to fetch user by phone number
-      const response = await axios.get(
-        `http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/search/${phoneNumber}`
-      );
-      
+      const response = await axios.get(endpoint);
+
       const data = response.data;
-      
+
       if (response.status === 200 && data.status === 1) {
         setUserData(data.data); // Store user data (data.data contains the user's details)
         setError(''); // Clear any previous error messages
@@ -44,9 +47,9 @@ const SearchUser = () => {
   };
 
   const renderUserProfile = () => {
-    if (userData ) {
-      return  <UserProfile user={userData} />;
-    } 
+    if (userData) {
+      return <UserProfile user={userData} />;
+    }
   };
 
   const clearUserData = () => {
@@ -66,7 +69,7 @@ const SearchUser = () => {
             placeholder="Search User by Phone Number..."
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            onKeyDown={handleKeyDown}  // Add the keydown handler
+            onKeyDown={handleKeyDown} // Add the keydown handler
             className="border shadow-md px-10 py-2 rounded w-full max-w-lg"
           />
           <button onClick={handleSearch} className="bg-blue-500 text-white py-2 px-8 rounded ml-2 shadow-md">
@@ -96,7 +99,6 @@ const SearchUser = () => {
         )}
 
         {!loading && userData && renderUserProfile()}
-
       </main>
     </div>
   );
