@@ -7,6 +7,7 @@ import { ShimmerCategoryItem } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
 import StatCard from "../common/StatCard";
 import { Users, PlusCircle, CheckCircle, XCircle } from 'lucide-react';
+import fetchWithToken from '../../utils/fetchWithToken';
 
 const PassengerTable = () => {
   const [passengerData, setPassengerData] = useState([]);
@@ -23,22 +24,11 @@ const PassengerTable = () => {
   useEffect(() => {
     const fetchPassengers = async (retryCount = 0) => {
       try {
-        const token = localStorage.getItem('token'); // Retrieve token from localStorage
-        const response = await fetch(ApiConfig.getPassengersEndpoint(), {
+        const response = await fetchWithToken(ApiConfig.getPassengersEndpoint(), {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,  // Add token to headers
-            'Content-Type': 'application/json',
-          },
         });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const passengers = data.passengers;
-        // console.log("----data----")
-        // console.log(data)
 
+        const passengers = response.passengers;
         setIsLoading(false);
         if (Array.isArray(passengers)) {
           setPassengerData(passengers);
@@ -58,6 +48,7 @@ const PassengerTable = () => {
 
     fetchPassengers();
   }, []);
+
 
   // Filter and sort passengers data
   const filteredData = passengerData
