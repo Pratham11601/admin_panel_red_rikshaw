@@ -6,6 +6,7 @@ import ApiConfig from '../../Consants/ApiConfig';
 import { FadeLoader } from "react-spinners";
 import { ShimmerCategoryItem } from "react-shimmer-effects";
 import usernotfound from '../../assets/usernotfound2.jpg';
+import fetchWithToken from '../../utils/fetchWithToken'; 
 
 const UsersTable = () => {
   const [driverData, setDriverData] = useState([]);
@@ -43,14 +44,7 @@ const UsersTable = () => {
     const fetchDrivers = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem('token');
-        const data = await retryFetch(ApiConfig.getDriversEndpoint(),{
-          method: 'GET',
-					headers: {
-						'Authorization': `Bearer ${token}`,  // Add token to headers
-						'Content-Type': 'application/json'
-					}
-        }, maxRetries, retryDelay);
+        const data = await fetchWithToken(ApiConfig.getDriversEndpoint());
         const Drivers = data.data;
         setIsLoading(false);
         if (Array.isArray(Drivers)) {
@@ -63,6 +57,7 @@ const UsersTable = () => {
         console.error("Error fetching Drivers Data", error);
       }
     };
+    
 
     fetchDrivers();
   }, []);
