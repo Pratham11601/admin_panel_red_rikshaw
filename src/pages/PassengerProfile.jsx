@@ -39,11 +39,15 @@ const PassengerProfile = () => {
 
     const handleBlockToggle = async () => {
         setLoading(true);
+        const token = localStorage.getItem('token'); // Get token from localStorage
+
         try {
             const response = await fetch(ApiConfig.putBlockStatus(passenger._id), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+
                 },
                 body: JSON.stringify({
                     blockStatus: !passenger.blockStatus,
