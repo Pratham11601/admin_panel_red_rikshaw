@@ -113,12 +113,14 @@ import UserProfile from "../components/SearchUser/UserProfile";
 import ApiConfig from '../Consants/ApiConfig';
 import usernotfound from '../assets/usernotfound2.jpg';
 import searchuser from '../assets/searchuser.jpg';
-
+import { useNavigate } from "react-router-dom";
 const SearchUser = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [role,setRole] = useState()
+  const navigate = useNavigate()
 
   // Trigger search whenever the phone number changes
   useEffect(() => {
@@ -163,6 +165,7 @@ const SearchUser = () => {
 
       const data = response.data;
       if (response.status === 200 && data.status === 1) {
+        setRole(data.role)
         setUserData(data.data); // Store user data (data.data contains the user's details)
         setError(''); // Clear any previous error messages
       } else {
@@ -184,8 +187,16 @@ const SearchUser = () => {
   };
 
   const renderUserProfile = () => {
-    if (userData) {
-      return <UserProfile user={userData} />;
+    // if (userData) {
+    //   return <UserProfile user={userData} />;
+    // }
+
+    if(userData){
+      if(role === "passenger"){
+    navigate(`/Home/passengerProfile`, { state: { passenger:userData  } }); 
+      }else if(role === 'driver'){
+        navigate(`/Home/driverProfile`, { state: { driver:userData } });
+      }
     }
   };
 
