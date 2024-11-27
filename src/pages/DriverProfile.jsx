@@ -47,11 +47,15 @@ const DriverProfile = ()=>{
 
       const handleBlockToggle = async () => {
         setLoading(true);
+        const token = localStorage.getItem('token'); // Get token from localStorage
+
         try {
             const response = await fetch(ApiConfig.putBlockStatus(driver._id), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+
                 },
                 body: JSON.stringify({
                     blockStatus: !driver.blockStatus,
