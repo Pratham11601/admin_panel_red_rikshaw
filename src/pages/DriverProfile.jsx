@@ -128,11 +128,11 @@ const DriverProfile = ()=>{
             console.log("response ----")
             console.log(response.data)
             if(response.status == 200){
-                alert(response.data.message)
+                // alert(response.data.message)
                 setWalletBalance(walletBalance + newAmount);
             }
             else{
-                alert("failed to add money")
+                console.log("failed to add money")
             }
         } catch (error) {
             console.log(error)
@@ -159,7 +159,7 @@ const DriverProfile = ()=>{
 
 
     const handleBackClick = () => {
-        navigate('/Home/drivers'); 
+        navigate(-1); 
       };
 
     const handleDeleteClick = () => {

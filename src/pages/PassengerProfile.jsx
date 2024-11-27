@@ -106,7 +106,7 @@ const PassengerProfile = () => {
     };
 
     const handleBackClick = () => {
-        navigate('/Home/passengers');
+        navigate(-1);
     };
 
     const handleAddMoney = async()=>{
@@ -133,11 +133,11 @@ const PassengerProfile = () => {
             console.log("response ----")
             console.log(response)
             if(response.status == 200){
-                alert(response.data.message)
+                // alert(response.data.message)
                 setWalletBalance(walletBalance + newAmount);
             }
             else{
-                alert("failed to add money")
+                console.log("failed to add money")
             }
             
         } catch (error) {
