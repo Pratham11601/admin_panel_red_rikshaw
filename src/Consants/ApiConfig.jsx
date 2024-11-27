@@ -125,18 +125,22 @@ static putBlockStatus(id) {
     }
 
     //Terms&Conditions
-    static postTermsAndConditionEndpoint() {
-        return `${this.BASE_URL}/api/terms/post`;
-    }
-    static putTermsAndConditionEndpoint(id) {
-      return `${this.BASE_URL}/api/terms/edit/${id}`;
-    }
-    static getTermsAndConditionEndpont() {
-        return `${this.BASE_URL}/api/terms/getAll`;
-    }
-    static deleteTermsAndConditionEndpoint(id) {
-      return `${this.BASE_URL}/api/terms/delete/${id}`;
-    }
+
+static postTermsAndConditionEndpoint() {
+  return `${this.BASE_URL}/api/terms/post`;
+}
+
+static putTermsAndConditionEndpoint(id) {
+  return `${this.BASE_URL}/api/terms/edit/${id}`;
+}
+
+static getTermsAndConditionEndpoint() {
+  return `${this.BASE_URL}/api/terms/getAll`;
+}
+
+static deleteTermsAndConditionEndpoint(id) {
+  return `${this.BASE_URL}/api/terms/delete/${id}`;
+}
     //charges
     static getChargesEndpoint() {
       return `${this.BASE_URL}/api/charges`;

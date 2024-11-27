@@ -14,7 +14,7 @@ const fetchWithToken = async (url, options = {}) => {
 
     // Handle response errors
     if (!response.ok) {
-      const errorMessage = await response.text(); // Get error message from response body
+      const errorMessage = await response.text(); 
       console.error(`Error fetching data: ${response.status} - ${errorMessage}`);
       
       // Handle 401 (unauthorized)
@@ -25,6 +25,13 @@ const fetchWithToken = async (url, options = {}) => {
         window.location.href = '/login';
       }
       
+      if (response.status === 403) {
+        console.error('Access denied. Admins only.');
+        alert('You do not have permission to perform this action. Please contact an administrator.');
+        // window.location.href = '/';
+      }
+
+
       // Handle 500 (internal server error)
       if (response.status === 500) {
         console.error('Internal Server Error: Please try again later.');

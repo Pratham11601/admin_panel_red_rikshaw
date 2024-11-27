@@ -73,11 +73,17 @@ function Charges() {
   };
 
   const handleChange = (e) => {
-    setCharges({
-      ...charges,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+  
+    // Check if the value is a positive number
+    if (value === '' || /^[0-9]+(\.[0-9]+)?$/.test(value)) {
+      setCharges({
+        ...charges,
+        [name]: value
+      });
+    }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

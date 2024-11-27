@@ -1,6 +1,8 @@
+
 import Header from "../components/common/Header";
 import { useEffect, useState } from "react";
 import ApiConfig from "../Consants/ApiConfig";
+import fetchWithToken from "../utils/fetchWithToken"; // Make sure the path is correct
 
 const Privacy = () => {
     const [policies, setPolicies] = useState([]);
@@ -12,20 +14,23 @@ const Privacy = () => {
     const [formData, setFormData] = useState({ title: '', content: '' });
 
     useEffect(() => {
-        fetch(ApiConfig.getPrivacyPolicyEndpoint())
-            .then((response) => response.json())
-            .then((data) => {
+        // Use fetchWithToken to get privacy policies
+        const fetchPolicies = async () => {
+            try {
+                const data = await fetchWithToken(ApiConfig.getPrivacyPolicyEndpoint());
                 if (data.status === 1) {
                     setPolicies(data.data);
                 } else {
                     setError(data.message || 'Failed to fetch privacy policies');
                 }
-                setLoading(false);
-            })
-            .catch((error) => {
+            } catch (error) {
                 setError('Error fetching data: ' + error.message);
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchPolicies();
     }, []);
 
     const handleAddClick = () => {
@@ -46,57 +51,64 @@ const Privacy = () => {
         setCurrentPolicy(null);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!formData.title && !formData.content) {
             alert('Please fill at least one field: title or content');
             return;
         }
-
+        
         const endpoint = formType === 'add'
             ? ApiConfig.postPrivacyPolicyEndpoint()
             : ApiConfig.putPrivacyPolicyEndpoint(currentPolicy._id);
-
-        fetch(endpoint, {
-            method: formType === 'add' ? 'POST' : 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 1) {
-                    if (formType === 'add') {
-                        setPolicies([...policies, data.data]);
-                    } else {
-                        const updatedPolicies = policies.map((policy) =>
+    
+        try {
+            const response = await fetchWithToken(endpoint, {
+                method: formType === 'add' ? 'POST' : 'PUT',
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' },
+            });
+    
+            if (response.status === 1) {
+                if (formType === 'add') {
+                    setPolicies((prevPolicies) => [...prevPolicies, response.data]);
+                } else {
+                    setPolicies((prevPolicies) =>
+                        prevPolicies.map((policy) =>
                             policy._id === currentPolicy._id ? { ...policy, ...formData, updatedAt: new Date() } : policy
-                        );
-                        setPolicies(updatedPolicies);
-                    }
-                    handleCancel();
-                } else {
-                    setError(data.message || 'Failed to save changes');
+                        )
+                    );
                 }
-            })
-            .catch((error) => {
+                handleCancel();
+            } else {
+                setError(response.message || 'Failed to save changes');
+                if (response.message === 'Access denied') {
+                    alert('You do not have permission to edit the privacy policy.');
+                }
+            }
+        } catch (error) {
+            if (error.message.includes('Access denied')) {
+                alert('You do not have permission to edit the privacy policy.');
+            } else {
                 setError('Error saving data: ' + error.message);
-            });
+            }
+        }
     };
-
-    const handleDeleteClick = (id) => {
-        fetch(ApiConfig.deletePrivacyPolicyEndpoint(id), {
-            method: 'DELETE',
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.status === 1) {
-                    setPolicies(policies.filter((policy) => policy._id !== id));
-                } else {
-                    setError(data.message || 'Failed to delete the policy');
-                }
-            })
-            .catch((error) => {
-                setError('Error deleting data: ' + error.message);
+    
+    
+    const handleDeleteClick = async (id) => {
+        try {
+            const response = await fetchWithToken(ApiConfig.deletePrivacyPolicyEndpoint(id), {
+                method: 'DELETE',
             });
+
+            if (response.status === 1) {
+                setPolicies(policies.filter((policy) => policy._id !== id));
+            } else {
+                setError(response.message || 'Failed to delete the policy');
+            }
+        } catch (error) {
+            setError('Error deleting data: ' + error.message);
+        }
     };
 
     if (loading) {
@@ -115,7 +127,6 @@ const Privacy = () => {
                 <ul className='space-y-4'>
                     {policies.map((policy) => (
                         <li key={policy._id} className='bg-white p-4 rounded-lg shadow-md text-black'>
-                            {/* <strong>Serial Number: {policy.sr_no}</strong><br /> */}
                             <span>Title: {policy.title}</span><br />
                             <span>Content: {policy.content}</span><br />
                             <small>Created At: {new Date(policy.createdAt).toLocaleString()}</small><br />
@@ -162,3 +173,5 @@ const Privacy = () => {
 };
 
 export default Privacy;
+
+

@@ -1,3 +1,5 @@
+
+
 import Header from "../components/common/Header";
 import { useEffect, useState } from "react";
 import ApiConfig from "../Consants/ApiConfig";
@@ -6,13 +8,15 @@ const Terms = () => {
     const [terms, setTerms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [notification, setNotification] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [formType, setFormType] = useState('');
     const [currentTerm, setCurrentTerm] = useState(null);
     const [formData, setFormData] = useState({ title: '', subtitle: '', content: '' });
 
+    // Fetch terms and conditions from the backend
     useEffect(() => {
-        fetch(ApiConfig.getTermsAndConditionEndpont())
+        fetch(ApiConfig.getTermsAndConditionEndpoint())
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === 1) {
@@ -28,11 +32,14 @@ const Terms = () => {
             });
     }, []);
 
+    // Handle add button click
     const handleAddClick = () => {
         setFormType('add');
         setShowForm(true);
+        setFormData({ title: '', subtitle: '', content: '' });
     };
 
+    // Handle edit button click
     const handleEditClick = (term) => {
         setFormType('edit');
         setCurrentTerm(term);
@@ -40,15 +47,17 @@ const Terms = () => {
         setShowForm(true);
     };
 
+    // Handle cancel button click
     const handleCancel = () => {
         setShowForm(false);
         setFormData({ title: '', subtitle: '', content: '' });
         setCurrentTerm(null);
     };
 
+    // Handle save button click
     const handleSave = () => {
-        if (!formData.title && !formData.subtitle && !formData.content) {
-            alert('Please fill at least one field: title, subtitle, or content');
+        if (!formData.title.trim() && !formData.subtitle.trim() && !formData.content.trim()) {
+            setNotification('Please fill at least one field: title, subtitle, or content');
             return;
         }
 
@@ -56,67 +65,79 @@ const Terms = () => {
             ? ApiConfig.postTermsAndConditionEndpoint()
             : ApiConfig.putTermsAndConditionEndpoint(currentTerm._id);
 
+        const method = formType === 'add' ? 'POST' : 'PUT';
+
         fetch(endpoint, {
-            method: formType === 'add' ? 'POST' : 'PUT',
+            method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === 1) {
+                    // If it's an add operation, add the new term immediately
                     if (formType === 'add') {
-                        setTerms([...terms, data.data]);
+                        setTerms((prevTerms) => [data.data, ...prevTerms]); // Add new term to the front of the list
                     } else {
-                        const updatedTerms = terms.map((term) =>
-                            term._id === currentTerm._id ? { ...term, ...formData, updatedAt: new Date() } : term
+                        // If it's an edit operation, update the term in the state
+                        setTerms((prevTerms) =>
+                            prevTerms.map((term) =>
+                                term._id === currentTerm._id ? { ...term, ...formData, updatedAt: new Date() } : term
+                            )
                         );
-                        setTerms(updatedTerms);
                     }
-                    handleCancel();
+
+                    setNotification('Changes saved successfully.');
+                    setShowForm(false); // Close the form after saving
                 } else {
-                    setError(data.message || 'Failed to save changes');
+                    setNotification(data.message || 'Failed to save changes');
                 }
             })
             .catch((error) => {
-                setError('Error saving data: ' + error.message);
+                setNotification('Error saving data: ' + error.message);
             });
     };
 
+    // Handle delete button click
     const handleDeleteClick = async (id) => {
         try {
-          const response = await fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), { method: "DELETE" });
-          const data = await response.json();
-          console.log("Delete Response:", data);
-    
-          if (data.status === 1) {
-            setTerms((prev) => prev.filter((term) => term._id !== id));
-          } else {
-            setError(data.message || "Failed to delete the term.");
-          }
+            const response = await fetch(ApiConfig.deleteTermsAndConditionEndpoint(id), { method: "DELETE" });
+            const data = await response.json();
+
+            if (data.status === 1) {
+                setTerms((prev) => prev.filter((term) => term._id !== id)); // Remove deleted term
+                setNotification("Term deleted successfully.");
+            } else {
+                setNotification(data.message || "Failed to delete the term.");
+            }
         } catch (err) {
-          console.error("Error deleting data:", err.message);
-          setError("Error deleting data: " + err.message);
+            setNotification("Error deleting data: " + err.message);
         }
-      };
-    
+    };
 
     if (loading) {
         return <div className='text-center'>Loading...</div>;
-    }
-
-    if (error) {
-        return <div className='text-center text-red-500'>Error: {error}</div>;
     }
 
     return (
         <div className='flex-1 relative z-10 overflow-auto bg-white text-black'>
             <Header title={"Terms and Conditions"} />
             <main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
+                {notification && (
+                    <div className='bg-green-200 text-green-700 p-4 rounded-md mb-4'>
+                        {notification}
+                        <button
+                            className="ml-2 text-red-500"
+                            onClick={() => setNotification(null)}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                )}
                 <button className='bg-blue-500 text-white px-4 py-2 rounded-md mb-4' onClick={handleAddClick}>Add</button>
                 <ul className='space-y-4'>
                     {terms.map((term) => (
-                        <li key={term._id} className='bg-white p-4 rounded-lg shadow-md text-black bordr-b border-red-400'>
-                            {/* <strong>Serial Number: {term.sr_no}</strong><br /> */}
+                        <li key={term._id} className='bg-white p-4 rounded-lg shadow-md text-black border-b border-gray-300'>
                             <span>Title: {term.title}</span><br />
                             <span>Subtitle: {term.subtitle}</span><br />
                             <span>Content: {term.content}</span><br />
@@ -136,7 +157,9 @@ const Terms = () => {
             {showForm && (
                 <div className='fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50'>
                     <div className='bg-white rounded-lg p-6 w-11/12 md:w-1/2'>
-                        <h3 className='text-lg font-semibold mb-4'>{formType === 'add' ? 'Add New Term' : 'Edit Term'}</h3>
+                        <h3 className='text-lg font-semibold mb-4'>
+                            {formType === 'add' ? 'Add New Term' : 'Edit Term'}
+                        </h3>
                         <label className='block mb-1'>Title:</label>
                         <input
                             type='text'
@@ -161,8 +184,21 @@ const Terms = () => {
                             className='border border-gray-300 rounded-md w-full p-2 mb-4'
                         />
                         <div className='flex justify-end space-x-2'>
-                            <button onClick={handleCancel} className='bg-gray-300 text-gray-700 px-4 py-2 rounded-md'>Cancel</button>
-                            <button onClick={handleSave} className='bg-blue-500 text-white px-4 py-2 rounded-md'>Save</button>
+                            <button
+                                onClick={handleCancel}
+                                className='bg-gray-300 text-gray-700 px-4 py-2 rounded-md'
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => {
+                                    handleSave();
+                                    setShowForm(false); // Close the popup after saving
+                                }}
+                                className='bg-blue-500 text-white px-4 py-2 rounded-md'
+                            >
+                                Save
+                            </button>
                         </div>
                     </div>
                 </div>
