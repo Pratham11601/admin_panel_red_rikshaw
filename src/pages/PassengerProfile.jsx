@@ -120,11 +120,15 @@ const PassengerProfile = () => {
             userId : passenger._id,
             amount : newAmount
         }
+        console.log("post data")
         console.log(postData)
+        const token = localStorage.getItem('token');
         try {
             const response = await axios.post(ApiConfig.postAddMoneyEndpoint(),postData,{
                 headers: { 
-                  'Content-Type': 'application/json', }
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                 }
               })
             console.log("response ----")
             console.log(response)
@@ -209,8 +213,8 @@ const PassengerProfile = () => {
                             </button>
 
 
-                            {passenger.bankDetails ? passenger.blockStatus ? (
-                                <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>
+                            {!passenger.blockStatus ? !passenger.bankDetails ? (
+                                <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user did not provided their bank details</p>
                             ):(
                                 <button
                                 onClick={handleBankdetails}
@@ -218,7 +222,7 @@ const PassengerProfile = () => {
                             >
                                 Add Money
                             </button>
-                            ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user did not provided their bank details</p>}
+                            ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>}
 
                         </div>
 

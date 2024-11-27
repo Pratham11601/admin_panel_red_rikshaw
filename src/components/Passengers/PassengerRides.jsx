@@ -53,9 +53,9 @@ const PassengerRides = ({ passengerId }) => {
         
         if (response.ok && data.status === 1) {
           setRidesData(data.rides);
-          console.log(ridesData);
+          // console.log(ridesData);
           
-         console.log(ridesData);
+        //  console.log(ridesData);
          
          
          
@@ -95,7 +95,7 @@ const filteredRides = ridesData.filter((ride) => {
     pickupLocation.includes(searchTerm)
   );
 });
-console.log(filteredRides)
+// console.log(filteredRides)
     // Sort the rides based on selected field
     const sortedRides = [...filteredRides].sort((a, b) => {
         
