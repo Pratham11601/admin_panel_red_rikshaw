@@ -459,7 +459,7 @@ const DriverProfile = ()=>{
 
 
                         {/* Auto Details */}
-                        <div className="p-4 bg-white shadow-lg rounded-lg text-black">
+                        {/* <div className="p-4 bg-white shadow-lg rounded-lg text-black">
                             <h3 className="text-xl font-bold mb-3">Auto Details</h3>
                             <p className="">Vehicle Number: {driver.vehicleDetails ? driver.vehicleDetails.Vehicle_number : "No Vehicle Number"}</p>
                             
@@ -475,7 +475,39 @@ const DriverProfile = ()=>{
                                 className="w-70 max-w-xs "
                                 />
                             </div>
-                        </div>
+                        </div> */}
+
+<div className="p-4 bg-white shadow-lg rounded-lg text-black">
+    <h3 className="text-xl font-bold mb-3">Auto Details</h3>
+    <p className="">
+        Vehicle Number: {driver.vehicleDetails?.Vehicle_number || "No Vehicle Number"}
+        </p>
+        <p> 
+        License Number: {driver.vehicleDetails?.license_no || "No license Number"}
+    </p>
+
+    <div className="flex flex-col">
+        {driver.vehicleDetails?.vehicle_img_front ? (
+            <img
+                src={driver.vehicleDetails.vehicle_img_front}
+                alt="Auto Image Front"
+                className="w-50 max-w-xs"
+            />
+        ) : (
+            <p>Front image not available</p>
+        )}
+        {driver.vehicleDetails?.vehicle_img_back ? (
+            <img
+                src={driver.vehicleDetails.vehicle_img_back}
+                alt="Auto Image Back"
+                className="w-70 max-w-xs"
+            />
+        ) : (
+            <p>Back image not available</p>
+        )}
+    </div>
+</div>
+
 
 
                         {/* Documents */}
