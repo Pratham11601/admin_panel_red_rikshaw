@@ -39,6 +39,7 @@ const TransactionReqTable = () => {
       setSortOrder("desc");
     }
   };
+  
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
@@ -48,24 +49,21 @@ const TransactionReqTable = () => {
           console.error("No token found");
           return; // Exit early if no token is available
         }
-
   
         // Fetch the transaction data from the backend
         const response = await fetch(ApiConfig.getTransactionRequestEndPoint(), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,  // Add token to headers
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         });
   
-        // Check if the response is successful
         if (!response.ok) {
           console.error("Failed to fetch data:", response.statusText);
           return;
         }
   
-        // Parse the response data
         const data = await response.json();
         const transactions = data.items;
   
@@ -74,18 +72,30 @@ const TransactionReqTable = () => {
         setIsLoading(false);
   
         if (Array.isArray(transactions)) {
-          setTransactions(transactions);
+          // Ensure localStorage status is applied to each transaction
+          const updatedTransactions = transactions.map((transaction) => {
+            const statusKey = `transaction-status-${transaction._id}`;
+            const savedStatus = localStorage.getItem(statusKey);
+            if (savedStatus) {
+              // Apply saved status if it exists in localStorage
+              transaction.status = savedStatus;
+            }
+            return transaction;
+          });
+  
+          setTransactions(updatedTransactions);
         } else {
           console.error('Failed to fetch transaction data');
         }
       } catch (error) {
         console.error('Error fetching transaction data:', error);
-        setIsLoading(false);  // Make sure loading state is updated even on error
+        setIsLoading(false);  // Ensure loading state is updated even on error
       }
     };
   
     fetchTransactionRequest();
   }, [sortBy, searchTerm]);  // Refetch when sorting or search term changes
+  
   useEffect(() => {
     if (selectedTransaction && selectedTransaction._id) {
       const statusKey = `transaction-status-${selectedTransaction._id}`;
@@ -173,26 +183,131 @@ const TransactionReqTable = () => {
   const closeModal = () => {
     setSelectedTransaction(null);
   };
+  // const handleSave = async () => {
+  //   if (selectedTransaction) {
+  //     try {
+  //       const requestBody = {
+  //         id: selectedTransaction._id,
+  //         status: updatedStatus,
+  //       };
+  
+  //       const responseData = await fetch(ApiConfig.putTransactionRequestEndPoint(), {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(requestBody),
+  //       });
+  
+  //       if (responseData.ok) {
+  //         const data = await responseData.json();
+  
+  //         if (data.status === 1) {
+  //           setTransactions((prev) =>
+  //             prev.map((transaction) =>
+  //               transaction._id === selectedTransaction._id
+  //                 ? { ...transaction, status: updatedStatus }
+  //                 : transaction
+  //             )
+  //           );
+  //           setError(null);
+  
+  //           // Save the updated status in localStorage
+  //           console.log(`Saving status for transaction ${selectedTransaction._id} to localStorage`);
+  //           localStorage.setItem(`transaction-status-${selectedTransaction._id}`, updatedStatus);
+  //         } else {
+  //           setError(data.message || "Failed to update the transaction status.");
+  //         }
+  //       } else {
+  //         setError("Failed to update the transaction status.");
+  //       }
+  //     } catch (err) {
+  //       setError(`Unexpected error: ${err.message}`);
+  //     }
+  //   }
+  
+  //   closeModal();
+  // };
+  
+  // const handleSave = async () => {
+  //   if (selectedTransaction) {
+  //     try {
+  //       // Prepare the request body
+  //       const requestBody = {
+  //         id: selectedTransaction._id,
+  //         status: updatedStatus,
+  //       };
+  //       const token = localStorage.getItem("token"); 
+  //       // Make the PUT request to update the transaction status
+  //       const response = await fetch(ApiConfig.putTransactionRequestEndPoint(), {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`,
+  //         },
+  //         body: JSON.stringify(requestBody),
+  //       });
+  
+  //       if (response.ok) {
+  //         const data = await response.json();
+  
+  //         if (data.status === 1) {
+  //           // Update the transaction status in local state
+  //           setTransactions((prev) =>
+  //             prev.map((transaction) =>
+  //               transaction._id === selectedTransaction._id
+  //                 ? { ...transaction, status: updatedStatus }
+  //                 : transaction
+  //             )
+  //           );
+  //           setError(null);
+  
+  //           // Save the updated status in localStorage
+  //           console.log(`Saving status for transaction ${selectedTransaction._id} to localStorage`);
+  //           localStorage.setItem(
+  //             `transaction-status-${selectedTransaction._id}`,
+  //             updatedStatus
+  //           );
+  //         } else {
+  //           setError(data.message || "Failed to update the transaction status.");
+  //         }
+  //       } else {
+  //         setError("Failed to update the transaction status.");
+  //       }
+  //     } catch (err) {
+  //       setError(`Unexpected error: ${err.message}`);
+  //     }
+  //   }
+  
+  //   closeModal();
+  // };
+  
   const handleSave = async () => {
     if (selectedTransaction) {
       try {
+        // Prepare the request body for the status update
         const requestBody = {
           id: selectedTransaction._id,
           status: updatedStatus,
         };
   
-        const responseData = await fetch(ApiConfig.putTransactionRequestEndPoint(), {
+        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+  
+        // Make the PUT request to update the transaction status on the backend
+        const response = await fetch(ApiConfig.putTransactionRequestEndPoint(), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(requestBody),
         });
   
-        if (responseData.ok) {
-          const data = await responseData.json();
+        if (response.ok) {
+          const data = await response.json();
   
           if (data.status === 1) {
+            // Update the transaction status in the local state
             setTransactions((prev) =>
               prev.map((transaction) =>
                 transaction._id === selectedTransaction._id
@@ -204,7 +319,10 @@ const TransactionReqTable = () => {
   
             // Save the updated status in localStorage
             console.log(`Saving status for transaction ${selectedTransaction._id} to localStorage`);
-            localStorage.setItem(`transaction-status-${selectedTransaction._id}`, updatedStatus);
+            localStorage.setItem(
+              `transaction-status-${selectedTransaction._id}`,
+              updatedStatus
+            );
           } else {
             setError(data.message || "Failed to update the transaction status.");
           }
@@ -216,9 +334,8 @@ const TransactionReqTable = () => {
       }
     }
   
-    closeModal();
+    closeModal(); // Close the modal after saving
   };
-  
   
 
   return (
