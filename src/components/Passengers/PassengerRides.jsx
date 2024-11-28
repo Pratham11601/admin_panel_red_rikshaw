@@ -16,7 +16,7 @@ const PassengerRides = ({ passengerId }) => {
   const itemsPerPage = 10;
   const [selectedRide, setSelectedRide] = useState(null);
 
-  console.log(passengerId);
+  //console.log(passengerId);
   
   
   // Search functionality
@@ -42,7 +42,9 @@ const PassengerRides = ({ passengerId }) => {
       setIsLoading(true);
       const token = localStorage.getItem('token'); // Retrieve token from localStorage
       try {
-        const response = await fetch(ApiConfig.getPassengerRidesEndpoint(passengerId),{
+        const response = await fetch(
+          `${ApiConfig.getPassengerRidesEndpoint(passengerId)}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+          {
           method: 'GET',
 					headers: {
 						'Authorization': `Bearer ${token}`,  // Add token to headers
@@ -98,30 +100,29 @@ const filteredRides = ridesData.filter((ride) => {
 // console.log(filteredRides)
     // Sort the rides based on selected field
     const sortedRides = [...filteredRides].sort((a, b) => {
-        
-        if (sortBy === "passenger") {
-          return sortOrder === "asc"
-            ? a.passengerId.name.localeCompare(b.passengerId.name)
-            : b.passengerId.name.localeCompare(a.passengerId.name);
-        }
-        if (sortBy === "rideNo") {
-          return sortOrder === "asc" ? a._id - b._id : b._id - a._id;
-        }
-        if (sortBy === "fare") {
-          return sortOrder === "asc" ? a.totalCost - b.totalCost : b.totalCost - a.totalCost;
-        }
-        if (sortBy === "fromplace") {
-          return sortOrder === "asc"
-            ? a.passengerId.name.localeCompare(b.passengerId.name)
-            : b.passengerId.name.localeCompare(a.passengerId.name);
-        }
-        if (sortBy === "toplace") {
-          return sortOrder === "asc"
-            ? a.passengerId.name.localeCompare(b.passengerId.name)
-            : b.passengerId.name.localeCompare(a.passengerId.name);
-        }
-        return 0;
-      });
+      if (sortBy === "passenger") {
+        const aName = a.passengerId?.name || ""; // Default to empty string if name is undefined
+        const bName = b.passengerId?.name || ""; // Default to empty string if name is undefined
+        return sortOrder === "asc"
+          ? aName.localeCompare(bName)
+          : bName.localeCompare(aName);
+      }
+      if (sortBy === "rideNo") {
+        return sortOrder === "asc" ? a._id - b._id : b._id - a._id;
+      }
+      if (sortBy === "fare") {
+        return sortOrder === "asc" ? a.totalCost - b.totalCost : b.totalCost - a.totalCost;
+      }
+      if (sortBy === "fromplace" || sortBy === "toplace") {
+        const aPlace = sortBy === "fromplace" ? a.pickupLocation?.place : a.dropoffLocation?.place;
+        const bPlace = sortBy === "fromplace" ? b.pickupLocation?.place : b.dropoffLocation?.place;
+        return sortOrder === "asc"
+          ? (aPlace || "").localeCompare(bPlace || "") // Default to empty string if place is undefined
+          : (bPlace || "").localeCompare(aPlace || "");
+      }
+      return 0;
+    });
+    
 
       const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

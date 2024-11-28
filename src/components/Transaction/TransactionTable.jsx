@@ -26,35 +26,23 @@ const TransactionTable = () => {
   
     setIsLoading(true);
     try {
-      const response = await fetch(ApiConfig.getTransactionsEndPoint(), {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`, // Add token to headers
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${ApiConfig.getTransactionsEndPoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
   
       const result = await response.json();
   
       if (response.ok) {
-        // Access the correct field based on the Swagger response
-        const transactionsData = result.data || []; 
-  
-        // Apply sorting to the fetched transactions based on the sortField and sortOrder
-        const sortedData = transactionsData.sort((a, b) => {
-          const fieldA = new Date(getNestedField(a, sortField));
-          const fieldB = new Date(getNestedField(b, sortField));
-        
-          if (sortOrder === "desc") {
-            return fieldB - fieldA; // Latest first
-          } else {
-            return fieldA - fieldB; // Oldest first
-          }
-        });
-        
-  
-        setTransactions(sortedData);
-        setTotalPages(Math.ceil(result.pagination.totalCount / itemsPerPage)); // Calculate total pages
+        const transactionsData = result.data || [];
+        setTransactions(transactionsData);
+        setTotalPages(Math.ceil(result.pagination.totalCount / itemsPerPage));
       } else {
         console.error("Error fetching transactions:", result.message);
       }
@@ -67,16 +55,16 @@ const TransactionTable = () => {
   
 
   // Helper function to access nested fields (e.g., 'from.name')
-  const getNestedField = (obj, fieldPath) => {
-    return fieldPath.split('.').reduce((acc, field) => acc[field], obj);
-  };
+  // const getNestedField = (obj, fieldPath) => {
+  //   return fieldPath.split('.').reduce((acc, field) => acc[field], obj);
+  // };
 
   const handleSort = (field) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'); // Toggle sort order
+      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
     } else {
-      setSortField(field); // Change sort field
-      setSortOrder('desc'); // Reset to ascending order for new field
+      setSortField(field);
+      setSortOrder("desc");
     }
   };
 
@@ -87,28 +75,30 @@ const TransactionTable = () => {
     }
   };
 
-  // Get current transactions for the current page
-  const currentItems = transactions.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
+ 
   // Calculate total transactions and total amount
   const totalTransactions = transactions.length;
   const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
 
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }) + ' ' + date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }) +
+      " " +
+      date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
   };
+
+  const currentItems = transactions.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <motion.div
@@ -179,9 +169,9 @@ const TransactionTable = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {currentItems.map((transaction) => (
+                {currentItems.map((transaction, index) => (
                   <motion.tr
-                    key={transaction.transactionID}
+                    key={index}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="border-b border-gray-200 hover:bg-gray-100"
@@ -200,22 +190,42 @@ const TransactionTable = () => {
 
           {/* Pagination */}
           <div className="flex justify-center mt-4">
-            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
-              Prev
-            </button>
-            <span className="px-4 py-2">{currentPage} of {totalPages}</span>
-            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
-              Next
-            </button>
-          </div>
-        </div>
+  <button
+    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
+    onClick={() => paginate(currentPage - 1)}
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalPages }).map((_, index) => (
+    <button
+      key={index}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
+      onClick={() => paginate(index + 1)}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
+    onClick={() => paginate(currentPage + 1)}
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
+</div>
+
+</div>
+
+       
       )}
     </motion.div>
   );
 };
 
 export default TransactionTable;
-
 
 
 //remember to remove Transaction details file from pages 

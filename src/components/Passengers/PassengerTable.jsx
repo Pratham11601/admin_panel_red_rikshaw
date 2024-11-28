@@ -24,7 +24,9 @@ const PassengerTable = () => {
   useEffect(() => {
     const fetchPassengers = async (retryCount = 0) => {
       try {
-        const response = await fetchWithToken(ApiConfig.getPassengersEndpoint(), {
+        const response = await fetchWithToken(
+          `${ApiConfig.getPassengersEndpoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+        {
           method: 'GET',
         });
 
@@ -47,7 +49,7 @@ const PassengerTable = () => {
     };
 
     fetchPassengers();
-  }, []);
+  }, [currentPage]);
 
 
   // Filter and sort passengers data
