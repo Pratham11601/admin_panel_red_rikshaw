@@ -30,8 +30,12 @@ const DriverProfile = ()=>{
     const [password, setPassword] = useState('');   
     
 
-    console.log("this is deiver")
-    console.log(driver)
+    // console.log("this is deiver")
+    // console.log(driver)
+
+//     console.log(driver.vehicleDetails?.vehicle_img_front);
+// console.log(driver.vehicleDetails?.vehicle_img_back);
+
     
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
@@ -71,7 +75,7 @@ const DriverProfile = ()=>{
                 alert('Failed to update block status. Please try again.');
             }
         } catch (error) {
-            console.error('Error toggling block status:', error);
+            //console.error('Error toggling block status:', error);
             alert('An error occurred while updating the block status.');
         } finally {
             setLoading(false);

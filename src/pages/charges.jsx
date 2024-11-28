@@ -52,8 +52,8 @@ function Charges() {
         setCharges({
           day_km_1_to_1_5: chargesData.oneToOneAndHalf || '0',
           day_km_1_5_plus: chargesData.oneAndHalfPlus || '0',
-          night_km_1_to_1_5: chargesData.night_km_1_to_1_5 || '0',
-          night_km_1_5_plus: chargesData.night_km_1_5_plus || '0',
+          night_km_1_to_1_5: chargesData.night_oneToOneAndHalf || '0',
+          night_km_1_5_plus: chargesData.night_oneAndHalfPlus || '0',
           perRideCharges: chargesData.perRideCharges || '0',
           platform_fee: chargesData.platform_fee || '0',
           driverReferral: chargesData.driver_refferal || '0',
