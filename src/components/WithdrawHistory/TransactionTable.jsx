@@ -16,44 +16,86 @@ const TransactionTable = () => {
 
   
 
+  // useEffect(() => {
+  //   const fetchTransactionRequest = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token"); // Retrieve token from localStorage
+  //       const response = await fetch(ApiConfig.getTransactionHistoryEndPoint(), {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         console.error(`Error fetching transactions: ${response.status} ${response.statusText}`);
+  //         setIsLoading(false);
+  //         return;
+  //       }
+
+  //       const data = await response.json();
+  //       if (data && Array.isArray(data.items)) {
+  //         // Sort transactions by createdAt
+  //         const sortedData = data.items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  //         setTransactions(sortedData);
+  //       } else {
+  //         console.error("Invalid data format or missing transactions");
+  //         setTransactions([]);
+  //       }
+
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching transaction data:", error);
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchTransactionRequest();
+  // }, [sortBy, searchTerm]);
+
   useEffect(() => {
     const fetchTransactionRequest = async () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve token from localStorage
-        const response = await fetch(ApiConfig.getTransactionHistoryEndPoint(), {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
+        const response = await fetch(
+          `${ApiConfig.getTransactionHistoryEndPoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`, // Add pagination parameters to the API request
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+  
         if (!response.ok) {
           console.error(`Error fetching transactions: ${response.status} ${response.statusText}`);
           setIsLoading(false);
           return;
         }
-
+  
         const data = await response.json();
         if (data && Array.isArray(data.items)) {
           // Sort transactions by createdAt
           const sortedData = data.items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           setTransactions(sortedData);
+          setTotalPages(data.totalPages); // Set totalPages from the API response
         } else {
           console.error("Invalid data format or missing transactions");
           setTransactions([]);
         }
-
+  
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching transaction data:", error);
         setIsLoading(false);
       }
     };
-
+  
     fetchTransactionRequest();
-  }, [sortBy, searchTerm]);
-
+  }, [currentPage, sortBy, searchTerm]); // Add currentPage to the dependency array to re-fetch data when the page changes
+  
   // Search functionality
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -102,14 +144,27 @@ const TransactionTable = () => {
     return 0;
   });
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const totalPages = Math.ceil(sortedTransactions.length / itemsPerPage);
+  // const totalPages = Math.ceil(sortedTransactions.length / itemsPerPage);
+  // const currentItems = sortedTransactions.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);  // Use filteredTransactions for pagination
   const currentItems = sortedTransactions.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
+  
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+  
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
     return (
@@ -205,19 +260,16 @@ const TransactionTable = () => {
           </motion.div>
 
           {/* Pagination */}
-          
-              
-          <div className="flex justify-center mt-4">
-  {/* Previous Button */}
+
+<div className="flex justify-center mt-4">
   <button
     className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-    onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+    onClick={() => paginate(currentPage - 1)}
     disabled={currentPage === 1}
   >
     Previous
   </button>
 
-  {/* Page Numbers */}
   {Array.from({ length: totalPages }).map((_, index) => (
     <button
       key={index}
@@ -228,17 +280,18 @@ const TransactionTable = () => {
     </button>
   ))}
 
-  {/* Next Button */}
   <button
     className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-    onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+    onClick={() => paginate(currentPage + 1)}
     disabled={currentPage === totalPages}
   >
     Next
   </button>
 </div>
 
-        </div>
+</div>
+
+       
       )}
        
      
