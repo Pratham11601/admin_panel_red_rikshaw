@@ -75,11 +75,9 @@ const Terms = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data.status === 1) {
-                    // If it's an add operation, add the new term immediately
                     if (formType === 'add') {
                         setTerms((prevTerms) => [data.data, ...prevTerms]); // Add new term to the front of the list
                     } else {
-                        // If it's an edit operation, update the term in the state
                         setTerms((prevTerms) =>
                             prevTerms.map((term) =>
                                 term._id === currentTerm._id ? { ...term, ...formData, updatedAt: new Date() } : term
