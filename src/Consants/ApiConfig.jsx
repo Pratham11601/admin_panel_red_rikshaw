@@ -60,8 +60,8 @@ static putBlockStatus(id) {
       return `${this.BASE_URL}/api/adminpanel/driver-rides/${driverId}?page=1&limit=15`;
     }
     //transactionhistory as per driver
-    static getDriverTransactionHistoryEndpoint(driverId){
-      return `${this.BASE_URL}/api/adminpanel/transactions-history?userId=${driverId}&page=1&limit=15`;
+    static getDriverTransactionHistoryEndpoint(driverId,currentPage,itemsPerPage){
+      return `${this.BASE_URL}/api/adminpanel/transactions-history?userId=${driverId}&page=${currentPage}&limit=${itemsPerPage}`;
     }
 
     //Rides

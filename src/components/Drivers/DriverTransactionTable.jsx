@@ -20,7 +20,7 @@ const DriverTransactionTable = ({ driverId }) => {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const endpoint = ApiConfig.getDriverTransactionHistoryEndpoint(driverId, currentPage, itemsPerPage);
+        const endpoint = ApiConfig.getDriverTransactionHistoryEndpoint(driverId, currentPage,itemsPerPage);
         const response = await fetch(endpoint, {
           method: 'GET',
           headers: {
@@ -39,7 +39,8 @@ const DriverTransactionTable = ({ driverId }) => {
 
         if (data && Array.isArray(data.Transactions)) {
           setTransactions(data.Transactions);
-          setTotalPages(data.totalPages || 1); // Assuming API provides total pages
+          // setTotalPages(data.totalPages || 1); // Assuming API provides total pages
+          setTotalPages(Math.ceil(data.Pagination.totalCount / itemsPerPage));
         } else {
           console.error('Invalid response format or Transactions is not an array');
           setTransactions([]);
@@ -206,13 +207,39 @@ const DriverTransactionTable = ({ driverId }) => {
       </div>*/}
          {/* Pagination */}
          <div className="flex justify-center mt-4">
-            <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
+            {/* <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
               Prev
             </button>
             <span className="px-4 py-2">{currentPage} of {totalPages}</span>
             <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
               Next
-            </button>
+            </button> */}
+
+<button
+    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-300"}`}
+    onClick={() => paginate(currentPage - 1)}
+    disabled={currentPage === 1}
+  >
+    Previous
+  </button>
+
+  {Array.from({ length: totalPages }).map((_, index) => (
+    <button
+      key={index}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
+      onClick={() => paginate(index + 1)}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  <button
+    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
+    onClick={() => paginate(currentPage + 1)}
+    disabled={currentPage === totalPages}
+  >
+    Next
+  </button>
           </div>
     </motion.div>
   );
