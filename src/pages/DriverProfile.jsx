@@ -194,15 +194,16 @@ const DriverProfile = ()=>{
     
             // Step 2: Make delete user request
             const deleteResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/delete-user', {
-                method: 'POST',
+                
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${adminToken}`,
                 },
                 body: JSON.stringify({
-                    userId: driver._id, // ID of the user to be deleted
-                    adminPassword: password, // Password entered in the confirmation popup
-                    role: driver.role, // Role of the user (Driver/Passenger)
+                    userId: driver._id, 
+                    adminPassword: password, 
+                    role: driver.role, 
                 }),
             });
     
