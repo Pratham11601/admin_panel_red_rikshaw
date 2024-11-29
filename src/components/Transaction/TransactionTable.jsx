@@ -27,7 +27,7 @@ const TransactionTable = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${ApiConfig.getTransactionsEndPoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+        ApiConfig.getTransactionsEndPoint(currentPage),
         {
           method: "GET",
           headers: {
@@ -53,7 +53,7 @@ const TransactionTable = () => {
     }
   };
   
-
+  
   // Helper function to access nested fields (e.g., 'from.name')
   // const getNestedField = (obj, fieldPath) => {
   //   return fieldPath.split('.').reduce((acc, field) => acc[field], obj);
@@ -95,10 +95,13 @@ const TransactionTable = () => {
       });
   };
 
-  const currentItems = transactions.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // const currentItems = transactions.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+
+  const currentItems = transactions; // Backend handles pagination
+
 
   return (
     <motion.div

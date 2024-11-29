@@ -72,9 +72,9 @@ static putBlockStatus(id) {
 
     //Transactions
     
-    static getTransactionsEndPoint() {
+    static getTransactionsEndPoint(currentPage) {
       
-      return `${this.BASE_URL}/api/adminpanel/all-transactions?page=1&limit=15`;
+      return `${this.BASE_URL}/api/adminpanel/all-transactions?page=${currentPage}&limit=10`;
     }
 
     
