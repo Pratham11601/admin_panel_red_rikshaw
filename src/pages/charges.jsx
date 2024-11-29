@@ -154,7 +154,12 @@ function Charges() {
             <tbody>
               {Object.keys(charges).map((key) => (
                 <tr className="border-b" key={key}>
-                  <td className="py-2 px-4">{key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</td>
+                    <td className="py-2 px-4">
+                      {key
+                        .replace(/_/g, ' ') 
+                        .replace(/1 5/g, '1.5') 
+                        .replace(/\b\w/g, (c) => c.toUpperCase())} 
+                    </td>
                   <td className="py-2 px-4">
                     {key === 'waiting_time' ? `${charges[key]} min` : `₹${charges[key]}`}
                   </td>
@@ -169,9 +174,13 @@ function Charges() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {Object.entries(charges).map(([key, value]) => (
               <div key={key}>
-                <label className="block text-gray-700 text-lg font-bold mb-2">
-                  {key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                </label>
+               <label className="block text-gray-700 text-lg font-bold mb-2">
+                    {key
+                      .replace(/_/g, ' ')
+                      .replace(/1 5/g, '1.5') 
+                      .replace(/\b\w/g, (c) => c.toUpperCase())} 
+                  </label>
+
                 <input
                   type="number"
                   name={key}
