@@ -85,7 +85,7 @@ const Terms = () => {
                         );
                     }
 
-                    setNotification('Changes saved successfully.');
+                    setNotification('Terms saved successfully.');
                     setShowForm(false); // Close the form after saving
                 } else {
                     setNotification(data.message || 'Failed to save changes');
@@ -124,12 +124,12 @@ const Terms = () => {
                 {notification && (
                     <div className='bg-green-200 text-green-700 p-4 rounded-md mb-4'>
                         {notification}
-                        <button
+                        {/* <button
                             className="ml-2 text-red-500"
                             onClick={() => setNotification(null)}
                         >
                             ✕
-                        </button>
+                        </button> */}
                     </div>
                 )}
                 <button className='bg-blue-500 text-white px-4 py-2 rounded-md mb-4' onClick={handleAddClick}>Add</button>
