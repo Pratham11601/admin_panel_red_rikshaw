@@ -248,7 +248,7 @@ const Privacy = () => {
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            if (response.status === 1) {
+            if (response.status) {
                 // Update state without re-fetching all policies
                 if (formType === 'add') {
                     setPolicies(prevPolicies => [...prevPolicies, response.data]);
