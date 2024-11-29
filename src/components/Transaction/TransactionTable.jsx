@@ -14,6 +14,9 @@ const TransactionTable = () => {
   const [sortField, setSortField] = useState('createdAt'); 
   const [sortOrder, setSortOrder] = useState('desc'); 
   const [totalPages, setTotalPages] = useState(1);
+  const [totalTransactions, setTotalTransactions] = useState(0); // Total transactions across all pages
+const [totalAmount, setTotalAmount] = useState(0); // Total amount across all pages
+
   const itemsPerPage = 10; 
 
   // Fetch data from the API
@@ -39,19 +42,43 @@ const TransactionTable = () => {
   
       const result = await response.json();
   
-      if (response.ok) {
-        const transactionsData = result.data || [];
-        setTransactions(transactionsData);
-        setTotalPages(Math.ceil(result.pagination.totalCount / itemsPerPage));
-      } else {
-        console.error("Error fetching transactions:", result.message);
-      }
-    } catch (error) {
-      console.error("Error during API call:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     if (response.ok) {
+  //       const transactionsData = result.data || [];
+  //       setTransactions(transactionsData);
+  //       setTotalPages(Math.ceil(result.pagination.totalCount / itemsPerPage));
+  //     } else {
+  //       console.error("Error fetching transactions:", result.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during API call:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  if (response.ok) {
+    const transactionsData = result.data || [];
+    setTransactions(transactionsData);
+
+    // Extract total count and amount from the response
+    const totalTransactionCount = result.pagination.totalCount || 0;
+    // const totalTransactionAmount = result.pagination.totalAmount || 0;
+    
+
+    setTotalPages(Math.ceil(totalTransactionCount / itemsPerPage));
+
+    // Update state for StatCard values
+    setTotalTransactions(totalTransactionCount);
+    // setTotalAmount(totalTransactionAmount);
+  } else {
+    console.error("Error fetching transactions:", result.message);
+  }
+} catch (error) {
+  console.error("Error during API call:", error);
+} finally {
+  setIsLoading(false);
+}
+};
   
   
   // Helper function to access nested fields (e.g., 'from.name')
@@ -77,8 +104,8 @@ const TransactionTable = () => {
 
  
   // Calculate total transactions and total amount
-  const totalTransactions = transactions.length;
-  const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+  // const totalTransactions = transactions.length;
+  // const totalAmount = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
 
   const formatDateTime = (isoString) => {
     const date = new Date(isoString);
@@ -112,24 +139,25 @@ const TransactionTable = () => {
     >
       {/* State cards with dynamic data */}
       <motion.div
-        className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 mb-8'
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <StatCard
-          name='Total Transactions'
-          icon={ArrowRightLeft}
-          value={totalTransactions}
-          color='#6366F1'
-        />
-        <StatCard
-          name='Total Amount' 
-          icon={CircleDollarSign} 
-          value={totalAmount.toFixed(2)} // Format amount to two decimal places
-          color='#10B981' 
-        />
-      </motion.div>
+  className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 mb-8"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1 }}
+>
+  <StatCard
+    name="Total Transactions"
+    icon={ArrowRightLeft}
+    value={totalTransactions} // Updated value from state
+    color="#6366F1"
+  />
+  {/* <StatCard
+    name="Total Amount"
+    icon={CircleDollarSign}
+    value={totalAmount.toFixed(2)} // Updated value from state
+    color="#10B981"
+  /> */}
+</motion.div>
+
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">
