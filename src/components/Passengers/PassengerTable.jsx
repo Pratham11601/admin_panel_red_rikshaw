@@ -15,28 +15,59 @@ const PassengerTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
-  const itemsPerPage = 12;
+  //const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(passengerData.length / itemsPerPage);
-  const maxRetries = 3;  // Max number of retries for failed requests
+  // const totalPages = Math.ceil(passengerData.length / itemsPerPage);
+  // const maxRetries = 3;  // Max number of retries for failed requests
+  const [stats, setStats] = useState({
+    totalPassengers: 0,
+    newPassengersCount: 0,
+  });
+  const itemsPerPage = 12; // Match API limit but here is take 2 extra data for match UI
+  const maxRetries = 3;  
+
+  const totalPages = Math.ceil(stats.totalPassengers / itemsPerPage);
+
 
   // Fetch passengers data from API
   useEffect(() => {
     const fetchPassengers = async (retryCount = 0) => {
       try {
         const response = await fetchWithToken(
-          `${ApiConfig.getPassengersEndpoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+          `${ApiConfig.getPassengersEndpoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}&sortBy=${sortField}&sortOrder=${sortOrder}`,
         {
           method: 'GET',
         });
 
-        const passengers = response.passengers;
+  //       const passengers = response.passengers;
+  //       setIsLoading(false);
+  //       if (Array.isArray(passengers)) {
+  //         setPassengerData(passengers);
+  //       } else {
+  //         console.error('Failed to fetch passengers data');
+  //       }
+  //     } catch (error) {
+  //       if (retryCount < maxRetries) {
+  //         console.warn(`Retrying fetch... (${retryCount + 1}/${maxRetries})`);
+  //         setTimeout(() => fetchPassengers(retryCount + 1), 1000);  // Retry after 1 second
+  //       } else {
+  //         console.error('Error fetching passenger data after retries:', error);
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //   };
+
+  //   fetchPassengers();
+  // }, [currentPage]);
+
+
+  setPassengerData(response.passengers || []);
+        setStats({
+          totalPassengers: response.totalPassengers || 0,
+          newPassengersCount: response.newPassengersCount || 0,
+        });
+
         setIsLoading(false);
-        if (Array.isArray(passengers)) {
-          setPassengerData(passengers);
-        } else {
-          console.error('Failed to fetch passengers data');
-        }
       } catch (error) {
         if (retryCount < maxRetries) {
           console.warn(`Retrying fetch... (${retryCount + 1}/${maxRetries})`);
@@ -49,22 +80,27 @@ const PassengerTable = () => {
     };
 
     fetchPassengers();
-  }, [currentPage]);
+  }, [currentPage, sortField, sortOrder]);
 
 
   // Filter and sort passengers data
-  const filteredData = passengerData
-    .filter((record) => {
-      const name = record.name ? record.name.toLowerCase() : '';
-      return name.includes(searchTerm.toLowerCase());
-    })
-    .sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a[sortField] > b[sortField] ? 1 : -1;
-      } else {
-        return a[sortField] < b[sortField] ? 1 : -1;
-      }
-    });
+  // const filteredData = passengerData
+  //   .filter((record) => {
+  //     const name = record.name ? record.name.toLowerCase() : '';
+  //     return name.includes(searchTerm.toLowerCase());
+  //   })
+  //   .sort((a, b) => {
+  //     if (sortOrder === 'asc') {
+  //       return a[sortField] > b[sortField] ? 1 : -1;
+  //     } else {
+  //       return a[sortField] < b[sortField] ? 1 : -1;
+  //     }
+  //   });
+
+  const filteredData = passengerData.filter((record) => {
+    const name = record.name ? record.name.toLowerCase() : '';
+    return name.includes(searchTerm.toLowerCase());
+  });
 
   // Toggle sort order
   const toggleSortOrder = () => {
@@ -101,11 +137,12 @@ const PassengerTable = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.filter((_, index) => index >= startIndex && index < endIndex);
 
-  // Calculate dynamic stats
-  const totalPassengers = passengerData.length;
-  const newPassengers = passengerData.filter(passenger => passenger.is_new).length;
-  const activePassengers = passengerData.filter(passenger => passenger.is_active).length;
-  const inactivePassengers = totalPassengers - activePassengers;
+  
+
+  const { totalPassengers, newPassengersCount } = stats;
+  
+  const activePassengers = passengerData.filter((p) => p.blockStatus === false).length;
+  const inactivePassengers = passengerData.filter((p) => p.blockStatus === true).length;
 
   return (
     <motion.div
@@ -116,7 +153,7 @@ const PassengerTable = () => {
     >
 
       {/* STATS */}
-      <motion.div
+      {/* <motion.div
         className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-12 mt-7 mx-3'
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -125,6 +162,18 @@ const PassengerTable = () => {
         <StatCard name='Total Passengers' icon={Users} value={totalPassengers} color='#6366F1' />
         <StatCard name='New Passengers' icon={CheckCircle} value={newPassengers} color='#F59E0B' />
         <StatCard name='Active Passengers' icon={CheckCircle} value={activePassengers} color='#F59E0B' />
+        <StatCard name='Inactive Passengers' icon={XCircle} value={inactivePassengers} color='#EF4444' />
+      </motion.div> */}
+
+<motion.div
+        className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-12 mt-7 mx-3'
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        <StatCard name='Total Passengers' icon={Users} value={totalPassengers} color='#6366F1' />
+        <StatCard name='New Passengers' icon={PlusCircle} value={newPassengersCount} color='#F59E0B' />
+        <StatCard name='Active Passengers' icon={CheckCircle} value={activePassengers} color='#34D399' />
         <StatCard name='Inactive Passengers' icon={XCircle} value={inactivePassengers} color='#EF4444' />
       </motion.div>
 

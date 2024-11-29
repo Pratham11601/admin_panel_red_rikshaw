@@ -33,10 +33,12 @@ const Drivers = () => {
 					
 					setTotalDriver(data.totalUsers || 0);
 	
-					const active = data.data?.filter(driver => driver.isActive) || [];
-					const inactive = data.data?.filter(driver => !driver.isActive) || [];
+					// const active = data.data?.filter(driver => driver.isActive) || [];
+					// const inactive = data.data?.filter(driver => !driver.isActive) || [];
 	
-					
+					const active = data.data?.filter(driver => driver.blockStatus === false) || []; 
+					const inactive = data.data?.filter(driver => driver.blockStatus === true) || []; 
+
 	
 					setActiveDriver(active.length);
 					setInactiveDriver(inactive.length);
@@ -81,11 +83,11 @@ const Drivers = () => {
 						value={activeDriver.toLocaleString()}
 						color='#F59E0B'
 					/>
-					<StatCard 
-						name='Inactive Users' 
-						icon={UserX} 
-						value={inactiveDriver.toLocaleString()} 
-						color='#EF4444' 
+					<StatCard
+						name='Inactive Drivers'
+						icon={UserX}
+						value={inactiveDriver.toLocaleString()}
+						color='#EF4444'
 					/>
 				</motion.div>
 				
