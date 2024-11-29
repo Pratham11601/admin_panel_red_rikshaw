@@ -74,7 +74,7 @@ const Terms = () => {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.status === 1) {
+                if (data.status) {
                     if (formType === 'add') {
                         setTerms((prevTerms) => [data.data, ...prevTerms]); // Add new term to the front of the list
                     } else {
