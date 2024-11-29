@@ -89,15 +89,69 @@ const PassengerProfile = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
     };
 
-    const handleDeleteConfirm = () => {
-        if (password === 'Steve@123') {
-            alert("User deleted successfully");
-            setShowDeletePopup(false); // Close the delete popup
-            setPassword(''); // Clear the password input
-            navigate('/Home/drivers'); // Redirect to another page
-        } else {
-            alert("Incorrect password. Please try again.");
+    // const handleDeleteConfirm = () => {
+    //     if (password === 'Steve@123') {
+    //         alert("User deleted successfully");
+    //         setShowDeletePopup(false); // Close the delete popup
+    //         setPassword(''); // Clear the password input
+    //         navigate('/Home/drivers'); // Redirect to another page
+    //     } else {
+    //         alert("Incorrect password. Please try again.");
+    //     }
+    // };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            // Step 1: Fetch admin login details
+            const loginResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone: "7768860976", // Use admin phone number
+                    password: password, // Password entered in the confirmation popup
+                }),
+            });
+    
+            if (!loginResponse.ok) {
+                alert('Incorrect password. Please try again.');
+                return;
+            }
+    
+            const loginData = await loginResponse.json();
+            const adminToken = loginData.token;
+    
+            // Step 2: Make delete user request
+            const deleteResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/delete-user', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${adminToken}`,
+                },
+                body: JSON.stringify({
+                    userId: passenger._id, // ID of the user to be deleted
+                    adminPassword: password, // Password entered in the confirmation popup
+                    role: passenger.role, // Role of the user (Driver/Passenger)
+                }),
+            });
+    
+            if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json();
+                alert(`Failed to delete user: ${errorData.message}`);
+                return;
+            }
+    
+            alert('User deleted successfully!');
+            setShowDeletePopup(false);
+            setPassword('');
+            navigate('/Home/passengers'); // Redirect after deletion
+            
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('An error occurred while deleting the user. Please try again.');
         }
+        
     };
 
     const handleCloseDeletePopup = () => {
