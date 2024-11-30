@@ -13,7 +13,7 @@ function Passengers() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const bannersPerPage = 10;
-
+  const [loading, setLoading] = useState(false); 
   const indexOfLastBanner = currentPage * bannersPerPage;
   const indexOfFirstBanner = indexOfLastBanner - bannersPerPage;
   const currentBanners = banners.slice(indexOfFirstBanner, indexOfLastBanner);
@@ -27,6 +27,7 @@ function Passengers() {
 
   const fetchAdvertisements = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(ApiConfig.getAdvertisementEndpoint(), {
         params: { category: 'passenger' }
       });
@@ -40,6 +41,9 @@ function Passengers() {
     } catch (error) {
       console.error('Error fetching advertisements:', error);
       setBanners([]);
+    }
+    finally {
+      setLoading(false); 
     }
   };
 
@@ -74,6 +78,7 @@ function Passengers() {
     // }
 
     try {
+      setLoading(true);
     const token = localStorage.getItem('token');
 
     const response = await fetch(ApiConfig.deleteAdvertisementEndpoint(), {
@@ -108,6 +113,9 @@ function Passengers() {
   } catch (error) {
     console.error('Error deleting banner:', error);
   }
+  finally {
+    setLoading(false);
+  }
   };
 
   const handleUploadImage = async (event) => {
@@ -126,6 +134,7 @@ for (let [key, value] of formData.entries()) {
     console.log(`${key}:`, value);
 }
     try {
+      setLoading(true);
       console.log(formData)
       const response = await axios.post(ApiConfig.postAdvertisementEndpoint(), formData, {
         headers: { 
@@ -141,6 +150,9 @@ for (let [key, value] of formData.entries()) {
       }
     } catch (error) {
       console.error('Error uploading advertisement:', error);
+    }
+    finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -164,6 +176,7 @@ for (let [key, value] of formData.entries()) {
     formData.append('file', file);
 
     try {
+      setLoading(true);
       const response = await axios.post(ApiConfig.postAdvertisementEndpoint(editBanner._id), formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -176,6 +189,9 @@ for (let [key, value] of formData.entries()) {
       }
     } catch (error) {
       console.error('Error uploading new image during edit:', error);
+    }
+    finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -206,6 +222,14 @@ for (let [key, value] of formData.entries()) {
       {uploadSuccess && (
         <div className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow-md">
           Image successfully uploaded!
+        </div>
+      )}
+      {loading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="loader bg-white p-5 rounded-lg shadow-lg">
+            <div className="spinner border-4 border-t-4 border-gray-300 rounded-full w-12 h-12 animate-spin"></div>
+            <p className="mt-4 text-gray-700">Loading...</p>
+          </div>
         </div>
       )}
 
