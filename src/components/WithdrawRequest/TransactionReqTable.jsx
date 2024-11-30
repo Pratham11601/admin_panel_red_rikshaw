@@ -885,7 +885,7 @@ const TransactionReqTable = () => {
       className="bg-indigo-400 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-indigo-500 hover:shadow-lg transition duration-200 ease-in-out"
       onClick={() => handleViewTransactionDetails(transaction)}
     >
-      Edit
+      Pay Now
     </button>
   </div>
 </td>
