@@ -879,15 +879,18 @@ const TransactionReqTable = () => {
           {transaction.status}
         </span>
       </td>
-
       <td className="px-3 py-4 text-center text-sm text-black">
-        <button
-          className="text-indigo-400 hover:text-indigo-300 mr-2"
-          onClick={() => handleViewTransactionDetails(transaction)}
-        >
-          Edit
-        </button>
-      </td>
+  <div className="flex justify-center items-center pr-10 md:pr-0">
+    <button
+      className="bg-indigo-400 text-white font-semibold px-3 py-1 rounded-lg shadow-md hover:bg-indigo-500 hover:shadow-lg transition duration-200 ease-in-out"
+      onClick={() => handleViewTransactionDetails(transaction)}
+    >
+      Edit
+    </button>
+  </div>
+</td>
+
+
     </motion.tr>
   ))}
 </tbody>
@@ -900,72 +903,73 @@ const TransactionReqTable = () => {
 
       {/* Popup Modal */}
       {selectedTransaction && (
- <div className="fixed inset-0 text-black flex items-center justify-center z-60 bg-gray-900 bg-opacity-50">
- <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] border border-gray-200 overflow-y-auto">
-   <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">Transaction Details</h2>
+  <div className="fixed inset-0 text-black flex items-center justify-center z-60 bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] border border-gray-200">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">Transaction Details</h2>
 
-   <div className="space-y-2">
-     <p className="text-sm sm:text-base">
-       <strong className="text-sm sm:text-base">Name: </strong>
-       <span className="font-semibold text-black-500">{selectedTransaction.UserDetails.userName}</span>
-     </p>
+      <div className="space-y-2">
+        <p className="text-sm sm:text-base">
+          <strong className="text-sm sm:text-base">Name: </strong>
+          <span className="font-semibold text-black-500">{selectedTransaction.UserDetails.userName}</span>
+        </p>
 
-     <p className="text-sm sm:text-base">
-       <strong className="text-sm sm:text-base">Account No: </strong>
-       <span className="font-semibold text-black-500">{selectedTransaction._id}</span>
-     </p>
+        <p className="text-sm sm:text-base">
+          <strong className="text-sm sm:text-base">Account No: </strong>
+          <span className="font-semibold text-black-500">{selectedTransaction._id}</span>
+        </p>
 
-     <p className="text-sm sm:text-base">
-       <strong className="text-sm sm:text-base">Status: </strong>
-       <span className={`font-semibold ${
-         selectedTransaction.status === 'Paid' ? 'text-green-600' :
-         selectedTransaction.status === 'Queued' ? 'text-yellow-500' :
-         selectedTransaction.status === 'Cancelled' ? 'text-red-600' :
-         selectedTransaction.status === 'Pending' ? 'text-blue-600' :
-         'text-gray-500'
-       }`}>{selectedTransaction.status}</span>
-     </p>
+        <p className="text-sm sm:text-base">
+          <strong className="text-sm sm:text-base">Status: </strong>
+          <span className={`font-semibold ${
+            selectedTransaction.status === 'Paid' ? 'text-green-600' :
+            selectedTransaction.status === 'Queued' ? 'text-yellow-500' :
+            selectedTransaction.status === 'Cancelled' ? 'text-red-600' :
+            selectedTransaction.status === 'Pending' ? 'text-blue-600' :
+            'text-gray-500'
+          }`}>{selectedTransaction.status}</span>
+        </p>
 
-     <p className="text-sm sm:text-base">
-       <strong className="text-sm sm:text-base">Balance: </strong>
-       <span className={`font-semibold ${selectedTransaction.bankDetails?.balance !== undefined ? 'text-green-600' : 'text-gray-500'}`}>{selectedTransaction.bankDetails?.balance !== undefined ? `₹${selectedTransaction.bankDetails.balance}` : "N/A"}</span>
-     </p>
-   </div>
+        <p className="text-sm sm:text-base">
+          <strong className="text-sm sm:text-base">Balance: </strong>
+          <span className={`font-semibold ${selectedTransaction.bankDetails?.balance !== undefined ? 'text-green-600' : 'text-gray-500'}`}>
+            {selectedTransaction.bankDetails?.balance !== undefined ? `₹${selectedTransaction.bankDetails.balance}` : "N/A"}
+          </span>
+        </p>
+      </div>
 
-   <div className="mt-2 flex flex-col items-center">
-     <h3 className="text-lg font-bold text-center mb-2">QR Code</h3>
-     {selectedTransaction.bankDetails?.qrCodePhoto ? (
-       <div className="flex justify-center items-center border border-gray-300 rounded-lg p-2 sm:p-4 shadow-md">
-         <img src={selectedTransaction.bankDetails.qrCodePhoto} alt="QR Code" className="w-32 h-32 sm:w-40 sm:h-40 object-contain" />
-       </div>
-     ) : (
-       <p className="text-gray-500 text-xs sm:text-sm">No QR Code available</p>
-     )}
-   </div>
+      <div className="mt-2 flex flex-col items-center">
+        <h3 className="text-lg font-bold text-center mb-2">QR Code</h3>
+        {selectedTransaction.bankDetails?.qrCodePhoto ? (
+          <div className="flex justify-center items-center border border-gray-300 rounded-lg p-2 sm:p-4 shadow-md">
+            <img src={selectedTransaction.bankDetails.qrCodePhoto} alt="QR Code" className="w-32 h-32 sm:w-40 sm:h-40 object-contain" />
+          </div>
+        ) : (
+          <p className="text-gray-500 text-xs sm:text-sm">No QR Code available</p>
+        )}
+      </div>
 
-   {/* Edit Status */}
-   <div className="mt-4 flex flex-col items-center">
-     <h3 className="text-lg font-semibold mb-2 text-center">Update Status</h3>
-     <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-       <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Paid" ? "bg-green-500" : "bg-green-300"}`} onClick={() => handleStatusChange("Paid")}>Paid</button>
-       <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Queued" ? "bg-yellow-500" : "bg-yellow-200"}`} onClick={() => handleStatusChange("Queued")}>Queued</button>
-       <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Cancelled" ? "bg-red-500" : "bg-red-400"}`} onClick={() => handleStatusChange("Cancelled")}>Cancelled</button>
-     </div>
-     <div className="mt-4">
-       {/* Debug log */}
-       <p className="font-semibold text-base sm:text-lg text-center">
-         Updated Status: <span className={`${updatedStatus === "Paid" ? "text-green-500" : updatedStatus === "Queued" ? "text-yellow-500" : updatedStatus === "Cancelled" ? "text-red-500" : "text-blue-700"}`}>{updatedStatus}</span>
-       </p>
-     </div>
-   </div>
+      {/* Edit Status */}
+      <div className="mt-4 flex flex-col items-center">
+        <h3 className="text-lg font-semibold mb-2 text-center">Update Status</h3>
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+          <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Paid" ? "bg-green-500" : "bg-green-300"}`} onClick={() => handleStatusChange("Paid")}>Paid</button>
+          <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Queued" ? "bg-yellow-500" : "bg-yellow-200"}`} onClick={() => handleStatusChange("Queued")}>Queued</button>
+          <button className={`px-3 py-1 sm:px-4 sm:py-2 text-black shadow-md border rounded-xl font-semibold transition-transform transform hover:scale-105 ${updatedStatus === "Cancelled" ? "bg-red-500" : "bg-red-400"}`} onClick={() => handleStatusChange("Cancelled")}>Cancelled</button>
+        </div>
+        <div className="mt-4">
+          {/* Debug log */}
+          <p className="font-semibold text-base sm:text-lg text-center">
+            Updated Status: <span className={`${updatedStatus === "Paid" ? "text-green-500" : updatedStatus === "Queued" ? "text-yellow-500" : updatedStatus === "Cancelled" ? "text-red-500" : "text-blue-700"}`}>{updatedStatus}</span>
+          </p>
+        </div>
+      </div>
 
-   <div className="flex justify-end mt-4 gap-2 sm:gap-4">
-     <button className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md transition-transform transform hover:scale-105" onClick={closeModal}>Cancel</button>
-     <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md transition-transform transform hover:scale-105" onClick={handleSave}>Save</button>
-   </div>
- </div>
-</div>
-
+      <div className="flex justify-end mt-4 gap-2 sm:gap-4">
+        <button className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md transition-transform transform hover:scale-105" onClick={closeModal}>Cancel</button>
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md transition-transform transform hover:scale-105" onClick={handleSave}>Save</button>
+      </div>
+    </div>
+  </div>
 )}
 
 
