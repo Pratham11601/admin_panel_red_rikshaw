@@ -65,8 +65,11 @@ static putBlockStatus(id) {
     }
 
     //Rides
-    static getAllRidesEndpoint(){
-      return `${this.BASE_URL}/api/adminpanel/rides-getall?page=1&limit=15`
+    // static getAllRidesEndpoint(){
+    //   return `${this.BASE_URL}/api/adminpanel/rides-getall?page=1&limit=15`
+    // }
+    static getAllRidesEndpoint(currentPage,itemsPerPage){
+      return `${this.BASE_URL}/api/adminpanel/rides-getall?page=${currentPage}&limit=${itemsPerPage}`
     } 
 
 

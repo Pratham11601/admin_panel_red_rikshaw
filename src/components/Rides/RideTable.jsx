@@ -271,6 +271,8 @@ const RideTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("createdAt"); // Default to sorting by latest first
   const [sortOrder, setSortOrder] = useState("desc"); // Default to descending order
+  const [totalPages,setTotalPages] = useState(2)
+  const [totalRides,setTotalRides] = useState()
   const itemsPerPage = 10;
 
   // Fetch ride data
@@ -279,7 +281,8 @@ const RideTable = () => {
       setIsLoading(true);
       try {
         const data = await fetchWithToken(
-          `${ApiConfig.getAllRidesEndpoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+          // `${ApiConfig.getAllRidesEndpoint()}?page=${currentPage}&itemsPerPage=${itemsPerPage}`,
+          ApiConfig.getAllRidesEndpoint(currentPage,itemsPerPage),
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -287,7 +290,12 @@ const RideTable = () => {
         );
   
         if (data?.data && Array.isArray(data.data)) {
+          const totalRidesCount = data.totalPages || 0;
+          setTotalRides(data.totalRides)
+          const noOfRides = data.totalRides          
+          setTotalPages(Math.ceil(noOfRides / itemsPerPage));
           setRidesData(data.data);
+          console.log(data)
         } else {
           console.error("Unexpected API response format");
         }
@@ -301,6 +309,8 @@ const RideTable = () => {
     fetchRides();
   }, [currentPage]);
   
+  console.log("rides data")
+  ridesData.map((item)=>console.log(item))
 
   // Search functionality
   const handleSearch = (e) => {
@@ -352,15 +362,28 @@ const RideTable = () => {
   });
 
   // Pagination
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const totalPages = Math.ceil(sortedRides.length / itemsPerPage);
-  const currentItems = sortedRides.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const totalPages = Math.ceil(sortedRides.length / itemsPerPage);
+  // const currentItems = sortedRides.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
+  // const totalPages = Math.ceil(sortedRides.length / itemsPerPage);
+  // const currentItems = sortedRides.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
+  const currentItems = sortedRides;
 
   // Dynamic Stat Calculations
-  const totalRides = ridesData.length;
+  // const totalRides = ridesData.length;
   const totalFare = ridesData.reduce((total, ride) => total + ride.totalCost, 0);
 
   return (
@@ -388,7 +411,7 @@ const RideTable = () => {
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Rides List</h2>
+        <h2 className="text-xl font-semibold text-black mb-4 md:mb-0">Rides List {totalPages}</h2>
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
