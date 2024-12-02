@@ -241,25 +241,54 @@ const PassengerTable = () => {
           </motion.div>
         </div>
       )}
+ {/* Pagination controls */}
+ <div className="flex justify-center items-center space-x-4 mt-6">
+                <nav aria-label="Page navigation" className="mb-2 sm:mb-0">
+                  <ul className="flex space-x-2">
+                    <li>
+                      <button
+                        className={`px-3 py-1 rounded-md text-sm font-medium ${
+                          currentPage === 1
+                            ? "bg-transparent text-black cursor-not-allowed"
+                            : "bg-white text-black hover:bg-gray-600"
+                        }`}
+                        onClick={handlePrevPage}
+                        disabled={currentPage === 1}
+                        aria-label="Previous Page"
+                      >
+                        Previous
+                      </button>
+                    </li>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                    <li key={index}>
+                      <button
+                        className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
+                        onClick={() => handlePageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-6">
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-4"
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        >
-          Prev
-        </button>
-        <span className="px-4 py-2 text-black">{currentPage} of {totalPages}</span>
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+                   
+
+                    <li>
+                      <button
+                        className={`px-3 py-1 rounded-md text-sm font-medium ${
+                          currentPage === totalPages
+                            ? "bg-transparent text-black cursor-not-allowed"
+                            : "bg-white text-black hover:bg-gray-600"
+                        }`}
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                        aria-label="Next Page"
+                      >
+                        Next
+                      </button>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
     </motion.div>
   );
 };
