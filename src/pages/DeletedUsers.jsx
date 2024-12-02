@@ -102,50 +102,62 @@ const DeletedUsers = () => {
             ))}
           </tbody>
         </table>
-
-        {/* Pagination Controls */}
-        <div className="flex justify-center mt-4 space-x-2">
-  {/* Previous Button */}
-  <button
-    onClick={() => setPage(page > 1 ? page - 1 : 1)}
-    disabled={page === 1}
-    className={`px-3 py-1 rounded-md text-sm font-medium ${
-      page === 1
-        ? "bg-transparent text-black cursor-not-allowed"
-        : "bg-white text-black hover:bg-gray-600"
-    }`}
-  >
-    Previous
-  </button>
-
-  {/* Page Numbers */}
-  {Array.from({ length: totalPages }).map((_, index) => (
+        <div className="flex flex-col justify-center items-center mt-4 space-y-2">
+  {/* Pagination Controls */}
+  <div className="flex space-x-2">
+    {/* Previous Button */}
     <button
-      key={index}
-      onClick={() => setPage(index + 1)}
+      onClick={() => setPage(page > 1 ? page - 1 : 1)}
+      disabled={page === 1}
       className={`px-3 py-1 rounded-md text-sm font-medium ${
-        page === index + 1
-          ? "bg-blue-600 text-white"
+        page === 1
+          ? "bg-transparent text-black cursor-not-allowed"
           : "bg-white text-black hover:bg-gray-600"
       }`}
     >
-      {index + 1}
+      Previous
     </button>
-  ))}
 
-  {/* Next Button */}
-  <button
-    onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
-    disabled={page === totalPages}
-    className={`px-3 py-1 rounded-md text-sm font-medium ${
-      page === totalPages
-        ? "bg-transparent text-black cursor-not-allowed"
-        : "bg-white text-black hover:bg-gray-600"
-    }`}
-  >
-    Next
-  </button>
+    {/* Page Numbers */}
+    {Array.from({ length: Math.min(3, totalPages) }).map((_, index) => {
+      const pageIndex = Math.max(1, page - 1) + index; // Dynamically set visible page range
+      return (
+        pageIndex <= totalPages && ( // Ensure the page index doesn't exceed total pages
+          <button
+            key={pageIndex}
+            onClick={() => setPage(pageIndex)}
+            className={`px-3 py-1 rounded-md text-sm font-medium ${
+              page === pageIndex
+                ? "bg-blue-600 text-white"
+                : "bg-white text-black hover:bg-gray-600"
+            }`}
+          >
+            {pageIndex}
+          </button>
+        )
+      );
+    })}
+
+    {/* Next Button */}
+    <button
+      onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
+      disabled={page === totalPages}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        page === totalPages
+          ? "bg-transparent text-black cursor-not-allowed"
+          : "bg-white text-black hover:bg-gray-600"
+      }`}
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Total Pages Info */}
+  <div className="text-sm font-medium text-gray-600">
+    Page {page} of {totalPages}
+  </div>
 </div>
+
 
       </main>
     </div>
