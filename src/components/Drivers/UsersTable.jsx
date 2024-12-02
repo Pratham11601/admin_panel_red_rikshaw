@@ -199,53 +199,58 @@ const handlePageChange = (page) => {
               </motion.div>
 
               {/* Pagination controls */}
-              <div className="flex justify-center items-center space-x-4 mt-6">
-                <nav aria-label="Page navigation" className="mb-2 sm:mb-0">
-                  <ul className="flex space-x-2">
-                    <li>
-                      <button
-                        className={`px-3 py-1 rounded-md text-sm font-medium ${
-                          currentPage === 1
-                            ? "bg-transparent text-black cursor-not-allowed"
-                            : "bg-white text-black hover:bg-gray-600"
-                        }`}
-                        onClick={handlePrevPage}
-                        disabled={currentPage === 1}
-                        aria-label="Previous Page"
-                      >
-                        Previous
-                      </button>
-                    </li>
-                    {Array.from({ length: totalPages }, (_, index) => (
-                    <li key={index}>
-                      <button
-                        className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
-                        onClick={() => handlePageChange(index + 1)}
-                      >
-                        {index + 1}
-                      </button>
-                    </li>
-                  ))}
+              
+          <div className="flex flex-col justify-center items-center mt-4 space-y-2">
+  {/* Pagination Buttons */}
+  <div className="flex space-x-2">
+    {/* Previous Button */}
+    <button
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      Previous
+    </button>
 
-                   
+    {/* Page Numbers */}
+    {Array.from({ length: Math.min(3, totalPages) }) // Show only 3 pages
+      .map((_, index) => {
+        const pageIndex = Math.max(1, currentPage - 1) + index; // Adjust visible range
+        return (
+          pageIndex <= totalPages && ( // Ensure the page index doesn't exceed total pages
+            <button
+              key={pageIndex}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                currentPage === pageIndex ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
+              }`}
+              onClick={() => paginate(pageIndex)}
+            >
+              {pageIndex}
+            </button>
+          )
+        );
+      })}
 
-                    <li>
-                      <button
-                        className={`px-3 py-1 rounded-md text-sm font-medium ${
-                          currentPage === totalPages
-                            ? "bg-transparent text-black cursor-not-allowed"
-                            : "bg-white text-black hover:bg-gray-600"
-                        }`}
-                        onClick={handleNextPage}
-                        disabled={currentPage === totalPages}
-                        aria-label="Next Page"
-                      >
-                        Next
-                      </button>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+    {/* Next Button */}
+    <button
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Total Pages Info */}
+  <div className="text-sm font-medium text-gray-600">
+    Page {currentPage} of {totalPages}
+  </div>
+</div>
+
             </div>
           )}
         </div>
