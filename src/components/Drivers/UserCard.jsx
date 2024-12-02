@@ -12,7 +12,7 @@ const UserCard= ({driver})=>{
   
   const handleViewProfile = () => {
 
-    navigate(`/Home/driverProfile`, { state: { driver: driver } });
+    navigate(`/Home/driverProfile`, { state: { driver: driver,searchUser: false } });
 
   };
 
