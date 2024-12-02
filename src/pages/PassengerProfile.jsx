@@ -25,6 +25,7 @@ const PassengerProfile = () => {
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');
     const [addAmount,setAddAmount] = useState(0)
+    const searchUser = location.state.searchUser
     console.log(passenger)
 
     const togglePopup = () => {
@@ -160,7 +161,13 @@ const PassengerProfile = () => {
     };
 
     const handleBackClick = () => {
-        navigate(-1);
+        // console.log("search user",searchUser)
+        if(searchUser){
+        navigate(-2);
+        }else{
+            navigate(-1)
+        }
+        // navigate(-1)
     };
 
     const handleAddMoney = async()=>{

@@ -193,9 +193,9 @@ const SearchUser = () => {
 
     if(userData){
       if(role === "passenger"){
-    navigate(`/Home/passengerProfile`, { state: { passenger:userData  } }); 
+    navigate(`/Home/passengerProfile`, { state: { passenger:userData, searchUser: true  } }); 
       }else if(role === 'driver'){
-        navigate(`/Home/driverProfile`, { state: { driver:userData } });
+        navigate(`/Home/driverProfile`, { state: { driver:userData, searchUser: true } });
       }
     }
   };

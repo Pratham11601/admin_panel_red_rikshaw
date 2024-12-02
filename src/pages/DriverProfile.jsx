@@ -28,7 +28,7 @@ const DriverProfile = ()=>{
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');   
-    
+    const searchUser = location.state.searchUser
 
     // console.log("this is deiver")
     // console.log(driver)
@@ -163,7 +163,12 @@ const DriverProfile = ()=>{
 
 
     const handleBackClick = () => {
-        navigate(-1); 
+        if(searchUser){
+            navigate(-2);
+            }else{
+                navigate(-1)
+            }
+        // navigate(-1); 
       };
 
     const handleDeleteClick = () => {

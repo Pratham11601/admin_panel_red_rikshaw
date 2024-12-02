@@ -14,7 +14,7 @@ const PassengerCard= ({passenger })=>{
 
 
   const handleViewProfile = () => {
-    navigate(`/Home/passengerProfile`, { state: { passenger: passenger } }); 
+    navigate(`/Home/passengerProfile`, { state: { passenger: passenger,searchUser: false } }); 
   };
   
     return(
