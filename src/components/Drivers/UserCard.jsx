@@ -18,7 +18,7 @@ const UserCard= ({driver})=>{
 
   console.log(driver)
     return(
-        <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300">
+        <div className="p-3 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 h-40">
           <div className="relative bg-white  rounded-lg ">
       {/* Status at top-right corner */}
           <div className={`absolute top-2 right-2 text-sm text-white  rounded-full ${ driver.activeStatus ? 'bg-green-600' : 'bg-red-600'}`}>
@@ -53,7 +53,7 @@ const UserCard= ({driver})=>{
           
           <button 
                 onClick={() => handleViewProfile(driver._id)} 
-                className="flex items-center text-center text-blue-500 text-sm py-10 font-semibold rounded-lg"
+                className="flex items-center text-center text-blue-500 text-sm py-10 mt-5 font-semibold rounded-lg"
               >
                 View Profile
                 <ArrowRightToLine className="h-4 w-4 ml-2" />

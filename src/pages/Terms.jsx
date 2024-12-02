@@ -1,5 +1,3 @@
-
-
 import Header from "../components/common/Header";
 import { useEffect, useState } from "react";
 import ApiConfig from "../Consants/ApiConfig";
