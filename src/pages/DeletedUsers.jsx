@@ -104,31 +104,49 @@ const DeletedUsers = () => {
         </table>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center items-center mt-6 space-x-2 text-black">
-          <button
-            onClick={() => setPage(page > 1 ? page - 1 : 1)}
-            disabled={page === 1}
-            className="px-4 py-2 bg-gray-300 rounded disabled:bg-gray-200"
-          >
-            Previous
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setPage(index + 1)}
-              className={`px-4 py-2 rounded ${page === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
-            >
-              {index + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
-            disabled={page === totalPages}
-            className="px-4 py-2 bg-gray-300 rounded disabled:bg-gray-200"
-          >
-            Next
-          </button>
-        </div>
+        <div className="flex justify-center mt-4 space-x-2">
+  {/* Previous Button */}
+  <button
+    onClick={() => setPage(page > 1 ? page - 1 : 1)}
+    disabled={page === 1}
+    className={`px-3 py-1 rounded-md text-sm font-medium ${
+      page === 1
+        ? "bg-transparent text-black cursor-not-allowed"
+        : "bg-white text-black hover:bg-gray-600"
+    }`}
+  >
+    Previous
+  </button>
+
+  {/* Page Numbers */}
+  {Array.from({ length: totalPages }).map((_, index) => (
+    <button
+      key={index}
+      onClick={() => setPage(index + 1)}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        page === index + 1
+          ? "bg-blue-600 text-white"
+          : "bg-white text-black hover:bg-gray-600"
+      }`}
+    >
+      {index + 1}
+    </button>
+  ))}
+
+  {/* Next Button */}
+  <button
+    onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
+    disabled={page === totalPages}
+    className={`px-3 py-1 rounded-md text-sm font-medium ${
+      page === totalPages
+        ? "bg-transparent text-black cursor-not-allowed"
+        : "bg-white text-black hover:bg-gray-600"
+    }`}
+  >
+    Next
+  </button>
+</div>
+
       </main>
     </div>
   );
