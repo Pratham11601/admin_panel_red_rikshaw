@@ -26,7 +26,13 @@ const PassengerProfile = () => {
     const [password, setPassword] = useState('');
     const [addAmount,setAddAmount] = useState(0)
     const searchUser = location.state.searchUser
+    const [passengerRides,setPassengerRides] = useState()
     console.log(passenger)
+
+    const setRides=(rides)=>{
+        setPassengerRides(rides)
+        console.log("passenger Rieds =",rides)
+    }
 
     const togglePopup = () => {
         setShowAddMoneyPopup(!showAddMoneyPopup);
@@ -163,7 +169,7 @@ const PassengerProfile = () => {
     const handleBackClick = () => {
         // console.log("search user",searchUser)
         if(searchUser){
-        navigate(-2);
+        navigate("/Home/searchuser");
         }else{
             navigate(-1)
         }
@@ -252,7 +258,7 @@ const PassengerProfile = () => {
                         <p className="text-gray-600">✉️ {passenger.email}</p>
                         <p className="text-gray-600">⭐ {passenger.rating} Reviews</p>
                         <p className="flex text-gray-600">
-                            <Car style={{ color: 'black', marginRight: '10px' }} /> {passenger.total_rides} Total Rides
+                            <Car style={{ color: 'black', marginRight: '10px' }} /> {passengerRides || 0} Total Rides
                         </p>
                     </motion.div>
 
@@ -394,7 +400,7 @@ const PassengerProfile = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <PassengerRides passengerId={passenger._id} />
+                        <PassengerRides passengerId={passenger._id} setRides={setRides} />
                     </motion.div>
                 )}
 

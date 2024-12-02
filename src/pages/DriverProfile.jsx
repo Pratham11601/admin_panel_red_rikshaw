@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion'; 
@@ -27,7 +27,8 @@ const DriverProfile = ()=>{
     const [addAmount, setAddAmount] = useState(0);     
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
-    const [password, setPassword] = useState('');   
+    const [password, setPassword] = useState('');  
+    const [driverRides,setDriverRides] = useState() 
     const searchUser = location.state.searchUser
 
     // console.log("this is deiver")
@@ -36,7 +37,30 @@ const DriverProfile = ()=>{
 //     console.log(driver.vehicleDetails?.vehicle_img_front);
 // console.log(driver.vehicleDetails?.vehicle_img_back);
 
+    useEffect(()=>{
+       const fetchRides = async()=>{
+        const token = localStorage.getItem("token")
+        const url = ApiConfig.getDriverRidesEndpoint(driver._id, 1, 15);
+          console.log("Requesting rides from:", url); // Log the URL for debugging
     
+          // Fetch the data
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          console.log(data)
+          setDriverRides(data.totalRides)
+       } 
+       fetchRides()
+    },[])
+    // const setRides = (rides)=>{
+    //     setDriverRides(rides)
+    //     console.log("Driver Rides = ",driverRides)
+    // }
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
@@ -164,7 +188,7 @@ const DriverProfile = ()=>{
 
     const handleBackClick = () => {
         if(searchUser){
-            navigate(-2);
+            navigate("/Home/searchuser");
             }else{
                 navigate(-1)
             }
@@ -286,7 +310,7 @@ const DriverProfile = ()=>{
                 <p className="text-gray-600">📞 {driver.phone}</p>
                 <p className="text-gray-600">✉️ {driver.email}</p>
                 {/* <p className="text-gray-600">📍 {driver.address}</p> */}
-                <p className="text-gray-600">🚗 20 Total Trips</p>
+                <p className="text-gray-600">🚗 {driverRides || 0} Total Trips</p>
                 <p className="text-gray-600">⭐ {driver.rating} Reviews</p>
                 
                 </motion.div>
@@ -547,7 +571,7 @@ const DriverProfile = ()=>{
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
                         >
-                        <DriverRides driverId={driver._id} />
+                        <DriverRides driverId={driver._id}  />
                         {/* <DriverRides driverId={driver.driverId} /> */}
                         </motion.div>
                 )}

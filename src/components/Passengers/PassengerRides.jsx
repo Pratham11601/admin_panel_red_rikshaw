@@ -6,7 +6,7 @@ import usernotfound from '../../assets/usernotfound2.jpg';
 import { ShimmerTable } from "react-shimmer-effects";
 import { Search, ArrowDownUp } from "lucide-react";
 
-const PassengerRides = ({ passengerId }) => {
+const PassengerRides = ({ passengerId,setRides }) => {
   const [ridesData, setRidesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,7 +52,8 @@ const PassengerRides = ({ passengerId }) => {
 					}
         });
         const data = await response.json();
-        
+        console.log(data)
+        setRides(data.totalRides)
         if (response.ok && data.status === 1) {
           setRidesData(data.rides);
           // console.log(ridesData);
