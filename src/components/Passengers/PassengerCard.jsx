@@ -48,7 +48,7 @@ const PassengerCard= ({passenger })=>{
 
         {/* Rides and View Profile */}
         <div className="absolute bottom-4 right-4 flex items-center justify-between w-full px-4">
-          <span className="text-yellow-500">{passenger.total_rides} rides</span>
+          {/* <span className="text-yellow-500">{passenger.total_rides} rides</span> */}
           <button
             onClick={handleViewProfile}
             className="flex items-center text-blue-500 text-sm font-semibold rounded-lg"
