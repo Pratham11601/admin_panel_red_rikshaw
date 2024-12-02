@@ -260,34 +260,57 @@ const TransactionTable = () => {
           </motion.div>
 
           {/* Pagination */}
-
-<div className="flex justify-center mt-4">
-  <button
-    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-    onClick={() => paginate(currentPage - 1)}
-    disabled={currentPage === 1}
-  >
-    Previous
-  </button>
-
-  {Array.from({ length: totalPages }).map((_, index) => (
+          <div className="flex flex-col justify-center items-center mt-4 space-y-2">
+  {/* Pagination Buttons */}
+  <div className="flex space-x-2">
+    {/* Previous Button */}
     <button
-      key={index}
-      className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
-      onClick={() => paginate(index + 1)}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage - 1)}
+      disabled={currentPage === 1}
     >
-      {index + 1}
+      Previous
     </button>
-  ))}
 
-  <button
-    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-    onClick={() => paginate(currentPage + 1)}
-    disabled={currentPage === totalPages}
-  >
-    Next
-  </button>
+    {/* Page Numbers */}
+    {Array.from({ length: Math.min(3, totalPages) }) // Show only 3 pages
+      .map((_, index) => {
+        const pageIndex = Math.max(1, currentPage - 1) + index; // Adjust visible range
+        return (
+          pageIndex <= totalPages && ( // Ensure the page index doesn't exceed total pages
+            <button
+              key={pageIndex}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                currentPage === pageIndex ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
+              }`}
+              onClick={() => paginate(pageIndex)}
+            >
+              {pageIndex}
+            </button>
+          )
+        );
+      })}
+
+    {/* Next Button */}
+    <button
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Total Pages Info */}
+  <div className="text-sm font-medium text-gray-600">
+    Page {currentPage} of {totalPages}
+  </div>
 </div>
+
 
 </div>
 
