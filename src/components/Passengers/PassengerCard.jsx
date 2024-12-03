@@ -29,7 +29,6 @@ const PassengerCard= ({passenger })=>{
         >
           <BadgeCheck className="h-6 w-6 text-white outline-none" />
         </div>
-          <br></br>
         {/* Passenger image and details */}
         <div className="flex items-center mb-4">
           <img

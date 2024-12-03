@@ -24,7 +24,6 @@ const UserCard= ({driver})=>{
           <div className={`absolute top-2 right-2 text-sm text-white  rounded-full ${ driver.activeStatus ? 'bg-green-600' : 'bg-red-600'}`}>
               <BadgeCheck className="h-6 w-6 text-white outline-none" />
           </div>
-            <br></br>
       {/* Driver image and ratings */}
           <div className="flex text-black items-center mb-4">
           <img src={ driver.blockStatus ? blockedUser : (driver.profile_img || defaultUser)}  alt="" className="w-16 h-16 rounded-full object-cover shadow-md"/>
