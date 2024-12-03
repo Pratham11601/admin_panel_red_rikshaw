@@ -280,7 +280,7 @@ const filteredRides = ridesData.filter((ride) => {
               
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-black">
                         <button
-                          className="text-indigo-400 hover:text-indigo-300 mr-2"
+                          className="text-indigo-500 hover:text-indigo-300 mr-2 text-base"
                           onClick={() => handleViewInvoice(ride)}
                         >
                           View

@@ -48,16 +48,29 @@ const PassengerCard= ({passenger })=>{
         
 
         {/* Rides and View Profile */}
-        <div className="absolute bottom-4 right-4 flex items-center justify-between w-full px-4">
+        {/* <div className="absolute bottom-4 right-4 flex items-center justify-between w-full px-4"> */}
           {/* <span className="text-yellow-500">{passenger.total_rides} rides</span> */}
-          <button
+          {/* <button
             onClick={handleViewProfile}
             className="flex items-center text-blue-500 text-sm font-semibold rounded-lg"
           >
             View Profile
             <ArrowRightToLine className="h-4 w-4 ml-2" />
           </button>
+        </div> */}
+
+      <div className=" absolute top-8  right-4">
+          {/* <span className="text-yellow-500">{passenger.total_rides} rides</span> */}
+          <button
+            onClick={handleViewProfile}
+            className="flex items-center text-center text-blue-500 text-sm py-10 mt-5 font-semibold rounded-lg"
+            >
+            View Profile
+            <ArrowRightToLine className="h-4 w-4 ml-2" />
+          </button>
         </div>
+
+
       </div>
     </div>
   );

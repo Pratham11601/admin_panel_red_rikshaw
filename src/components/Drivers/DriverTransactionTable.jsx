@@ -153,20 +153,21 @@ const DriverTransactionTable = ({ driverId }) => {
                   className="py-3 px-6 text-left cursor-pointer"
                   onClick={() => handleSortChange("transactionType")}
                 >
-                  Transaction Type <ArrowDownUp />
+                  TRANSACTION TYPE <ArrowDownUp />
                 </th>
                 <th
                   className="py-3 px-6 text-left cursor-pointer"
                   onClick={() => handleSortChange("amount")}
                 >
-                  Amount <ArrowDownUp />
+                  AMOUNT <ArrowDownUp />
                 </th>
-                <th className="py-3 px-6 text-left">Message</th>
+                <th className="py-3 px-6 text-left">MESSAGE</th>
                 <th
                   className="py-3 px-6 text-left cursor-pointer"
                   onClick={() => handleSortChange("createdAt")}
                 >
-                  Date & Time <ArrowDownUp />
+                 DATE & TIME
+                 <ArrowDownUp />
                   
                 </th>
               </tr>
