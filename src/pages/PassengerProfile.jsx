@@ -244,15 +244,23 @@ const PassengerProfile = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <motion.div className="flex justify-center md:justify-start">
+                    {/* <motion.div className="flex justify-center md:justify-start">
                         <img
                             src={passenger.blockStatus ? blockedUser : (passenger.profile_img || defaultUser)}
                             alt="Profile"
                             className="w-50 h-50 md:w-40 md:h-40 rounded-full object-cover shadow-md"
                         />
+                    </motion.div> */}
+
+                    <motion.div className="flex justify-center md:justify-start">
+                        <img
+                            src={passenger.blockStatus ? blockedUser : (passenger.profile_img || defaultUser)}
+                            alt="Profile"
+                            className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full object-cover shadow-md"
+                        />
                     </motion.div>
 
-                    <motion.div className="text-center md:text-left space-y-2">
+                    {/* <motion.div className="text-center md:text-left space-y-2">
                         <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
                         <p className="text-gray-600">📞 {passenger.phone}</p>
                         <p className="text-gray-600">✉️ {passenger.email}</p>
@@ -260,6 +268,14 @@ const PassengerProfile = () => {
                         <p className="flex text-gray-600">
                             <Car style={{ color: 'black', marginRight: '10px' }} /> {passengerRides || 0} Total Rides
                         </p>
+                    </motion.div> */}
+                    
+                   <motion.div className="text-center md:text-left space-y-2">
+                        <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
+                        <p className="text-gray-600">📞 {passenger.phone}</p>
+                        <p className="text-gray-600">✉️ {passenger.email}</p>
+                        <p className="text-gray-600">🚗 {passengerRides || 0} Total Trips</p>
+                        <p className="text-gray-600">⭐ {passenger.rating} Reviews</p>
                     </motion.div>
 
                     <motion.div className="space-y-3">
