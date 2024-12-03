@@ -154,16 +154,16 @@ function PassengersBenefits() {
             {benefits.map((benefit, index) => (
               <li key={benefit._id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2">
                 <span className="text-gray-700 w-full sm:w-3/4">{benefit.text}</span>
-                <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
+                <div className="mt-4 flex justify-end space-x-2">
                   <button
                     onClick={() => handleOpenEditModal(index)}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-700 w-full sm:w-auto"
+                    className="bg-yellow-500 text-white px-3 py-1 rounded-md"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteBenefit(index)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 w-full sm:w-auto"
+                    className="bg-red-500 text-white px-3 py-1 rounded-md"
                   >
                     Delete
                   </button>
