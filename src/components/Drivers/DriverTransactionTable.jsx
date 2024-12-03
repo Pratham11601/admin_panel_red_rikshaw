@@ -64,10 +64,10 @@ const DriverTransactionTable = ({ driverId }) => {
   // Handle sort change
   const handleSortChange = (field) => {
     if (sortBy === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      setSortOrder(sortOrder === "desc" ? "asc" : "desc");
     } else {
       setSortBy(field);
-      setSortOrder("asc");
+      setSortOrder("desc");
     }
   };
 
@@ -94,10 +94,10 @@ const DriverTransactionTable = ({ driverId }) => {
   // Sort transactions
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "amount") {
-      return sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount;
+      return sortOrder === "desc" ? a.amount - b.amount : b.amount - a.amount;
     }
     if (sortBy === "createdAt") {
-      return sortOrder === "asc"
+      return sortOrder === "desc"
         ? new Date(a.createdAt) - new Date(b.createdAt)
         : new Date(b.createdAt) - new Date(a.createdAt);
     }
@@ -167,6 +167,7 @@ const DriverTransactionTable = ({ driverId }) => {
                   onClick={() => handleSortChange("createdAt")}
                 >
                   Date & Time <ArrowDownUp />
+                  {sortBy === "createdAt" && (sortOrder === "desc" ? "↑" : "↓")}
                 </th>
               </tr>
             </thead>
@@ -191,56 +192,60 @@ const DriverTransactionTable = ({ driverId }) => {
         </div>
       )}
 
-      {/* Pagination 
-      <div className="flex justify-end mt-4">
-        {[...Array(totalPages).keys()].map((page) => (
-          <button
-            key={page}
-            className={`px-4 py-2 mx-1 rounded-lg ${
-              currentPage === page + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-            onClick={() => setCurrentPage(page + 1)}
-          >
-            {page + 1}
-          </button>
-        ))}
-      </div>*/}
+     
          {/* Pagination */}
-         <div className="flex justify-center mt-4">
-            {/* <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
-              Prev
-            </button>
-            <span className="px-4 py-2">{currentPage} of {totalPages}</span>
-            <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg">
-              Next
-            </button> */}
 
-<button
-    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-300"}`}
-    onClick={() => paginate(currentPage - 1)}
-    disabled={currentPage === 1}
-  >
-    Previous
-  </button>
-
-  {Array.from({ length: totalPages }).map((_, index) => (
+          
+<div className="flex flex-col justify-center items-center mt-4 space-y-2">
+  {/* Pagination Buttons */}
+  <div className="flex space-x-2">
+    {/* Previous Button */}
     <button
-      key={index}
-      className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === index + 1 ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"}`}
-      onClick={() => paginate(index + 1)}
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage - 1)}
+      disabled={currentPage === 1}
     >
-      {index + 1}
+      Previous
     </button>
-  ))}
 
-  <button
-    className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"}`}
-    onClick={() => paginate(currentPage + 1)}
-    disabled={currentPage === totalPages}
-  >
-    Next
-  </button>
-          </div>
+    {/* Page Numbers */}
+    {Array.from({ length: Math.min(3, totalPages) }) // Show only 3 pages
+      .map((_, index) => {
+        const pageIndex = Math.max(1, currentPage - 1) + index; // Adjust visible range
+        return (
+          pageIndex <= totalPages && ( // Ensure the page index doesn't exceed total pages
+            <button
+              key={pageIndex}
+              className={`px-3 py-1 rounded-md text-sm font-medium ${
+                currentPage === pageIndex ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
+              }`}
+              onClick={() => paginate(pageIndex)}
+            >
+              {pageIndex}
+            </button>
+          )
+        );
+      })}
+
+    {/* Next Button */}
+    <button
+      className={`px-3 py-1 rounded-md text-sm font-medium ${
+        currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
+      }`}
+      onClick={() => paginate(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Total Pages Info */}
+  <div className="text-sm font-medium text-gray-600">
+    Page {currentPage} of {totalPages}
+  </div>
+</div>
     </motion.div>
   );
 };
