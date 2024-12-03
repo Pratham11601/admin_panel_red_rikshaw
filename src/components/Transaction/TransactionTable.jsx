@@ -139,7 +139,7 @@ const [totalAmount, setTotalAmount] = useState(0); // Total amount across all pa
     >
       {/* State cards with dynamic data */}
       <motion.div
-  className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 mb-8"
+  className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 1 }}
@@ -195,7 +195,7 @@ const [totalAmount, setTotalAmount] = useState(0); // Total amount across all pa
                     <span className="flex">Message<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                   <th onClick={() => handleSort("createdAt")} className="py-3 px-6 text-left cursor-pointer">
-                    <span className="flex">Date/Time<ArrowDownUpIcon className="pl-2" /></span>
+                    <span className="flex">Date & Time<ArrowDownUpIcon className="pl-2" /></span>
                   </th>
                 </tr>
               </thead>
