@@ -167,7 +167,7 @@ const DriverTransactionTable = ({ driverId }) => {
                   onClick={() => handleSortChange("createdAt")}
                 >
                   Date & Time <ArrowDownUp />
-                  {sortBy === "createdAt" && (sortOrder === "desc" ? "↑" : "↓")}
+                  
                 </th>
               </tr>
             </thead>
