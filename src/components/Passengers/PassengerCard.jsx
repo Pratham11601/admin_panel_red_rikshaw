@@ -20,15 +20,16 @@ const PassengerCard= ({passenger })=>{
     return(
       <div className="p-4 bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 h-40">
       <div className="relative bg-white rounded-lg h-full">
-        {/* Status at top-right corner */}
-        <div
+        
+         {/* Status at top-right corner*/}
+         <div
           className={`absolute top-2 right-2 text-sm text-white rounded-full ${
             passenger.is_active ? 'bg-green-600' : 'bg-red-600'
           }`}
         >
           <BadgeCheck className="h-6 w-6 text-white outline-none" />
         </div>
-
+          <br></br>
         {/* Passenger image and details */}
         <div className="flex items-center mb-4">
           <img
@@ -45,6 +46,7 @@ const PassengerCard= ({passenger })=>{
             </p>
           </div>
         </div>
+        
 
         {/* Rides and View Profile */}
         <div className="absolute bottom-4 right-4 flex items-center justify-between w-full px-4">
