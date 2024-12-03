@@ -224,7 +224,7 @@ function DriverBenefits() {
                 onClick={handleSaveEdit}
                 className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-700 w-full sm:w-[20%]"
               >
-                Save Changes
+                Save 
               </button>
             </div>
           )}

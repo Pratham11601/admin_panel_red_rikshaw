@@ -14,10 +14,10 @@ function Charges() {
     day_km_1_5_plus: '0',
     night_km_1_to_1_5: '0',
     night_km_1_5_plus: '0',
-    perRideCharges: '0',
+    Per_Ride_Charges: '0',
     platform_fee: '0',
-    driverReferral: '0',
-    passengerReferral: '0',
+    driver_Referral: '0',
+    passenger_Referral: '0',
     joining_bonus_driver: '0',
     joining_bonus_passenger: '0',
     waiting_charge: '0',
@@ -54,10 +54,10 @@ function Charges() {
           day_km_1_5_plus: chargesData.oneAndHalfPlus || '0',
           night_km_1_to_1_5: chargesData.night_oneToOneAndHalf || '0',
           night_km_1_5_plus: chargesData.night_oneAndHalfPlus || '0',
-          perRideCharges: chargesData.perRideCharges || '0',
+          Per_Ride_Charges: chargesData.perRideCharges || '0',
           platform_fee: chargesData.platform_fee || '0',
-          driverReferral: chargesData.driver_refferal || '0',
-          passengerReferral: chargesData.passenger_refferal || '0',
+          driver_Referral: chargesData.driver_refferal || '0',
+          passenger_Referral: chargesData.passenger_refferal || '0',
           joining_bonus_driver: chargesData.driver_joining_amount || '0',
           joining_bonus_passenger: chargesData.passenger_joining_amount || '0',
           waiting_charge: chargesData.waitingCharges || '0',
@@ -97,7 +97,7 @@ function Charges() {
       driver_joining_amount: charges.joining_bonus_driver,
       passenger_refferal: charges.passengerReferral,
       driver_refferal: charges.driverReferral,
-      perRideCharges: charges.perRideCharges,
+      Per_RideCharges: charges.perRideCharges,
       cancellationCharges: charges.cancellation_Charges,
       waitingCharges: charges.waiting_charge,
       platform_fee: charges.platform_fee
@@ -134,7 +134,7 @@ function Charges() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <StatCard name="Per Ride Driver Charge" icon={User} value={`₹${charges.perRideCharges}`} color="#EF4444" />
+          <StatCard name="Per Ride Driver Charge" icon={User} value={`₹${charges.Per_Ride_Charges}`} color="#EF4444" />
           <StatCard name="Platform Fee" icon={User} value={`₹${charges.platform_fee}`} color="#EF4444" />
           <StatCard name="Cancellation Charges" icon={User} value={`₹${charges.cancellation_Charges}`} color="#F59E0B" />
           <StatCard name="Waiting charges" icon={User} value={`${charges.waiting_charge}`} color="#6B7280" />
