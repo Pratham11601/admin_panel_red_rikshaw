@@ -189,101 +189,109 @@ const filteredRides = ridesData.filter((ride) => {
             <div className="RidesData">
                 <motion.div 
                      className="overflow-x-auto"
-                >
-                <table className="min-w-full bg-white border border-gray-300 shadow-lg">
-                    <thead>
-                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                        
-                        <th text-gray-600 uppercase text-sm leading-normal
-                        className="py-3 px-6 text-left cursor-pointer"
-                          onClick={() => handleSortChange("driver")}
+                ><table className="min-w-full bg-white border border-gray-300 shadow-lg">
+                <thead>
+                  <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th
+                      className="py-3 px-6 text-left cursor-pointer"
+                      onClick={() => handleSortChange("driver")}
+                    >
+                      <span className="flex">
+                        Driver
+                        <ArrowDownUp className="pl-2" />
+                      </span>
+                    </th>
+                    <th
+                      className="py-3 px-6 text-left cursor-pointer"
+                      onClick={() => handleSortChange("fare")}
+                    >
+                      <span className="flex">
+                        Fare
+                        <ArrowDownUp className="pl-2" />
+                      </span>
+                    </th>
+                    <th
+                      className="py-3 px-6 text-left cursor-pointer"
+                      onClick={() => handleSortChange("fromplace")}
+                    >
+                      <span className="flex">
+                        From Place
+                        <ArrowDownUp className="pl-2" />
+                      </span>
+                    </th>
+                    <th
+                      className="py-3 px-6 text-left cursor-pointer"
+                      onClick={() => handleSortChange("toplace")}
+                    >
+                      <span className="flex">
+                        To Place
+                        <ArrowDownUp className="pl-2" />
+                      </span>
+                    </th>
+                    <th className="py-3 px-6 text-left cursor-pointer">
+                      <span className="flex">Status</span>
+                    </th>
+                    <th className="py-3 px-6 text-left cursor-pointer">
+                      View Invoice
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {currentItems.map((ride) => (
+                    <motion.tr
+                      key={ride._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        {ride.driverId?.name || "N/A"}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        {/* Display the fare from the ride */}
+                        {ride.fare?.$numberDecimal ? `$${parseFloat(ride.fare.$numberDecimal).toFixed(2)}` : "$0.00"}
+                      </td>
+              
+                      {/* "From Place" column */}
+                      <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        <span>{ride.pickupLocation?.place || "N/A"}</span>
+                      </td>
+              
+                      {/* "To Place" column */}
+                      <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        <span>{ride.dropoffLocation?.place || "N/A"}</span>
+                      </td>
+              
+                      <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${
+                              ride.status === "completed"
+                                ? "bg-green-200 text-green-900"
+                                : ride.status === "pending"
+                                ? "bg-yellow-200 text-yellow-900"
+                                : "bg-red-200 text-red-900"
+                            }`}
                         >
-                          <span className="flex" >Driver<ArrowDownUp className="pl-2"/></span>
-                        </th>
-                        <th
-                        className="py-3 px-6 text-left cursor-pointer"
-                          onClick={() => handleSortChange("fare")}
+                          {ride.status || "Unknown"}
+                        </span>
+                      </td>
+              
+                      <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-black">
+                        <button
+                          className="text-indigo-400 hover:text-indigo-300 mr-2"
+                          onClick={() => handleViewInvoice(ride)}
                         >
-                          <span className="flex">Fare<ArrowDownUp className="pl-2"/></span>
-                        </th>
-                        <th className="py-3 px-6 text-left cursor-pointer"
-                          onClick={() => handleSortChange("fromplace")}
-                        >
-                          <span className="flex">From Place<ArrowDownUp className="pl-2"/></span>
-                        </th>
-                        <th className="py-3 px-6 text-left cursor-pointer"
-                          onClick={() => handleSortChange("toplace")}
-                        >
-                        <span className="flex">To Place<ArrowDownUp className="pl-2"/></span>
-                        </th>
-                        <th className="py-3 px-6 text-left cursor-pointer"
-                        //   onClick={() => handleSortChange("toplace")}
-                        >
-                        <span className="flex">Status<ArrowDownUp className="pl-2"/></span>
-                        </th>
-                        <th className="py-3 px-6 text-left cursor-pointer">
-                        View Invoice
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                    {currentItems.map((ride) => (
-                      <motion.tr
-                        key={ride._id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className="text-gray-800 transform transition duration-300 ease-in-out hover:scale-104 hover:bg-gray-100 hover:shadow-lg"
-                      >
-                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black border-gray-700">
-                            {ride._id}
-                        </td> */}
-
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {ride.driverId?.name || "N/A"}
-
-                        </td>
-                        {/* <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          $15.00
-                        </td> */}
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {/* Display the fare from the ride */}
-                          {ride.fare?.$numberDecimal ? `$${parseFloat(ride.fare.$numberDecimal).toFixed(2)}` : "$0.00"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black hidden sm:table-cell">
-                          {ride.pickupLocation?.place || "N/A"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black hidden sm:table-cell">
-                          {ride.dropoffLocation?.place || "N/A"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                              ${
-                                ride.status === "completed"
-                                  ? "bg-green-200 text-green-900"
-                                  : ride.status === "pending"
-                                  ? "bg-yellow-200 text-yellow-900"
-                                  : "bg-red-200 text-red-900"
-                              }`}
-                          >
-                            {ride.status || "Unknown"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-black">
-                          <button
-                            className="text-indigo-400 hover:text-indigo-300 mr-2"
-                            onClick={() => handleViewInvoice(ride)}
-                          >
-                            View
-                          </button>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-
-                </table>
-                </motion.div>
+                          View
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+              </motion.div>
+                
             
 
             {/* Pagination */}
