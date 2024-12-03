@@ -262,8 +262,12 @@ const DriverRides = ({ driverId }) => {
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black ">
                             {ride.passengerId.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                             $15.00
+                        </td> */}
+                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                          {/* Display the fare from the ride */}
+                          {ride.fare?.$numberDecimal ? `$${parseFloat(ride.fare.$numberDecimal).toFixed(2)}` : "$0.00"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm  text-black hidden sm:table-cell">
                             {ride.pickupLocation.place}
