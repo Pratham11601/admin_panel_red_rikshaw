@@ -200,7 +200,7 @@ const handlePageChange = (page) => {
 
               {/* Pagination controls */}
               
-          <div className="flex flex-col justify-center items-center mt-4 space-y-2">
+              <div className="flex flex-col justify-center items-center mt-4 space-y-2">
   {/* Pagination Buttons */}
   <div className="flex space-x-2">
     {/* Previous Button */}
@@ -208,7 +208,7 @@ const handlePageChange = (page) => {
       className={`px-3 py-1 rounded-md text-sm font-medium ${
         currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
       }`}
-      onClick={() => paginate(currentPage - 1)}
+      onClick={() => setCurrentPage(currentPage - 1)}
       disabled={currentPage === 1}
     >
       Previous
@@ -225,7 +225,7 @@ const handlePageChange = (page) => {
               className={`px-3 py-1 rounded-md text-sm font-medium ${
                 currentPage === pageIndex ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
               }`}
-              onClick={() => paginate(pageIndex)}
+              onClick={() => setCurrentPage(pageIndex)}
             >
               {pageIndex}
             </button>
@@ -238,7 +238,7 @@ const handlePageChange = (page) => {
       className={`px-3 py-1 rounded-md text-sm font-medium ${
         currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
       }`}
-      onClick={() => paginate(currentPage + 1)}
+      onClick={() => setCurrentPage(currentPage + 1)}
       disabled={currentPage === totalPages}
     >
       Next
@@ -250,6 +250,7 @@ const handlePageChange = (page) => {
     Page {currentPage} of {totalPages}
   </div>
 </div>
+
 
             </div>
           )}

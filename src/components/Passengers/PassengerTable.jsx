@@ -242,7 +242,6 @@ const PassengerTable = () => {
         </div>
       )}
  {/* Pagination controls */}
- 
  <div className="flex flex-col justify-center items-center mt-4 space-y-2">
   {/* Pagination Buttons */}
   <div className="flex space-x-2">
@@ -251,7 +250,7 @@ const PassengerTable = () => {
       className={`px-3 py-1 rounded-md text-sm font-medium ${
         currentPage === 1 ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
       }`}
-      onClick={() => paginate(currentPage - 1)}
+      onClick={() => setCurrentPage(currentPage - 1)}
       disabled={currentPage === 1}
     >
       Previous
@@ -268,7 +267,7 @@ const PassengerTable = () => {
               className={`px-3 py-1 rounded-md text-sm font-medium ${
                 currentPage === pageIndex ? "bg-blue-600 text-white" : "bg-white text-black hover:bg-gray-600"
               }`}
-              onClick={() => paginate(pageIndex)}
+              onClick={() => setCurrentPage(pageIndex)}
             >
               {pageIndex}
             </button>
@@ -281,7 +280,7 @@ const PassengerTable = () => {
       className={`px-3 py-1 rounded-md text-sm font-medium ${
         currentPage === totalPages ? "bg-transparent text-black cursor-not-allowed" : "bg-white text-black hover:bg-gray-600"
       }`}
-      onClick={() => paginate(currentPage + 1)}
+      onClick={() => setCurrentPage(currentPage + 1)}
       disabled={currentPage === totalPages}
     >
       Next
@@ -293,6 +292,8 @@ const PassengerTable = () => {
     Page {currentPage} of {totalPages}
   </div>
 </div>
+
+
 
     </motion.div>
   );
