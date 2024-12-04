@@ -16,7 +16,8 @@ import ApiConfig from '../Consants/ApiConfig';
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
-    const [driver, setDriver] = useState(location.state.driver); // State for driver data
+    const [driver, setDriver] = useState(location.state ? location.state.driver : null);
+    // const [driver, setDriver] = useState(location.state.driver); // State for driver data
     const [loading, setLoading] = useState(false); // Loading state for API call
     const [activeTab, setActiveTab] = useState('profileSummary');
     const [isPopupOpen, setPopupOpen] = useState(false);
@@ -27,15 +28,19 @@ const DriverProfile = ()=>{
     const [addAmount, setAddAmount] = useState(0);     
     const [documentUrls, setDocumentUrls] = useState({ front: '', back: '' });  
     const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [showEditPopup, setShowEditPopup] = useState(false);
     const [password, setPassword] = useState('');  
     const [driverRides,setDriverRides] = useState() 
     const searchUser = location.state.searchUser
+    const [editedDriverDetails, setEditedDriverDetails] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        rating: 0,
+        blockStatus: false,
+    });
 
-    // console.log("this is deiver")
-    // console.log(driver)
-
-//     console.log(driver.vehicleDetails?.vehicle_img_front);
-// console.log(driver.vehicleDetails?.vehicle_img_back);
+    
 
     useEffect(()=>{
        const fetchRides = async()=>{
@@ -57,10 +62,7 @@ const DriverProfile = ()=>{
        } 
        fetchRides()
     },[])
-    // const setRides = (rides)=>{
-    //     setDriverRides(rides)
-    //     console.log("Driver Rides = ",driverRides)
-    // }
+   
     const toggleStatus = () => {
         const newStatus = status === 'Block' ? 'Unblock' : 'Block';
         setStatus(newStatus);
@@ -120,20 +122,7 @@ const DriverProfile = ()=>{
             console.error('Error fetching driver data:', error);
         }
     };
-
-
-    // const handleAddMoney = () => {
-    //     const newAmount = parseFloat(addAmount);
-    //     if (isNaN(newAmount) || newAmount <= 0) {
-    //       alert('Please enter a valid amount.');
-    //       return;
-    //     }
-    //     setWalletBalance(walletBalance + newAmount);
-    //     setAddAmount('');
-    //     togglePopup();
-    //   };
-
-    const handleAddMoney = async()=>{
+  const handleAddMoney = async()=>{
         const newAmount = parseFloat(addAmount);
         if (isNaN(newAmount) || newAmount <= 0) {
           alert('Please enter a valid amount.');
@@ -194,6 +183,88 @@ const DriverProfile = ()=>{
             }
         // navigate(-1); 
       };
+
+
+
+    // Function to handle the click event to show the edit popup
+    const handleEditClick = () => {
+        setShowEditPopup(true);
+    };
+
+      // Function to handle editing driver details and confirming the changes
+    //   const handleEditDriver = (e) => {
+    //     e.preventDefault(); // Prevents form submission if the function is triggered by a form event
+    //     console.log('Edited Driver Details:', editedDriverDetails);
+
+    //     // Here, you could add code to send the edited data to a server or update it in a state management tool.
+    //     setShowEditPopup(false); // Close the popup after confirming the edit
+    // };
+
+    const handleEditDriver = async () => {
+          
+        if (editedDriverDetails) {
+          try {
+            // Prepare the request body with the edited driver details
+            const requestBody = {
+              id: editedDriverDetails.id,
+              name: editedDriverDetails.name,
+              phone: editedDriverDetails.phone,
+              email: editedDriverDetails.email,
+              rating: editedDriverDetails.rating,
+              blockStatus: editedDriverDetails.blockStatus,
+            };
+      
+            const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      
+            // Make the PUT request to update the driver details on the backend
+            const response = await fetch(ApiConfig.puteditDriver(editedDriverDetails.id), {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              },
+              body: JSON.stringify(requestBody),
+            });
+      
+            if (response.ok) {
+              const data = await response.json();
+      
+              if (data.status === 1) {
+                // Update the driver details in the local state
+                setDrivers((prev) =>
+                  prev.map((driver) =>
+                    driver.id === editedDriverDetails.id
+                      ? { ...driver, ...editedDriverDetails }
+                      : driver
+                  )
+                );
+                setError(null);
+      
+                // Optionally, save the updated driver details to localStorage if needed
+                console.log(`Saving edited driver ${editedDriverDetails.id} to localStorage`);
+                localStorage.setItem(
+                  `driver-details-${editedDriverDetails.id}`,
+                  JSON.stringify(editedDriverDetails)
+                );
+              } else {
+                setError(data.message || "Failed to update driver details.");
+              }
+            } else {
+              setError("Failed to update driver details.");
+            }
+          } catch (err) {
+            setError(`Unexpected error: ${err.message}`);
+          }
+        }
+      
+        closeModal(); // Close the modal after saving
+      };
+      
+     // Function to close the edit popup without saving changes
+     const handleCloseEditPopup = (e) => {
+        e.preventDefault();
+        setShowEditPopup(false);
+    };
 
     const handleDeleteClick = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
@@ -319,7 +390,12 @@ const DriverProfile = ()=>{
                 <motion.div className="space-y-3">
             
                 <div className="flex items-center justify-center md:justify-start">
-                    
+                <button
+    onClick={handleEditClick}
+    className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
+>
+    Edit
+</button>
 
                 <button
                                 onClick={handleBlockToggle}
@@ -346,12 +422,7 @@ const DriverProfile = ()=>{
                                 Add Money
                             </button>
                             ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>}
-                    {/* <button
-                            onClick={toggleStatus}
-                            className="ml-10 px-3 py-1 bg-red-400 text-white font-sb rounded "
-                        >
-                            Change Status
-                    </button> */}
+                   
                                 </div>
                                 <div className="flex items-center justify-center md:justify-start pt-3">
                     <div className="flex w-full flex-col justify-center gap-3 items-start">
@@ -369,6 +440,93 @@ const DriverProfile = ()=>{
                     </div>
                 </div>
                 
+                {/* Edit Confirmation Popup */}
+                {showEditPopup && (
+    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+            <h2 className="text-xl font-semibold mb-4">Edit Driver Details</h2>
+            <form>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Name:</label>
+                    <input
+                        type="text"
+                        value={editedDriverDetails.name}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, name: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Enter name"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Phone:</label>
+                    <input
+                        type="text"
+                        value={editedDriverDetails.phone}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, phone: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Enter phone number"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Email:</label>
+                    <input
+                        type="email"
+                        value={editedDriverDetails.email}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, email: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Enter email"
+                    />
+                </div>
+                {/* <div className="mb-4">
+                    <label className="block text-gray-700">Address:</label>
+                    <input
+                        type="text"
+                        value={editedDriverDetails.address}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, address: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Enter address"
+                    />
+                </div> */}
+                <div className="mb-4">
+                    <label className="block text-gray-700">Rating:</label>
+                    <input
+                        type="number"
+                        value={editedDriverDetails.rating}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, rating: parseInt(e.target.value) })}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        placeholder="Enter rating"
+                        min="0"
+                        max="5"
+                        step="1"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Block Status:</label>
+                    <input
+                        type="checkbox"
+                        checked={editedDriverDetails.blockStatus}
+                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, blockStatus: e.target.checked })}
+                        className="mr-2"
+                    />
+                    <span>Blocked</span>
+                </div>
+                <div className="flex justify-between">
+                    <button
+                        onClick={handleEditDriver}
+                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    >
+                        Confirm Edit
+                    </button>
+                    <button
+                        onClick={handleCloseEditPopup}
+                        className="ml-2 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+)}
 
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (
@@ -399,33 +557,6 @@ const DriverProfile = ()=>{
                 )}
                 </motion.div>
                 </motion.div>
-
-      {/* Popup for adding money */}
-      {/* {showAddMoneyPopup && (
-        <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-80">
-            <h2 className="text-xl font-semibold">Add Money to Wallet</h2>
-
-            <img src={driver.qr_code} alt=""  className='p-10'/>
-
-            
-            <button
-              onClick={handleAddMoney}
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 w-full"
-            >
-              Add
-            </button>
-
-            
-            <button
-              onClick={togglePopup}
-              className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 w-full"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )} */}
 
 {showAddMoneyPopup && (
                     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
@@ -491,25 +622,6 @@ const DriverProfile = ()=>{
                         transition={{ duration: 0.5 }}
                         >
 
-
-                        {/* Auto Details */}
-                        {/* <div className="p-4 bg-white shadow-lg rounded-lg text-black">
-                            <h3 className="text-xl font-bold mb-3">Auto Details</h3>
-                            <p className="">Vehicle Number: {driver.vehicleDetails ? driver.vehicleDetails.Vehicle_number : "No Vehicle Number"}</p>
-                            
-                            <div className="flex flex-col ">
-                                <img 
-                                src={driver.vehicleDetails ?driver.vehicleDetails.vehicle_img_front :driver.vehicle_img_front }
-                                alt="Auto Image Front" 
-                                className="w-50 max-w-xs "
-                                />
-                                <img 
-                                src={driver.vehicleDetails ?driver.vehicleDetails.vehicle_img_back :driver.vehicle_img_back }
-                                alt="Auto Image Back" 
-                                className="w-70 max-w-xs "
-                                />
-                            </div>
-                        </div> */}
 
 <div className="p-4 bg-white shadow-lg rounded-lg text-black">
     <h3 className="text-xl font-bold mb-3">Auto Details</h3>

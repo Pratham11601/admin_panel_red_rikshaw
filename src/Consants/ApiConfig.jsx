@@ -47,7 +47,16 @@ static putBlockStatus(id) {
   return `${this.BASE_URL}/api/adminpanel/block-status/${id}`;
 }
 
-    
+//edit driver details
+static puteditDriver(id) {
+  return `${this.BASE_URL}/api/adminpanel/edit-driver/${id}`;
+}
+
+//edit passenger details
+static putEditPassengerDetails (id) {
+  return `${this.BASE_URL}/api/adminpanel/edit-passenger/${id}`;
+}
+
 
     //drivers
     static getDriversEndpoint() {
