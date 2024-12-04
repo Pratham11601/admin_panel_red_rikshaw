@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../components/common/Header";
 import { ChevronLeft, Car } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -35,7 +35,7 @@ const PassengerProfile = () => {
         address: "",
         role: "Passenger",
         rating: 0,
-        blockStatus: false,
+        // blockStatus: false,
         });
 
         const handleChange = (e) => {
@@ -68,6 +68,31 @@ const PassengerProfile = () => {
             }
         }
 
+        useEffect(() => {
+            if (passenger) {
+                setFormData({
+                    name: passenger.name || '',
+                    phone: passenger.phone || '',
+                    email: passenger.email || '',
+                    address: passenger.address || '',
+                    rating: passenger.rating || 0,
+                    blockStatus: passenger.blockStatus || false,
+                });
+            }
+        }, [passenger]);
+        
+        const handleEditClick = () => {
+            setShowEditPopup(true);
+            // If `passenger` is the source of truth, no need to reset formData again.
+        };
+        
+        
+            //  Function to close the edit popup without saving changes
+     const handleCloseEditPopup = (e) => {
+        e.preventDefault();
+        setShowEditPopup(false);
+    };
+    
         const handleSubmit = (e) => {
         e.preventDefault();
         console.log("form data")
@@ -152,7 +177,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
     //         alert("User deleted successfully");
     //         setShowDeletePopup(false); // Close the delete popup
     //         setPassword(''); // Clear the password input
-    //         navigate('/Home/drivers'); // Redirect to another page
+    //         navigate('/Home/passengers'); // Redirect to another page
     //     } else {
     //         alert("Incorrect password. Please try again.");
     //     }
@@ -332,7 +357,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     <motion.div className="space-y-3">
                         <div className="flex flex-wrap items-center my-2 justify-center">
                         <button
-                                onClick={()=>setShowEditPopup(true)}
+                                onClick={()=>handleEditClick(true)}
                                 className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
                             >
                                 Edit
@@ -466,45 +491,47 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     </div>
                 )}
 
-{showEditPopup && 
-<div className={`bg-gray-100 p-4 fixed inset-0 h-5/6 justify-center items-center z-30 rounded-md shadow-md max-w-sm mx-auto`}>
-  <div className="flex justify-between items-center mb-4">
-    <h1 className="text-xl font-bold text-gray-700">User Input Form</h1>
-    {/* <button
+{showEditPopup && (
+            <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                <h2 className="text-xl font-semibold mb-4">Edit Passenger Details</h2>
+                {/* <button
       onClick={() => setShowEditPopup(false)}
       className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
     >
       &times;
     </button> */}
-  </div>
   <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
-    <div>
-      <label className="block text-sm font-medium text-black">Name:</label>
+  <div className="mb-4">
+  <label className="block text-gray-700">Name:</label>
       <input
         type="text"
     
-        name="name"
+      name="name"
         value={formData.name}
         onChange={handleChange}
         required
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      />
+        className="w-full p-2 border border-gray-300 rounded"
+        />
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Phone:</label>
+    <div className="mb-4">
+    <label className="block text-gray-700">Phone:</label>
       <input
         type="tel"
         name="phone"
         value={formData.phone}
         onChange={handleChange}
         required
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      />
+        className="w-full p-2 border border-gray-300 rounded"
+        placeholder="Enter phone"
+        pattern="\d*" // HTML validation for digits only
+        maxLength={10} 
+        />
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Email:</label>
+    <div className="mb-4">
+    <label className="block text-gray-700">Email:</label>
       <input
         type="email"
         name="email"
@@ -512,38 +539,39 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
         onChange={handleChange}
         required
         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      />
+        placeholder="Enter email"
+
+     />
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-gray-700">Address:</label>
+    <div className="mb-4">
+    <label className="block text-gray-700">Address:</label>
       <input
         type="text"
         name="address"
         value={formData.address}
         onChange={handleChange}
-        required
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      />
+        className="w-full p-2 border border-gray-300 rounded"
+        placeholder="Enter address"      />
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-black">Role:</label>
+    <div className="mb-4">
+    <label className="block text-gray-700">Role:</label>
       <select
         name="role"
         value={formData.role}
         onChange={handleChange}
         required
-        className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      >
+        className="w-full p-2 border border-gray-300 rounded"
+        >
         {/* <option value="Driver">Driver</option>
         <option value="Admin">Admin</option> */}
         <option value="Manager">Passenger</option>
       </select>
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-black">Rating:</label>
+    <div className="mb-4">
+    <label className="block text-gray-700">Rating:</label>
       <input
         type="number"
         name="rating"
@@ -553,13 +581,13 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
         max="5"
         step="0.1"
         required
-        className="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-      />
+        className="w-full p-2 border border-gray-300 rounded"
+        placeholder="Enter rating"      />
     </div>
+{/* 
+    <div className="mb-4">
 
-    <div className='flex items-start'>
-      <div className='flex justify-center gap-2 items-center'>
-      <label className="block text-sm font-medium  text-gray-700">Block Status:</label>
+      <label className="block text-gray-700">Block Status:</label>
       <input
         type="checkbox"
         name="blockStatus"
@@ -567,21 +595,28 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
         onChange={handleChange}
         className="mt-2"
       />
-      </div>
-    </div>
-
-    <div>
-      <button
-        type="submit"
-        className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none"
-      >
-        Submit
-      </button>
-    </div>
+      <span>Blocked</span>
+      </div> */}
+      <div className="flex justify-between">
+                    <button
+        type="Confirm Edit"
+        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    >
+                        Confirm Edit
+                    </button>
+                    <button
+                        onClick={handleCloseEditPopup}
+                        className="ml-2 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    >
+                        Cancel
+                    </button>
+                </div>
   </form>
 </div>
+</div>
 
-}
+)}
+
 
                 {/* Active Tab Content */}
                 {!showDeletePopup && activeTab === 'Rides' && (

@@ -40,7 +40,6 @@ const DriverProfile = (driverData )=>{
         email: '',
         address: '',
         rating: 0,
-        blockStatus: false,
     });
 
     const handleChange = (e) => {
@@ -193,31 +192,25 @@ const DriverProfile = (driverData )=>{
             }
         // navigate(-1); 
       };
-      useEffect(() => {
-        if (driverData) {
-            setFormData({
-                name: driverData.name || '',
-                phone: driverData.phone || '',
-                email: driverData.email || '',
-                address: driverData.address || '',
-                rating: driverData.rating || 0,
-                blockStatus: driverData.blockStatus || false,
-            });
-        }
-    }, [driverData]);
-
-    const handleEditClick = () => {
-        setShowEditPopup(true);
+// Simplify useEffect to only depend on a single source of truth
+useEffect(() => {
+    if (driver) {
         setFormData({
             name: driver.name || '',
             phone: driver.phone || '',
             email: driver.email || '',
             address: driver.address || '',
             rating: driver.rating || 0,
-            blockStatus: driver.blockStatus || '',
+            blockStatus: driver.blockStatus || false,
         });
-    };
-    
+    }
+}, [driver]);
+
+const handleEditClick = () => {
+    setShowEditPopup(true);
+    // If `driver` is the source of truth, no need to reset formData again.
+};
+
 
       const editDriver =async()=>{
         try {
@@ -233,6 +226,7 @@ const DriverProfile = (driverData )=>{
             console.log(response)
             if(response.data.status === 1){
                 setDriver(response.data.data)
+                fetchDriverData(); // Optionally refetch driver data from the server
             }else{
                 console.error("failed to edit driver")
             }
@@ -435,18 +429,18 @@ console.log(driver)
                 
                 {/* Edit Confirmation Popup */}
                 {showEditPopup && (
-    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-md w-80">
-            <h2 className="text-xl font-semibold mb-4">Edit Driver Details</h2>
-            {/* <button
-      onClick={() => setShowEditPopup(false)}
-      className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
-    >
-      &times;
-    </button> */}
-  {/* </div> */}
-  <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
-                <div className="mb-4">
+            <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                    <h2 className="text-xl font-semibold mb-4">Edit Driver Details</h2>
+                    {/* <button
+            onClick={() => setShowEditPopup(false)}
+            className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
+            >
+            &times;
+            </button> */}
+        {/* </div> */}
+        <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
+              <div className="mb-4">
                     <label className="block text-gray-700">Name:</label>
                     <input
                         type="text"
@@ -460,17 +454,19 @@ console.log(driver)
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700">Phone:</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                                                className="w-full p-2 border border-gray-300 rounded"
-                        placeholder="Enter phone number"
-                    />
-                </div>
+                <label className="block text-gray-700">Phone:</label>
+                <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-2 border border-gray-300 rounded"
+                    placeholder="Enter phone number"
+                    pattern="\d*" // HTML validation for digits only
+                    maxLength={10} 
+                />
+            </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Email:</label>
                     <input
@@ -490,8 +486,7 @@ console.log(driver)
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
-                        required
-                                                className="w-full p-2 border border-gray-300 rounded"
+                      className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter address"
                     />
                 </div>
@@ -502,24 +497,24 @@ console.log(driver)
                         name="rating"
                         value={formData.rating}
                         onChange={handleChange}
-                                                className="w-full p-2 border border-gray-300 rounded"
+                       className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter rating"
                         min="0"
                         max="5"
-                        step="1"
-                    />
+                        step="0.1"
+                        />
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                     <label className="block text-gray-700">Block Status:</label>
                     <input
                         type="checkbox"
                         name="blockStatus"
                         checked={formData.blockStatus}
                         onChange={handleChange}
-                                                className="mr-2"
+                      className="mr-2"
                     />
                     <span>Blocked</span>
-                </div>
+                </div> */}
                 <div className="flex justify-between">
                     <button
         type="Confirm Edit"
@@ -542,7 +537,7 @@ console.log(driver)
 
                 {/* Delete Confirmation Popup */}
                 {showDeletePopup && (
-                        <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
+                        <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50 z-50">
                         <div className="bg-white p-6 rounded-lg shadow-md w-80">
                             <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
                             <input
