@@ -40,10 +40,6 @@ class ApiConfig {
     static getPassengerRidesEndpoint(passengerId) {
       return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
     }
-
-    static putEditPassengerDetails(id){
-      return `${this.BASE_URL}//api/adminpanel/edit-passenger/${id}`
-    }
     
 
     //Block passenger or driver
@@ -51,14 +47,15 @@ static putBlockStatus(id) {
   return `${this.BASE_URL}/api/adminpanel/block-status/${id}`;
 }
 
-//edit driver details
-static puteditDriver(id) {
-  return `${this.BASE_URL}/api/adminpanel/edit-driver/${id}`;
-}
 
 //edit passenger details
-static putEditPassengerDetails (id) {
-  return `${this.BASE_URL}/api/adminpanel/edit-passenger/${id}`;
+static putEditPassengerDetails(id){
+  return `${this.BASE_URL}/api/adminpanel/edit-passenger/${id}`
+}
+
+//edit driver details
+static putEditDriverDetails(id) {
+  return `${this.BASE_URL}/api/adminpanel/edit-driver/${id}`;
 }
 
 

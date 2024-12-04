@@ -13,6 +13,7 @@ import  blockedUser from "../assets/blocked_user.png"
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
 import axios from 'axios';
 import ApiConfig from '../Consants/ApiConfig';
+
 const DriverProfile = ()=>{
     const navigate = useNavigate();
     const location = useLocation();
@@ -32,15 +33,23 @@ const DriverProfile = ()=>{
     const [password, setPassword] = useState('');  
     const [driverRides,setDriverRides] = useState() 
     const searchUser = location.state.searchUser
-    const [editedDriverDetails, setEditedDriverDetails] = useState({
+    const [formData, setFormData] = useState({
         name: '',
         phone: '',
         email: '',
+        address: '',
         rating: 0,
         blockStatus: false,
     });
 
-    
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) : value,
+        });
+        };
+
 
     useEffect(()=>{
        const fetchRides = async()=>{
@@ -186,81 +195,41 @@ const DriverProfile = ()=>{
 
 
 
-    // Function to handle the click event to show the edit popup
-    const handleEditClick = () => {
-        setShowEditPopup(true);
-    };
-
-      // Function to handle editing driver details and confirming the changes
-    //   const handleEditDriver = (e) => {
-    //     e.preventDefault(); // Prevents form submission if the function is triggered by a form event
-    //     console.log('Edited Driver Details:', editedDriverDetails);
-
-    //     // Here, you could add code to send the edited data to a server or update it in a state management tool.
-    //     setShowEditPopup(false); // Close the popup after confirming the edit
-    // };
-
-    const handleEditDriver = async () => {
-          
-        if (editedDriverDetails) {
-          try {
-            // Prepare the request body with the edited driver details
-            const requestBody = {
-              id: editedDriverDetails.id,
-              name: editedDriverDetails.name,
-              phone: editedDriverDetails.phone,
-              email: editedDriverDetails.email,
-              rating: editedDriverDetails.rating,
-              blockStatus: editedDriverDetails.blockStatus,
-            };
-      
-            const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-      
-            // Make the PUT request to update the driver details on the backend
-            const response = await fetch(ApiConfig.puteditDriver(editedDriverDetails.id), {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-              },
-              body: JSON.stringify(requestBody),
-            });
-      
-            if (response.ok) {
-              const data = await response.json();
-      
-              if (data.status === 1) {
-                // Update the driver details in the local state
-                setDrivers((prev) =>
-                  prev.map((driver) =>
-                    driver.id === editedDriverDetails.id
-                      ? { ...driver, ...editedDriverDetails }
-                      : driver
-                  )
-                );
-                setError(null);
-      
-                // Optionally, save the updated driver details to localStorage if needed
-                console.log(`Saving edited driver ${editedDriverDetails.id} to localStorage`);
-                localStorage.setItem(
-                  `driver-details-${editedDriverDetails.id}`,
-                  JSON.stringify(editedDriverDetails)
-                );
-              } else {
-                setError(data.message || "Failed to update driver details.");
-              }
-            } else {
-              setError("Failed to update driver details.");
+      const editDriver =async()=>{
+        try {
+            console.log("edit api called")
+            const token = localStorage.getItem("token")
+            const response = await axios.put(ApiConfig.putEditDriverDetails(driver._id),formData,{
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+            console.log("edit response")
+            console.log(response)
+            if(response.data.status === 1){
+                setDriver(response.data.data)
+            }else{
+                console.error("failed to edit driver")
             }
-          } catch (err) {
-            setError(`Unexpected error: ${err.message}`);
-          }
+        } catch (error) {
+            console.log(error)
         }
-      
-        closeModal(); // Close the modal after saving
-      };
-      
-     // Function to close the edit popup without saving changes
+    }
+
+    const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted with data:", formData); // Check the form data
+    console.log(formData);
+    editDriver();
+    setShowEditPopup(false)
+    };
+    console.log("driver ID:", driver?._id);
+console.log("Endpoint URL:", ApiConfig.putEditDriverDetails(driver?._id));
+
+console.log(driver)
+
+    //  Function to close the edit popup without saving changes
      const handleCloseEditPopup = (e) => {
         e.preventDefault();
         setShowEditPopup(false);
@@ -391,11 +360,11 @@ const DriverProfile = ()=>{
             
                 <div className="flex items-center justify-center md:justify-start">
                 <button
-    onClick={handleEditClick}
-    className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
->
-    Edit
-</button>
+                                onClick={()=>setShowEditPopup(true)}
+                                className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
+            >
+                Edit
+            </button>
 
                 <button
                                 onClick={handleBlockToggle}
@@ -445,13 +414,23 @@ const DriverProfile = ()=>{
     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-md w-80">
             <h2 className="text-xl font-semibold mb-4">Edit Driver Details</h2>
-            <form>
+            {/* <button
+      onClick={() => setShowEditPopup(false)}
+      className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
+    >
+      &times;
+    </button> */}
+  {/* </div> */}
+  <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
                 <div className="mb-4">
                     <label className="block text-gray-700">Name:</label>
                     <input
                         type="text"
-                        value={editedDriverDetails.name}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, name: e.target.value })}
+                        name="name"
+
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
                         className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter name"
                     />
@@ -460,9 +439,11 @@ const DriverProfile = ()=>{
                     <label className="block text-gray-700">Phone:</label>
                     <input
                         type="text"
-                        value={editedDriverDetails.phone}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, phone: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                                                className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter phone number"
                     />
                 </div>
@@ -470,29 +451,34 @@ const DriverProfile = ()=>{
                     <label className="block text-gray-700">Email:</label>
                     <input
                         type="email"
-                        value={editedDriverDetails.email}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, email: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                                                className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter email"
                     />
                 </div>
-                {/* <div className="mb-4">
+                <div className="mb-4">
                     <label className="block text-gray-700">Address:</label>
                     <input
                         type="text"
-                        value={editedDriverDetails.address}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, address: e.target.value })}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required
+                                                className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter address"
                     />
-                </div> */}
+                </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Rating:</label>
                     <input
                         type="number"
-                        value={editedDriverDetails.rating}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, rating: parseInt(e.target.value) })}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        name="rating"
+                        value={formData.rating}
+                        onChange={handleChange}
+                                                className="w-full p-2 border border-gray-300 rounded"
                         placeholder="Enter rating"
                         min="0"
                         max="5"
@@ -503,16 +489,17 @@ const DriverProfile = ()=>{
                     <label className="block text-gray-700">Block Status:</label>
                     <input
                         type="checkbox"
-                        checked={editedDriverDetails.blockStatus}
-                        onChange={(e) => setEditedDriverDetails({ ...editedDriverDetails, blockStatus: e.target.checked })}
-                        className="mr-2"
+                        name="blockStatus"
+                        checked={formData.blockStatus}
+                        onChange={handleChange}
+                                                className="mr-2"
                     />
                     <span>Blocked</span>
                 </div>
                 <div className="flex justify-between">
                     <button
-                        onClick={handleEditDriver}
-                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        type="Confirm Edit"
+        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                     >
                         Confirm Edit
                     </button>
@@ -525,7 +512,8 @@ const DriverProfile = ()=>{
                 </div>
             </form>
         </div>
-    </div>
+                </div>
+
 )}
 
                 {/* Delete Confirmation Popup */}

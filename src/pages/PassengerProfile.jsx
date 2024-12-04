@@ -466,15 +466,16 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     </div>
                 )}
 
-{showEditPopup && <div className={`bg-gray-100 p-4 fixed inset-0 h-5/6 justify-center items-center z-30 rounded-md shadow-md max-w-sm mx-auto`}>
+{showEditPopup && 
+<div className={`bg-gray-100 p-4 fixed inset-0 h-5/6 justify-center items-center z-30 rounded-md shadow-md max-w-sm mx-auto`}>
   <div className="flex justify-between items-center mb-4">
     <h1 className="text-xl font-bold text-gray-700">User Input Form</h1>
-    <button
+    {/* <button
       onClick={() => setShowEditPopup(false)}
       className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
     >
       &times;
-    </button>
+    </button> */}
   </div>
   <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
     <div>
