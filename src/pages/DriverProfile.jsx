@@ -14,7 +14,7 @@ import DriverTransactionTable from '../components/Drivers/DriverTransactionTable
 import axios from 'axios';
 import ApiConfig from '../Consants/ApiConfig';
 
-const DriverProfile = ()=>{
+const DriverProfile = (driverData )=>{
     const navigate = useNavigate();
     const location = useLocation();
     const [driver, setDriver] = useState(location.state ? location.state.driver : null);
@@ -32,6 +32,7 @@ const DriverProfile = ()=>{
     const [showEditPopup, setShowEditPopup] = useState(false);
     const [password, setPassword] = useState('');  
     const [driverRides,setDriverRides] = useState() 
+    
     const searchUser = location.state.searchUser
     const [formData, setFormData] = useState({
         name: '',
@@ -192,8 +193,31 @@ const DriverProfile = ()=>{
             }
         // navigate(-1); 
       };
+      useEffect(() => {
+        if (driverData) {
+            setFormData({
+                name: driverData.name || '',
+                phone: driverData.phone || '',
+                email: driverData.email || '',
+                address: driverData.address || '',
+                rating: driverData.rating || 0,
+                blockStatus: driverData.blockStatus || false,
+            });
+        }
+    }, [driverData]);
 
-
+    const handleEditClick = () => {
+        setShowEditPopup(true);
+        setFormData({
+            name: driver.name || '',
+            phone: driver.phone || '',
+            email: driver.email || '',
+            address: driver.address || '',
+            rating: driver.rating || 0,
+            blockStatus: driver.blockStatus || '',
+        });
+    };
+    
 
       const editDriver =async()=>{
         try {
@@ -360,7 +384,7 @@ console.log(driver)
             
                 <div className="flex items-center justify-center md:justify-start">
                 <button
-                                onClick={()=>setShowEditPopup(true)}
+                                onClick={()=>handleEditClick(true)}
                                 className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
             >
                 Edit
