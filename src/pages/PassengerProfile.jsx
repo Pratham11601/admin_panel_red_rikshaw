@@ -27,6 +27,57 @@ const PassengerProfile = () => {
     const [addAmount,setAddAmount] = useState(0)
     const searchUser = location.state.searchUser
     const [passengerRides,setPassengerRides] = useState()
+    const [showEditPopup,setShowEditPopup] = useState(false)
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        role: "Passenger",
+        rating: 0,
+        blockStatus: false,
+        });
+
+        const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) : value,
+        });
+        };
+
+        const editPassenger =async()=>{
+            try {
+                console.log("edit api called")
+                const token = localStorage.getItem("token")
+                const response = await axios.put(ApiConfig.putEditPassengerDetails(passenger._id),formData,{
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${token}`,
+                    },
+                  })
+                console.log("edit rresponse")
+                console.log(response)
+                if(response.data.status === 1){
+                    setPassenger(response.data.data)
+                }else{
+                    console.error("failed to edit passenger")
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("form data")
+        console.log(formData);
+        editPassenger();
+        setShowEditPopup(false)
+        };
+        console.log("Passenger ID:", passenger?._id);
+console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
+
     console.log(passenger)
 
     const setRides=(rides)=>{
@@ -280,6 +331,12 @@ const PassengerProfile = () => {
 
                     <motion.div className="space-y-3">
                         <div className="flex flex-wrap items-center my-2 justify-center">
+                        <button
+                                onClick={()=>setShowEditPopup(true)}
+                                className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
+                            >
+                                Edit
+                            </button>
                           <button
                                 onClick={handleBlockToggle}
                                 className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${passenger.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
@@ -408,6 +465,122 @@ const PassengerProfile = () => {
                         </ul>
                     </div>
                 )}
+
+{showEditPopup && <div className={`bg-gray-100 p-4 fixed inset-0 h-5/6 justify-center items-center z-30 rounded-md shadow-md max-w-sm mx-auto`}>
+  <div className="flex justify-between items-center mb-4">
+    <h1 className="text-xl font-bold text-gray-700">User Input Form</h1>
+    <button
+      onClick={() => setShowEditPopup(false)}
+      className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
+    >
+      &times;
+    </button>
+  </div>
+  <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
+    <div>
+      <label className="block text-sm font-medium text-black">Name:</label>
+      <input
+        type="text"
+    
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Phone:</label>
+      <input
+        type="tel"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        required
+        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Email:</label>
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700">Address:</label>
+      <input
+        type="text"
+        name="address"
+        value={formData.address}
+        onChange={handleChange}
+        required
+        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-black">Role:</label>
+      <select
+        name="role"
+        value={formData.role}
+        onChange={handleChange}
+        required
+        className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        {/* <option value="Driver">Driver</option>
+        <option value="Admin">Admin</option> */}
+        <option value="Manager">Passenger</option>
+      </select>
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-black">Rating:</label>
+      <input
+        type="number"
+        name="rating"
+        value={formData.rating}
+        onChange={handleChange}
+        min="0"
+        max="5"
+        step="0.1"
+        required
+        className="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+
+    <div className='flex items-start'>
+      <div className='flex justify-center gap-2 items-center'>
+      <label className="block text-sm font-medium  text-gray-700">Block Status:</label>
+      <input
+        type="checkbox"
+        name="blockStatus"
+        checked={formData.blockStatus}
+        onChange={handleChange}
+        className="mt-2"
+      />
+      </div>
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+
+}
 
                 {/* Active Tab Content */}
                 {!showDeletePopup && activeTab === 'Rides' && (

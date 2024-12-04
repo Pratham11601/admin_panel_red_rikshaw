@@ -40,6 +40,10 @@ class ApiConfig {
     static getPassengerRidesEndpoint(passengerId) {
       return `${this.BASE_URL}/api/adminpanel/passenger-rides/${passengerId}?page=1&limit=15`;
     }
+
+    static putEditPassengerDetails(id){
+      return `${this.BASE_URL}//api/adminpanel/edit-passenger/${id}`
+    }
     
 
     //Block passenger or driver
