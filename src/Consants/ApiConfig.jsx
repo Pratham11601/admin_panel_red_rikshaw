@@ -203,6 +203,22 @@ static postAddMoneyEndpoint() {
   return `${this.BASE_URL}/api/adminpanel/add-money`;
 }
 
+
+
+//How it works
+static getHowItWorksEndpoint() {
+  return `${this.BASE_URL}/api/howItWorks/fetch`;
+}
+
+static postHowItWorksEndpoint() {
+  return `${this.BASE_URL}/api/howItWorks/create`;
+}
+
+
+static getHowItWorksEndpoint(userType, type) {
+  return `${this.BASE_URL}/api/howItWorks/fetchByTypeAndUser/${userType}/${type}`;
+}
+
     
 }
 
