@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo2.png";
-import { HelpCircle } from "lucide-react";
+//import { HelpCircle } from "lucide-react";
 
 
 const SIDEBAR_ITEMS = [
