@@ -140,8 +140,8 @@ const Privacy = () => {
                 <ul className="space-y-4">
                     {policies.map((policy) => (
                         <li key={policy._id} className="bg-white p-4 rounded-lg shadow-md text-black">
-                            <span>Title: {policy.title}</span><br />
-                            <span>Content: {policy.content}</span><br />
+                            <span className="font-semibold"><span className="text-xl font-bold">Title: </span> {policy.title}</span><br />
+                            <span><span className="text-xl font-bold">Content:</span> {policy.content}</span><br />
                             <small>Created At: {new Date(policy.createdAt).toLocaleString()}</small><br />
                             {policy.updatedAt && (
                                 <small>Updated At: {new Date(policy.updatedAt).toLocaleString()}</small>
