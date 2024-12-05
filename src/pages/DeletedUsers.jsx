@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import StatCard from "../components/common/StatCard";
 import { UsersIcon } from "lucide-react";
 import ApiConfig from '../Consants/ApiConfig';
-import fetchWithToken from '../utils/fetchWithToken'; // Import fetchWithToken
+import fetchWithToken from '../utils/fetchWithToken'; 
+import { format } from 'date-fns';
 
 const DeletedUsers = () => {
   const [filter, setFilter] = useState("all"); // Default filter is "all"
@@ -33,8 +34,15 @@ const DeletedUsers = () => {
         method: 'GET',
       });
   
+      // if (response.status === "success") {
+      //   // Sort the users by deletedAt in descending order
+      //   const sortedUsers = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
+        
+      //   setDeletedUsers(sortedUsers); // Set sorted users
+      //   setTotal(response.total);
+      // }
       if (response.status === "success") {
-        // Sort the users by deletedAt in descending order
+        // Sort the users by deletedAt in descending order if not already sorted
         const sortedUsers = response.data.sort((a, b) => new Date(b.deletedAt) - new Date(a.deletedAt));
         
         setDeletedUsers(sortedUsers); // Set sorted users
@@ -97,7 +105,7 @@ const DeletedUsers = () => {
                 <td className="px-4 py-2">{user.name}</td>
                 <td className="px-4 py-2">{user.role}</td>
                 <td className="px-4 py-2">{user.phone}</td>
-                <td className="px-4 py-2">{new Date(user.deletedAt).toLocaleDateString()}</td>
+                <td className="px-4 py-2">{format(new Date(user.deletedAt), 'MM/dd/yyyy')}</td>
               </tr>
             ))}
           </tbody>

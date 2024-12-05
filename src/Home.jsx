@@ -48,26 +48,33 @@ function Home() {
 			
 				<Route path='searchuser' element={<SearchUser />} />
 				<Route path='dashboard' element={<Dashboard />} />
+				
 				<Route path='passengers' element={<Passengers />} />
 				<Route path='drivers' element={<Drivers />} />
+
 				<Route path='rides' element={<Rides />} />
+
 				<Route path='transactions' element={<Transactions />} />
+
 				<Route path='withdrawHistory' element={<WithdrawHistory />} />
 				<Route path='withdrawrequest' element={<WithdrawRequest />} />
+
 				<Route path='settings' element={<SettingsPage />} />
+
 				<Route path='terms' element={<TermsPage />} />
 				<Route path='privacy' element={<PrivacyPage />} />
+
 				<Route path="driverProfile" element={<DriverProfile />} />
 				<Route path="passengerProfile" element={<PassengerProfile />} />
+
 				<Route path="passangerAd" element={<PassangerAd />} />
 				<Route path="driverAd" element={< DriverAd />} />
+
 				<Route path="charges" element={< Charges />} />
+
 				<Route path="passengers-Benefits" element={<  PassengersBenefits/>} />
 				<Route path="drivers-Benefits" element={<  DriversBenefits/>} />
-				{/* <Route path="how-work" element={<  HowItWork/>} /> */}
-				{/* <Route path="passengers-work" element={<  PassengersWork/>} />
-				<Route path="drivers-work" element={<  DriversWork/>} /> */}
-
+				
 				<Route path="passengers-work" element={<PassengersWork />} />
 				<Route path="drivers-work" element={<DriversWork />} />
 				<Route path="deletedUsers" element={<  DeletedUsers/>} />

@@ -28,6 +28,7 @@ const PassengerProfile = () => {
     const searchUser = location.state.searchUser
     const [passengerRides,setPassengerRides] = useState()
     const [showEditPopup,setShowEditPopup] = useState(false)
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
@@ -192,8 +193,8 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phone: "7768860976", // Use admin phone number
-                    password: password, // Password entered in the confirmation popup
+                    phone: phoneNumber, 
+                    password: password, 
                 }),
             });
     
@@ -415,6 +416,13 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
                         <div className="bg-white p-6 rounded-lg shadow-md w-80">
                             <h2 className="text-xl font-semibold mb-4">Please enter your password to confirm:</h2>
+                            <input
+                                type="text"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter phone number"
+                            />
                             <input
                                 type="password"
                                 value={password}
