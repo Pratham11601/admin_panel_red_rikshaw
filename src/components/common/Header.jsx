@@ -15,7 +15,7 @@ const Header = ({ title, isSidebarOpen, onLogout }) => {
   };
 
   const handleRefresh = () => {
-    window.location.reload(); // Refresh the page
+    window.location.reload(); 
   };
 
   return (

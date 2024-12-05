@@ -193,8 +193,8 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phone: phoneNumber, // Use admin phone number
-                    password: password, // Password entered in the confirmation popup
+                    phone: phoneNumber, 
+                    password: password, 
                 }),
             });
     
