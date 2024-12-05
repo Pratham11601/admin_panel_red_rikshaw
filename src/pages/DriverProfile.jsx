@@ -633,6 +633,9 @@ console.log(driver)
 <div className="p-4 bg-white shadow-lg rounded-lg text-black">
     <h3 className="text-xl font-bold mb-3">Auto Details</h3>
     <p className="">
+    Driver Type: {driver.vehicleDetails?.driverType || "No Driver Type"}
+    </p>
+    <p className="">
         Vehicle Number: {driver.vehicleDetails?.Vehicle_number || "No Vehicle Number"}
         </p>
         <p> 
