@@ -206,17 +206,25 @@ static postAddMoneyEndpoint() {
 
 
 //How it works
-static getHowItWorksEndpoint() {
-  return `${this.BASE_URL}/api/howItWorks/fetch`;
+// static getHowItWorksEndpoint() {
+//   return `${this.BASE_URL}/api/howItWorks/fetch`;
+// }
+
+static getHowItWorksEndpoint(userType, type) {
+  return `${this.BASE_URL}/api/howItWorks/fetchByTypeAndUser/${userType}/${type}`;
 }
 
 static postHowItWorksEndpoint() {
   return `${this.BASE_URL}/api/howItWorks/create`;
 }
 
+static putHowItWorksEditEndpoint(id) {
+  return `${this.BASE_URL}/api/howItWorks/edit/${id}`;
+}
 
-static getHowItWorksEndpoint(userType, type) {
-  return `${this.BASE_URL}/api/howItWorks/fetchByTypeAndUser/${userType}/${type}`;
+
+static deleteHowItWorksEndpoint(id) {
+  return `${this.BASE_URL}/api/howItWorks/delete/${id}`;
 }
 
     
