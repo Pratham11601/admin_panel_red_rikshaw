@@ -68,8 +68,8 @@ function Home() {
 				{/* <Route path="passengers-work" element={<  PassengersWork/>} />
 				<Route path="drivers-work" element={<  DriversWork/>} /> */}
 
-				<Route path="Home/passengers-work" element={<PassengersWork />} />
-				<Route path="Home/drivers-work" element={<DriversWork />} />
+				<Route path="passengers-work" element={<PassengersWork />} />
+				<Route path="drivers-work" element={<DriversWork />} />
 				<Route path="deletedUsers" element={<  DeletedUsers/>} />
 				
 				
