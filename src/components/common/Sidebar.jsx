@@ -1,4 +1,4 @@
-import { UserSearchIcon,BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard, Gift, ArrowDownCircle } from "lucide-react";
+import { UserSearchIcon,BarChart2, DollarSign, Menu, Users, Car, Lock, ArrowRightLeft, Megaphone, ChevronDown, X, CreditCard, Gift, ArrowDownCircle, HelpCircle  } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -15,9 +15,12 @@ const SIDEBAR_ITEMS = [
   { name: "Advertisement", icon: Megaphone, color: "black", href: "#" },
   { name: "Charges", icon: CreditCard, color: "black", href: "/Home/charges" },
   { name: "Benefits", icon: Gift, color: "black", href: "#" },
+  { name: "How It Work", icon: HelpCircle, color: "black", href: "/Home/how-work" },
+
   { name: "Deleted users", icon: CreditCard, color: "black", href: "/Home/deletedUsers" },
-  { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
+  
   { name: "Privacy Policy", icon: Lock, color: "black", href: "/Home/privacy" },
+  { name: "T & C", icon: Lock, color: "black", href: "/Home/terms" },
   // { name: "Statistics", icon: BarChart2, color: "black", href: "/Home/Dashboard" },
 ];
 
