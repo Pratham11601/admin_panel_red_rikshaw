@@ -26,7 +26,8 @@ import Transactions from "./pages/TransactionsDetails";
 import PassengersBenefits from "./pages/Benefits/PassengersBenefits";
 import DriversBenefits from "./pages/Benefits/DriverBenefits";
 
-import HowItWork from "./pages/HowItWork";
+import DriversWork from "./pages/HowItWorks/DriverWork";
+import  PassengersWork from "./pages/HowItWorks/PassangerWork";
 
 
 
@@ -63,7 +64,12 @@ function Home() {
 				<Route path="charges" element={< Charges />} />
 				<Route path="passengers-Benefits" element={<  PassengersBenefits/>} />
 				<Route path="drivers-Benefits" element={<  DriversBenefits/>} />
-				<Route path="how-work" element={<  HowItWork/>} />
+				{/* <Route path="how-work" element={<  HowItWork/>} /> */}
+				{/* <Route path="passengers-work" element={<  PassengersWork/>} />
+				<Route path="drivers-work" element={<  DriversWork/>} /> */}
+
+				<Route path="Home/passengers-work" element={<PassengersWork />} />
+				<Route path="Home/drivers-work" element={<DriversWork />} />
 				<Route path="deletedUsers" element={<  DeletedUsers/>} />
 				
 				
