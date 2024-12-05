@@ -29,55 +29,7 @@ function PassangerWork() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
-
-  // Fetch benefits from the API
-  // useEffect(() => {
-  //   const fetchBenefits = async () => {
-  //     try {
-  //       const userType = 'driver';
-  //       const type = 'recharge';
-
-  //       const response = await axios.get(ApiConfig.getHowItWorksEndpoint(userType, type));
-  //       if (response?.data?.status === 1 && Array.isArray(response.data.benifits)) {
-  //         setBenefits(response.data.benifits);
-  //       } else {
-  //         console.error('Unexpected response format:', response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error.response?.data || error.message);
-  //     }
-  //   };
-
-  //   fetchBenefits();
-  // }, []);
-
-
-  // useEffect(() => {
-  //   const fetchBenefits = async () => {
-  //     try {
-  //       const userType = 'Driver';
-  //        const type = 'Recharge';
-  //        //const type = 'Deduction';
-  //       // const type = ['Recharge', 'Deduction']; 
   
-  //       const endpoint = ApiConfig.getHowItWorksEndpoint(userType, type);
-  //       const response = await axios.get(endpoint);
-  
-  //       console.log(response); // Log the API response to verify data
-  
-  //       if (response?.data?.status === 1 && Array.isArray(response.data.benifits)) {
-  //         setBenefits(response.data.benifits);
-  //       } else {
-  //         console.error('Unexpected response format:', response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error.response?.data || error.message);
-  //     }
-  //   };
-  
-  //   fetchBenefits();
-  // }, []);
-
   useEffect(() => {
     const fetchBenefits = async () => {
       try {
@@ -104,51 +56,6 @@ function PassangerWork() {
     fetchBenefits();
   }, []);
   
-  
-  // useEffect(() => {
-  //   const fetchBenefits = async () => {
-  //     try {
-  //       const userType = 'Driver';
-  //       const types = ['Recharge', 'Deduction']; // Both Recharge and Deduction types
-  
-  //       // Creating an array of promises to fetch both Recharge and Deduction data
-  //       const responses = await Promise.all(
-  //         types.map((type) => {
-  //           const endpoint = ApiConfig.getHowItWorksEndpoint(userType, type);
-  //           return axios.get(endpoint);
-  //         })
-  //       );
-  
-  //       // Extract the data for Recharge and Deduction from the responses
-  //       const rechargeData = responses[0]?.data;
-  //       const deductionData = responses[1]?.data;
-  
-  //       console.log('Recharge Data:', rechargeData); // Log Recharge data
-  //       console.log('Deduction Data:', deductionData); // Log Deduction data
-  
-  //       // Check if both responses are valid and update state accordingly
-  //       if (
-  //         rechargeData?.status === 1 && Array.isArray(rechargeData.benifits) &&
-  //         deductionData?.status === 1 && Array.isArray(deductionData.benifits)
-  //       ) {
-  //         const filteredBenefits = {
-  //           recharge: rechargeData.benifits.filter(benefit => benefit.type === 'Recharge'),
-  //           deduction: deductionData.benifits.filter(benefit => benefit.type === 'Deduction'),
-  //         };
-  
-  //         setBenefits(filteredBenefits);
-  //       } else {
-  //         console.error('Unexpected response format:', { rechargeData, deductionData });
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error.response?.data || error.message);
-  //     }
-  //   };
-  
-  //   fetchBenefits();
-  // }, []);
-  
-    
 
   // Open modal for adding a new benefit
   const handleOpenAddModal = () => {
@@ -163,12 +70,12 @@ function PassangerWork() {
     setModalType('edit');
     setIsModalOpen(true);
   };
-// Add new benefit
+// Add new data
 const handleAddBenefit = () => {
   if (newBenefit.trim() && type.trim()) {
     const newBenefitData = {
       text: newBenefit,
-      forWhom: 'Driver', // You can hardcode this as 'driver'
+      forWhom: 'Passenger', 
       type: type,
     };
 
@@ -200,7 +107,7 @@ const handleAddBenefit = () => {
       const updatedBenefit = { 
         _id: benefits[editingIndex]._id,
         text: editingBenefit,
-        forWhom: 'Driver',
+        forWhom: 'Passenger',
         type: benefits[editingIndex].type,
       };
 
@@ -245,15 +152,15 @@ const handleAddBenefit = () => {
 
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10 p-4 text-black">
-      <Header title="How It Works" />
+      <Header title="How It Works - Passenger" />
 
-      {/* Add Benefit Button */}
+      {/* Add Button */}
       <div className="mb-6 mt-8">
         <button
           onClick={handleOpenAddModal}
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 w-full sm:w-auto"
         >
-          Add Benefit
+          Add 
         </button>
       </div>
 
@@ -292,13 +199,13 @@ const handleAddBenefit = () => {
       {/* Modal for Adding/Editing Benefit */}
       {isModalOpen && (
         <Modal
-          title={modalType === 'add' ? 'Add New Benefit' : 'Edit Benefit'}
+          title={modalType === 'add' ? 'Add New Data' : 'Edit'}
           onClose={() => setIsModalOpen(false)}
         >
           {modalType === 'add' ? (
             <div>
               <textarea
-                placeholder="Enter new benefit"
+                placeholder="Enter new Data"
                 value={newBenefit}
                 onChange={(e) => setNewBenefit(e.target.value)}
                 className="border p-2 w-full mb-2 h-32"
@@ -308,7 +215,7 @@ const handleAddBenefit = () => {
       onChange={(e) => setType(e.target.value)}
       className="border p-2 w-full mb-2"
     >
-      <option value="">Select Benefit Type</option>
+      <option value="">Select Type</option>
       <option value="recharge">Recharge</option>
       <option value="deduction">Deduction</option>
     </select>
@@ -316,13 +223,13 @@ const handleAddBenefit = () => {
                 onClick={handleAddBenefit}
                 className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 w-full sm:w-[20%]"
               >
-                Add Benefit
+                Add
               </button>
             </div>
           ) : (
             <div>
               <textarea
-                placeholder="Edit benefit"
+                placeholder="Edit"
                 value={editingBenefit}
                 onChange={(e) => setEditingBenefit(e.target.value)}
                 className="border p-2 w-full mb-2 h-32"
