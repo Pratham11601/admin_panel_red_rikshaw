@@ -36,6 +36,7 @@ const [recharge, setRecharge] = useState([]);
 const [editingBenefitId, setEditingBenefitId] = useState(null);
 const [notification, setNotification] = useState(null);
 
+
   // Filter benefits based on type
   const rechargeBenefits = benefits.filter((benefit) => benefit.type === 'Recharge');
   const deductionBenefits = benefits.filter((benefit) => benefit.type === 'Deduction');
@@ -77,6 +78,8 @@ const [notification, setNotification] = useState(null);
   // Open modal for adding a new benefit
   const handleOpenAddModal = () => {
     setModalType('add');
+    setNewBenefit(''); // Reset new benefit field for the add form
+    setEditingBenefit(''); // Reset editing benefit for safety
     setIsModalOpen(true);
   };
 
@@ -87,6 +90,20 @@ const [notification, setNotification] = useState(null);
     setModalType('edit');
     setIsModalOpen(true);
   };
+
+  
+// Reset modal states when closing
+const handleCloseModal = () => {
+  setIsModalOpen(false);
+  // Reset fields if modal is closed, but only clear fields for add mode
+  if (modalType === 'add') {
+    setNewBenefit('');
+  } else {
+    setEditingBenefit('');
+  }
+  setModalType(''); // Clear modal type to reset state
+};
+
 
  // Add new benefit
 const handleAddBenefit = (e) => {
@@ -142,26 +159,72 @@ const handleAddBenefit = (e) => {
   
 
 
-  const handleSaveEdit = () => {
+//   const handleSaveEdit = () => {
+//   if (editingBenefit.trim()) {
+//     // Find the benefit by its ID instead of index
+//     const updatedBenefit = {
+//       _id: benefits.find(benefit => benefit._id === editingBenefitId)._id, // Use the ID of the selected benefit
+//       text: editingBenefit,
+//       forWhom: 'Driver', // Customize as per your application logic
+//       type: benefits.find(benefit => benefit._id === editingBenefitId).type,
+//     };
+
+//     axios.put(ApiConfig.putHowItWorksEditEndpoint(updatedBenefit._id), updatedBenefit)
+//       .then((response) => {
+//         if (response.data.status === 1) {
+//           setBenefits((prevBenefits) => {
+//             const newBenefits = prevBenefits.map((benefit) => 
+//               benefit._id === updatedBenefit._id ? updatedBenefit : benefit
+//             );
+//             return newBenefits;
+//           });
+//           setEditingBenefit('');
+//           setIsModalOpen(false);
+//           setNotification('Benefit updated successfully.');
+//         } else {
+//           console.error('Failed to save changes:', response.data.message);
+//         }
+//       })
+//       .catch((error) => {
+//         console.error("Error saving edited benefit:", error);
+//       });
+//   } else {
+//     console.error("Editing benefit text is empty");
+//   }
+// };
+
+const handleSaveEdit = () => {
   if (editingBenefit.trim()) {
-    // Find the benefit by its ID instead of index
-    const updatedBenefit = {
-      _id: benefits.find(benefit => benefit._id === editingBenefitId)._id, // Use the ID of the selected benefit
+    // Find the benefit to update based on the ID (no need to search again)
+    const updatedBenefit = benefits.find(benefit => benefit._id === editingBenefitId);
+    
+    if (!updatedBenefit) {
+      console.error("Benefit not found for editing");
+      return;
+    }
+
+    // Update the benefit with the new data
+    const updatedBenefitData = {
+      _id: updatedBenefit._id,
       text: editingBenefit,
-      forWhom: 'Driver', // Customize as per your application logic
-      type: benefits.find(benefit => benefit._id === editingBenefitId).type,
+      forWhom: 'Driver', // Adjust this as per your logic
+      type: updatedBenefit.type, // Retain the existing type or update as needed
     };
 
-    axios.put(ApiConfig.putHowItWorksEditEndpoint(updatedBenefit._id), updatedBenefit)
+    axios.put(ApiConfig.putHowItWorksEditEndpoint(updatedBenefit._id), updatedBenefitData)
       .then((response) => {
         if (response.data.status === 1) {
-          setBenefits((prevBenefits) => {
-            const newBenefits = prevBenefits.map((benefit) => 
-              benefit._id === updatedBenefit._id ? updatedBenefit : benefit
-            );
-            return newBenefits;
-          });
+          // Update the benefits list in the state
+          setBenefits((prevBenefits) => 
+            prevBenefits.map((benefit) => 
+              benefit._id === updatedBenefitData._id ? updatedBenefitData : benefit
+            )
+          );
+
+          // Reset the state values after saving
           setEditingBenefit('');
+          setForWhom(''); // Reset if needed
+          setType(''); // Reset if needed
           setIsModalOpen(false);
           setNotification('Benefit updated successfully.');
         } else {
@@ -321,7 +384,7 @@ const handleAddBenefit = (e) => {
       </div>
     
 
-      {/* Modal for Adding/Editing Benefit */}
+      {/* Modal for Adding/Editing Benefit
       {isModalOpen && (
         <Modal
           title={modalType === 'add' ? 'Add New Benefit' : 'Edit Benefit'}
@@ -376,12 +439,138 @@ const handleAddBenefit = (e) => {
                 onClick={handleSaveEdit}
                 className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-700 w-full sm:w-[20%]"
               >
-                Save Changes
+                Save 
               </button>
             </div>
           )}
         </Modal>
-      )}
+      )} */}
+      {/* Modal for Adding/Editing Benefit */}
+      {/* {isModalOpen && (
+  <Modal
+    title={modalType === 'add' ? 'Add New Benefit' : 'Edit Benefit'}
+    onClose={() => {
+      setIsModalOpen(false);
+      // Reset states when modal closes
+      setNewBenefit('');
+      setEditingBenefit('');
+      setModalType('');
+    }}
+  >
+    {modalType === 'add' ? (
+      <div>
+        <textarea
+          placeholder="Enter new benefit"
+          value={newBenefit}
+          onChange={(e) => setNewBenefit(e.target.value)}
+          className="border p-2 w-full mb-2 h-32"
+        />
+          <select
+          id="forWhom"
+          value={forWhom}
+          onChange={(e) => setForWhom(e.target.value)}
+          className="border p-2 w-full mb-2"
+        >
+          <option value="">Select For Whom</option>
+          <option value="Driver">Driver</option>
+        </select>
+        
+
+               <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="border p-2 w-full mb-2"
+            >
+              <option value="">Select Benefit Type</option>
+              <option value="Recharge">Recharge</option>
+              <option value="Deduction">Deduction</option>
+            </select>
+        <button
+          type="button"
+          onClick={(e) => handleAddBenefit(e)} // Add benefit logic
+          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 w-full sm:w-[20%]"
+        >
+          Add
+        </button>
+      </div>
+    ) : (
+      <div>
+        <textarea
+          placeholder="Edit benefit"
+          value={editingBenefit}
+          onChange={(e) => setEditingBenefit(e.target.value)}
+          className="border p-2 w-full mb-2 h-32"
+        />
+        <button
+          onClick={handleSaveEdit} // Save edited benefit logic
+          className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-700 w-full sm:w-[20%]"
+        >
+          Save
+        </button>
+      </div>
+    )}
+  </Modal>
+)} */}
+
+{isModalOpen && (
+  <Modal
+    title={modalType === 'add' ? 'Add New Benefit' : 'Edit Benefit'}
+    onClose={handleCloseModal}
+  >
+    {modalType === 'add' ? (
+      <div>
+        <textarea
+          placeholder="Enter new benefit"
+          value={newBenefit}
+          onChange={(e) => setNewBenefit(e.target.value)}
+          className="border p-2 w-full mb-2 h-32"
+        />
+         <select
+          id="forWhom"
+          value={forWhom}
+          onChange={(e) => setForWhom(e.target.value)}
+          className="border p-2 w-full mb-2"
+        >
+          <option value="">Select For Whom</option>
+          <option value="Driver">Driver</option>
+        </select>
+        
+
+               <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="border p-2 w-full mb-2"
+            >
+              <option value="">Select Benefit Type</option>
+              <option value="Recharge">Recharge</option>
+              <option value="Deduction">Deduction</option>
+            </select>
+        <button
+          type="button"
+          onClick={(e) => handleAddBenefit(e)} // Add benefit logic
+          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-700 w-full sm:w-[20%]"
+        >
+          Add
+        </button>
+      </div>
+    ) : (
+      <div>
+        <textarea
+          placeholder="Edit benefit"
+          value={editingBenefit}
+          onChange={(e) => setEditingBenefit(e.target.value)}
+          className="border p-2 w-full mb-2 h-32"
+        />
+        <button
+          onClick={handleSaveEdit} // Save edited benefit logic
+          className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-700 w-full sm:w-[20%]"
+        >
+          Save
+        </button>
+      </div>
+    )}
+     </Modal>
+)}
     </div>
   );
 }
