@@ -89,89 +89,60 @@ const [notification, setNotification] = useState(null);
   };
 
  // Add new benefit
-
-
-// const handleAddBenefit = () => {
-//   if (newBenefit.trim() && forWhom.trim() && type.trim()) {
-//     const newBenefitData = {
-//       text: newBenefit,
-//       forWhom: 'Driver', // Update this value as per your app logic
-//       type: type,
-//     };
-
-//     axios.post(ApiConfig.postHowItWorksEndpoint(), newBenefitData)
-//       .then((response) => {
-//         if (response.data.status === 1 || response.data.message === "Benefit created successfully") {
-//           setBenefits((prevBenefits) => [
-//             ...prevBenefits,
-//             response.data.data,
-//           ]);
-//           setNewBenefit('');
-//           setForWhom('');
-//           setType('');
-//           setIsModalOpen(false);
-//         } else {
-//           console.error('Failed to add benefit:', response.data?.message || 'No message provided');
-//         }
-//       })
-//       .catch((error) => {
-//         console.error('Error adding benefit:', error);
-//       });
-//   } else {
-//     console.error("All fields must be filled");
-//   }
-// };
 const handleAddBenefit = (e) => {
-  e.preventDefault();  // Prevent page reload or form submission
+    e.preventDefault();
+  
+    if (newBenefit.trim() && forWhom.trim() && type.trim()) {
+      const newBenefitData = { text: newBenefit, forWhom, type };
+  
+      console.log("Sending payload:", newBenefitData);
+      setLoading(true);
+  
+      axios
+        .post(ApiConfig.postHowItWorksEndpoint(), newBenefitData)
+        .then((response) => {
+          setLoading(false);
+          console.log("API Response:", response.data);
+  
+          if (response?.data?.status === 1 || response?.data?.message === "Benefit created successfully") {
+            const newBenefitItem = response?.data?.benifit; // Use the correct key here
+  
+            if (newBenefitItem) {
+              setBenefits((prev) => [...prev, newBenefitItem]);
+              setNewBenefit('');
+              setForWhom('');
+              setType('');
+              setIsModalOpen(false);
+              setNotification("Benefit created successfully.");
+            } else {
+              throw new Error("Response does not contain benefit data.");
+            }
+          } else {
+            alert("Failed to add benefit: " + (response?.data?.message || "Unknown error"));
+          }
+        })
+        .catch((error) => {
+          setLoading(false);
+          if (error.response) {
+            console.error("Error Response:", error.response.data);
+            alert("Error: " + error.response.data.message || "Server error.");
+          } else if (error.request) {
+            console.error("No Response:", error.request);
+            alert("Server is not responding. Please try again.");
+          } else {
+            console.error("Error:", error.message);
+            alert("An error occurred. Please try again.");
+          }
+        });
+    } else {
+      alert("All fields must be filled.");
+    }
+  };
+  
+  
 
-  // Check if all fields are filled before proceeding
-  if (newBenefit.trim() && forWhom.trim() && type.trim()) {
-    const newBenefitData = {
-      text: newBenefit,
-      forWhom: forWhom, // Ensure this dynamically uses the appropriate value
-      type: type,
-    };
 
-    // Loading state to manage UI during API call
-    setLoading(true); 
-
-    axios.post(ApiConfig.postHowItWorksEndpoint(), newBenefitData)
-      .then((response) => {
-        setLoading(false); // Stop loading indicator
-
-        if (response.data.status === 1 || response.data.message === "Benefit created successfully") {
-          // Update the benefits state with the newly added benefit
-          setBenefits((prevBenefits) => {
-            const updatedBenefits = [...prevBenefits, response.data.data];
-            console.log(updatedBenefits);  // Log updated benefits to check if state is updated
-            return updatedBenefits;
-            
-          });
-
-          // Clear input fields and close modal after successful addition
-          setNewBenefit('');
-          setForWhom('');
-          setType('');
-          setIsModalOpen(false);
-          setNotification('Benefit created successfully.');
-        } else {
-          console.error('Failed to add benefit:', response.data?.message || 'No message provided');
-          alert("Failed to add benefit: " + (response.data?.message || 'Unknown error'));
-        }
-      })
-      .catch((error) => {
-        setLoading(false); // Stop loading indicator on error
-        console.error('Error adding benefit:', error);
-        alert("Error adding benefit. Please try again later.");
-      });
-
-  } else {
-    alert("All fields must be filled"); // Alert if fields are missing
-  }
-};
-
-  // Save edited benefit
-const handleSaveEdit = () => {
+  const handleSaveEdit = () => {
   if (editingBenefit.trim()) {
     // Find the benefit by its ID instead of index
     const updatedBenefit = {
@@ -353,7 +324,7 @@ const handleSaveEdit = () => {
       {/* Modal for Adding/Editing Benefit */}
       {isModalOpen && (
         <Modal
-          title={modalType === 'add' ? 'Add New' : 'Edit Benefit'}
+          title={modalType === 'add' ? 'Add New Benefit' : 'Edit Benefit'}
           onClose={() => setIsModalOpen(false)}
         >
           {modalType === 'add' ? (
@@ -373,15 +344,17 @@ const handleSaveEdit = () => {
           <option value="">Select For Whom</option>
           <option value="Driver">Driver</option>
         </select>
+        
+
                <select
-      value={type}
-      onChange={(e) => setType(e.target.value)}
-      className="border p-2 w-full mb-2"
-    >
-      <option value="">Select Benefit Type</option>
-      <option value="Recharge">Recharge</option>
-      <option value="Deduction">Deduction</option>
-    </select>
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="border p-2 w-full mb-2"
+            >
+              <option value="">Select Benefit Type</option>
+              <option value="Recharge">Recharge</option>
+              <option value="Deduction">Deduction</option>
+            </select>
               <button
                 type="button"
                 //onClick={handleAddBenefit}
