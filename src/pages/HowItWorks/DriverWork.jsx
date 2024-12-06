@@ -36,12 +36,16 @@ const [recharge, setRecharge] = useState([]);
 const [editingBenefitId, setEditingBenefitId] = useState(null);
 const [notification, setNotification] = useState(null);
 
-
-
-  
   // Filter benefits based on type
   const rechargeBenefits = benefits.filter((benefit) => benefit.type === 'Recharge');
   const deductionBenefits = benefits.filter((benefit) => benefit.type === 'Deduction');
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(''), 3000); // Auto-dismiss after 5 seconds
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    }
+  }, [notification]);
 
   useEffect(() => {
     const fetchBenefits = async () => {
@@ -221,7 +225,18 @@ const handleSaveEdit = () => {
   return (
     <div className="bg-white flex-1 overflow-auto relative z-10 p-4 text-black">
       <Header title="How It Works - Driver" />
-                   
+      {notification && (
+  <div className="bg-green-200 text-green-700 p-4 rounded-md mb-4 flex justify-between items-center">
+    <span>{notification}</span>
+    <button
+      onClick={() => setNotification('')} // Clear the notification
+      className="text-green-700 font-bold px-2 rounded hover:bg-green-300"
+    >
+      X
+    </button>
+  </div>
+)}
+
        {/* How It Works Section */}
        <div className="mb-6 mt-8">
         <p className="text-gray-700">
