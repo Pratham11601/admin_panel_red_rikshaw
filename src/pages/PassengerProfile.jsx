@@ -19,15 +19,15 @@ const PassengerProfile = () => {
     const [activeTab, setActiveTab] = useState('Rides');
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [status, setStatus] = useState('Block');
-    const [walletBalance, setWalletBalance] = useState(passenger.bankDetails ? passenger.bankDetails.balance :0);
+    const [walletBalance, setWalletBalance] = useState(passenger.bankDetails ? passenger.bankDetails.balance : 0);
     const [lockBalance, setLockBalance] = useState(0);
     const [showAddMoneyPopup, setShowAddMoneyPopup] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [password, setPassword] = useState('');
-    const [addAmount,setAddAmount] = useState(0)
+    const [addAmount, setAddAmount] = useState(0)
     const searchUser = location.state.searchUser
-    const [passengerRides,setPassengerRides] = useState()
-    const [showEditPopup,setShowEditPopup] = useState(false)
+    const [passengerRides, setPassengerRides] = useState()
+    const [showEditPopup, setShowEditPopup] = useState(false)
     const [phoneNumber, setPhoneNumber] = useState('');
     const [formData, setFormData] = useState({
         name: "",
@@ -37,78 +37,78 @@ const PassengerProfile = () => {
         role: "Passenger",
         rating: 0,
         // blockStatus: false,
-        });
+    });
 
-        const handleChange = (e) => {
+    const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) : value,
         });
-        };
+    };
 
-        const editPassenger =async()=>{
-            try {
-                console.log("edit api called")
-                const token = localStorage.getItem("token")
-                const response = await axios.put(ApiConfig.putEditPassengerDetails(passenger._id),formData,{
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Authorization: `Bearer ${token}`,
-                    },
-                  })
-                console.log("edit rresponse")
-                console.log(response)
-                if(response.data.status === 1){
-                    setPassenger(response.data.data)
-                }else{
-                    console.error("failed to edit passenger")
-                }
-            } catch (error) {
-                console.log(error)
+    const editPassenger = async () => {
+        try {
+            console.log("edit api called")
+            const token = localStorage.getItem("token")
+            const response = await axios.put(ApiConfig.putEditPassengerDetails(passenger._id), formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            console.log("edit rresponse")
+            console.log(response)
+            if (response.data.status === 1) {
+                setPassenger(response.data.data)
+            } else {
+                console.error("failed to edit passenger")
             }
+        } catch (error) {
+            console.log(error)
         }
+    }
 
-        useEffect(() => {
-            if (passenger) {
-                setFormData({
-                    name: passenger.name || '',
-                    phone: passenger.phone || '',
-                    email: passenger.email || '',
-                    address: passenger.address || '',
-                    rating: passenger.rating || 0,
-                    blockStatus: passenger.blockStatus || false,
-                });
-            }
-        }, [passenger]);
-        
-        const handleEditClick = () => {
-            setShowEditPopup(true);
-            // If `passenger` is the source of truth, no need to reset formData again.
-        };
-        
-        
-            //  Function to close the edit popup without saving changes
-     const handleCloseEditPopup = (e) => {
+    useEffect(() => {
+        if (passenger) {
+            setFormData({
+                name: passenger.name || '',
+                phone: passenger.phone || '',
+                email: passenger.email || '',
+                address: passenger.address || '',
+                rating: passenger.rating || 0,
+                blockStatus: passenger.blockStatus || false,
+            });
+        }
+    }, [passenger]);
+
+    const handleEditClick = () => {
+        setShowEditPopup(true);
+        // If `passenger` is the source of truth, no need to reset formData again.
+    };
+
+
+    //  Function to close the edit popup without saving changes
+    const handleCloseEditPopup = (e) => {
         e.preventDefault();
         setShowEditPopup(false);
     };
-    
-        const handleSubmit = (e) => {
+
+    const handleSubmit = (e) => {
         e.preventDefault();
         console.log("form data")
         console.log(formData);
         editPassenger();
         setShowEditPopup(false)
-        };
-        console.log("Passenger ID:", passenger?._id);
-console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
+    };
+    console.log("Passenger ID:", passenger?._id);
+    console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
 
     console.log(passenger)
 
-    const setRides=(rides)=>{
+    const setRides = (rides) => {
         setPassengerRides(rides)
-        console.log("passenger Rieds =",rides)
+        console.log("passenger Rieds =", rides)
     }
 
     const togglePopup = () => {
@@ -137,7 +137,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     blockStatus: !passenger.blockStatus,
                 }),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('Block status updated:', data);
@@ -153,10 +153,10 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
             setLoading(false);
         }
     };
-    
+
     const fetchPassengerData = async () => {
         try {
-            const response = await fetch(ApiConfig.getPassengerDetails(passenger._id)); 
+            const response = await fetch(ApiConfig.getPassengerDetails(passenger._id));
             if (response.ok) {
                 const data = await response.json();
                 console.log("Fetched passenger data:", data); // Debugging log
@@ -168,7 +168,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
             console.error('Error fetching passenger data:', error);
         }
     };
-    
+
     const handleDeleteClick = () => {
         setShowDeletePopup(true); // Open delete confirmation popup
     };
@@ -193,19 +193,19 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    phone: phoneNumber, 
-                    password: password, 
+                    phone: phoneNumber,
+                    password: password,
                 }),
             });
-    
+
             if (!loginResponse.ok) {
                 alert('Incorrect password. Please try again.');
                 return;
             }
-    
+
             const loginData = await loginResponse.json();
             const adminToken = loginData.token;
-    
+
             // Step 2: Make delete user request
             const deleteResponse = await fetch('http://ec2-3-110-123-252.ap-south-1.compute.amazonaws.com/api/adminpanel/delete-user', {
                 method: 'DELETE',
@@ -219,23 +219,23 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     role: passenger.role, // Role of the user (Driver/Passenger)
                 }),
             });
-    
+
             if (!deleteResponse.ok) {
                 const errorData = await deleteResponse.json();
                 alert(`Failed to delete user: ${errorData.message}`);
                 return;
             }
-    
+
             alert('User deleted successfully!');
             setShowDeletePopup(false);
             setPassword('');
             navigate('/Home/passengers'); // Redirect after deletion
-            
+
         } catch (error) {
             console.error('Error deleting user:', error);
             alert('An error occurred while deleting the user. Please try again.');
         }
-        
+
     };
 
     const handleCloseDeletePopup = () => {
@@ -245,45 +245,45 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
 
     const handleBackClick = () => {
         // console.log("search user",searchUser)
-        if(searchUser){
-        navigate("/Home/searchuser");
-        }else{
+        if (searchUser) {
+            navigate("/Home/searchuser");
+        } else {
             navigate(-1)
         }
         // navigate(-1)
     };
 
-    const handleAddMoney = async()=>{
+    const handleAddMoney = async () => {
         const newAmount = parseFloat(addAmount);
         if (isNaN(newAmount) || newAmount <= 0) {
-          alert('Please enter a valid amount.');
-          return;
+            alert('Please enter a valid amount.');
+            return;
         }
-        
-        const postData={
-            userId : passenger._id,
-            amount : newAmount
+
+        const postData = {
+            userId: passenger._id,
+            amount: newAmount
         }
         console.log("post data")
         console.log(postData)
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.post(ApiConfig.postAddMoneyEndpoint(),postData,{
-                headers: { 
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`,
-                 }
-              })
+            const response = await axios.post(ApiConfig.postAddMoneyEndpoint(), postData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                }
+            })
             console.log("response ----")
             console.log(response)
-            if(response.status == 200){
+            if (response.status == 200) {
                 // alert(response.data.message)
                 setWalletBalance(walletBalance + newAmount);
             }
-            else{
+            else {
                 console.log("failed to add money")
             }
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -292,17 +292,17 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
         togglePopup()
         setActiveTab('Rides')
     }
-    const handleBankdetails=()=>{
-        if(passenger.bankDetails){
+    const handleBankdetails = () => {
+        if (passenger.bankDetails) {
             setShowAddMoneyPopup(true)
-                setActiveTab("")
-            
+            setActiveTab("")
+
         }
-        else{
+        else {
             alert("The user has not provided their bank details, Money can not be added")
         }
-    } 
-   
+    }
+
 
     return (
         <div className="flex-1 overflow-auto relative z-10">
@@ -346,8 +346,8 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                             <Car style={{ color: 'black', marginRight: '10px' }} /> {passengerRides || 0} Total Rides
                         </p>
                     </motion.div> */}
-                    
-                   <motion.div className="text-center md:text-left space-y-2">
+
+                    <motion.div className="text-center md:text-left space-y-2">
                         <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
                         <p className="text-gray-600">📞 {passenger.phone}</p>
                         <p className="text-gray-600">✉️ {passenger.email}</p>
@@ -357,13 +357,13 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
 
                     <motion.div className="space-y-3">
                         <div className="flex flex-wrap items-center my-2 justify-center">
-                        <button
-                                onClick={()=>handleEditClick(true)}
+                            <button
+                                onClick={() => handleEditClick(true)}
                                 className="ml-4 px-3 py-1 bg-yellow-500 text-white my-2 font-semibold rounded hover:bg-yellow-600"
                             >
                                 Edit
                             </button>
-                          <button
+                            <button
                                 onClick={handleBlockToggle}
                                 className={`ml-4 px-5 py-1 rounded-full font-semibold text-white ${passenger.blockStatus ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`}
                                 disabled={loading} // Disable button while API call is in progress
@@ -381,14 +381,14 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
 
                             {!passenger.blockStatus ? !passenger.bankDetails ? (
                                 <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user did not provided their bank details</p>
-                            ):(
+                            ) : (
                                 <button
-                                onClick={handleBankdetails}
-                                className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
-                            >
-                                Add Money
-                            </button>
-                            ):<p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>}
+                                    onClick={handleBankdetails}
+                                    className="ml-4 px-3 py-1 my-2 bg-blue-400 text-white font-semibold rounded hover:bg-blue-700"
+                                >
+                                    Add Money
+                                </button>
+                            ) : <p className='text-sm m-2 font-semibold text-red-500' >Money can not be added because user is blocked</p>}
 
                         </div>
 
@@ -446,7 +446,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     </div>
                 )}
 
-
+                {/* add money popup  */}
                 {showAddMoneyPopup && (
                     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
                         <div className="bg-white p-6 rounded-lg shadow-md w-80">
@@ -458,7 +458,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                                 className="w-full p-2 border border-gray-300 rounded mb-4"
                                 placeholder="Enter amount"
                             />
-                            
+
                             <button
                                 onClick={handleAddMoney}
                                 className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
@@ -466,7 +466,7 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                                 Add amount
                             </button>
                             <button
-                                onClick={()=>{
+                                onClick={() => {
                                     togglePopup()
                                     setActiveTab("Rides")
                                 }}
@@ -499,100 +499,101 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
                     </div>
                 )}
 
-{showEditPopup && (
-            <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50 z-50">
-                <div className="bg-white p-6 rounded-lg shadow-md w-80">
-                <h2 className="text-xl font-semibold mb-4">Edit Passenger Details</h2>
-                {/* <button
+                {/* edit passenger details popup */}
+                {showEditPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50 z-50">
+                        <div className="bg-white p-6 rounded-lg shadow-md w-80">
+                            <h2 className="text-xl font-semibold mb-4">Edit Passenger Details</h2>
+                            {/* <button
       onClick={() => setShowEditPopup(false)}
       className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
     >
       &times;
     </button> */}
-  <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
-  <div className="mb-4">
-  <label className="block text-gray-700">Name:</label>
-      <input
-        type="text"
-    
-      name="name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border border-gray-300 rounded"
-        />
-    </div>
+                            <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Name:</label>
+                                    <input
+                                        type="text"
 
-    <div className="mb-4">
-    <label className="block text-gray-700">Phone:</label>
-      <input
-        type="tel"
-        name="phone"
-        value={formData.phone}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border border-gray-300 rounded"
-        placeholder="Enter phone"
-        pattern="\d*" // HTML validation for digits only
-        maxLength={10} 
-        />
-    </div>
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
 
-    <div className="mb-4">
-    <label className="block text-gray-700">Email:</label>
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        placeholder="Enter email"
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Phone:</label>
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder="Enter phone"
+                                        pattern="\d*" // HTML validation for digits only
+                                        maxLength={10}
+                                    />
+                                </div>
 
-     />
-    </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Email:</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Enter email"
 
-    <div className="mb-4">
-    <label className="block text-gray-700">Address:</label>
-      <input
-        type="text"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        className="w-full p-2 border border-gray-300 rounded"
-        placeholder="Enter address"      />
-    </div>
+                                    />
+                                </div>
 
-    <div className="mb-4">
-    <label className="block text-gray-700">Role:</label>
-      <select
-        name="role"
-        value={formData.role}
-        onChange={handleChange}
-        required
-        className="w-full p-2 border border-gray-300 rounded"
-        >
-        {/* <option value="Driver">Driver</option>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Address:</label>
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder="Enter address" />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Role:</label>
+                                    <select
+                                        name="role"
+                                        value={formData.role}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    >
+                                        {/* <option value="Driver">Driver</option>
         <option value="Admin">Admin</option> */}
-        <option value="Manager">Passenger</option>
-      </select>
-    </div>
+                                        <option value="Manager">Passenger</option>
+                                    </select>
+                                </div>
 
-    <div className="mb-4">
-    <label className="block text-gray-700">Rating:</label>
-      <input
-        type="number"
-        name="rating"
-        value={formData.rating}
-        onChange={handleChange}
-        min="0"
-        max="5"
-        step="0.1"
-        required
-        className="w-full p-2 border border-gray-300 rounded"
-        placeholder="Enter rating"      />
-    </div>
-{/* 
+                                <div className="mb-4">
+                                    <label className="block text-gray-700">Rating:</label>
+                                    <input
+                                        type="number"
+                                        name="rating"
+                                        value={formData.rating}
+                                        onChange={handleChange}
+                                        min="0"
+                                        max="5"
+                                        step="0.1"
+                                        required
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                        placeholder="Enter rating" />
+                                </div>
+                                {/* 
     <div className="mb-4">
 
       <label className="block text-gray-700">Block Status:</label>
@@ -605,25 +606,25 @@ console.log("Endpoint URL:", ApiConfig.putEditPassengerDetails(passenger?._id));
       />
       <span>Blocked</span>
       </div> */}
-      <div className="flex justify-between">
-                    <button
-        type="Confirm Edit"
-        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                    >
-                        Confirm Edit
-                    </button>
-                    <button
-                        onClick={handleCloseEditPopup}
-                        className="ml-2 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                    >
-                        Cancel
-                    </button>
-                </div>
-  </form>
-</div>
-</div>
+                                <div className="flex justify-between">
+                                    <button
+                                        type="Confirm Edit"
+                                        className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                    >
+                                        Confirm Edit
+                                    </button>
+                                    <button
+                                        onClick={handleCloseEditPopup}
+                                        className="ml-2 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-)}
+                )}
 
 
                 {/* Active Tab Content */}

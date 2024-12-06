@@ -74,6 +74,10 @@ static putEditDriverDetails(id) {
       return `${this.BASE_URL}/api/adminpanel/transactions-history?userId=${driverId}&page=${currentPage}&limit=${itemsPerPage}`;
     }
 
+    static patchVehicleDetails(userId){
+      return `${this.BASE_URL}/api/drivers/edit-vehicles-details/${userId}`;
+    }
+
     //Rides
     // static getAllRidesEndpoint(){
     //   return `${this.BASE_URL}/api/adminpanel/rides-getall?page=1&limit=15`
