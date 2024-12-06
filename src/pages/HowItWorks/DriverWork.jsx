@@ -36,12 +36,16 @@ const [recharge, setRecharge] = useState([]);
 const [editingBenefitId, setEditingBenefitId] = useState(null);
 const [notification, setNotification] = useState(null);
 
-
-
-  
   // Filter benefits based on type
   const rechargeBenefits = benefits.filter((benefit) => benefit.type === 'Recharge');
   const deductionBenefits = benefits.filter((benefit) => benefit.type === 'Deduction');
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(''), 3000); // Auto-dismiss after 5 seconds
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    }
+  }, [notification]);
 
   useEffect(() => {
     const fetchBenefits = async () => {
