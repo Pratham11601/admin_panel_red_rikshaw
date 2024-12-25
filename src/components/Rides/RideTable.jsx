@@ -21,6 +21,18 @@ const RideTable = () => {
   const [totalRides,setTotalRides] = useState()
   const itemsPerPage = 10;
 
+
+// Enum for Ride Status
+const RideStatus = Object.freeze({
+  SEARCHING: 'searching',
+  ACCEPTED: 'accepted',
+  ONGOING: 'ongoing',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+  NO_DRIVER_FOUND: 'nodriverFound',
+  UNACCEPTED: 'unaccepted',
+});
+
   // Fetch ride data
   useEffect(() => {
     const fetchRides = async () => {
@@ -212,6 +224,12 @@ const RideTable = () => {
                       >
                         <span className="flex">To Place<ArrowDownUp className="pl-2" /></span>
                       </th>
+                      <th
+                        className="py-3 px-6 text-left cursor-pointer"
+                        onClick={() => handleSortChange("status")}
+                      >
+                        <span className="flex">Status<ArrowDownUp className="pl-2" /></span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -234,6 +252,9 @@ const RideTable = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.dropoffLocation?.place || "N/A"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                          {RideStatus[ride.status.toUpperCase()] || "Unknown"}
                         </td>
                         
                       </motion.tr>
