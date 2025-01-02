@@ -322,6 +322,14 @@ const RideTable = () => {
                             <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.address || "N/A"}</span>
                           </p>
                           <p>
+                            <strong className="text-gray-600">latitude: </strong>{" "}
+                            <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.location?.lat || "N/A"}</span>
+                          </p>
+                          <p>
+                            <strong className="text-gray-600">longitude:</strong>{" "}
+                            <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.location?.lng || "N/A"}</span>
+                          </p>
+                          <p>
                             <strong className="text-gray-600">Fare:</strong>{" "}
                             <span className="text-gray-800">₹{currentRide.sourceToDestination?.fare?.cost || 0}</span>
                           </p>
@@ -344,6 +352,22 @@ const RideTable = () => {
                                 {currentRide.sourceToDestination?.polyline || "N/A"}
                               </span>
                             </div>
+                            <button
+                              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              onClick={() => {
+                                navigator.clipboard
+                                  .writeText(currentRide.sourceToDestination?.polyline)
+                                  .then(() => {
+                                    alert("Polyline copied to clipboard!");
+                                  })
+                                  .catch((err) => {
+                                    alert("Failed to copy polyline.");
+                                    console.error(err);
+                                  });
+                              }}
+                            >
+                              Copy Polyline
+                            </button>
                           </p>}
                         </div>
                       </div>
@@ -359,6 +383,14 @@ const RideTable = () => {
                           <p>
                             <strong className="text-gray-600">Destination:</strong>{" "}
                             <span className="text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</span>
+                          </p>
+                          <p>
+                            <strong className="text-gray-600">latitude: </strong>{" "}
+                            <span className="text-gray-800">{currentRide.driverToSource?.destination?.location?.lat || "N/A"}</span>
+                          </p>
+                          <p>
+                            <strong className="text-gray-600">longitude:</strong>{" "}
+                            <span className="text-gray-800">{currentRide.driverToSource?.destination?.location?.lng || "N/A"}</span>
                           </p>
                           <p>
                             <strong className="text-gray-600">Distance:</strong>{" "}
@@ -379,6 +411,22 @@ const RideTable = () => {
                                 {currentRide.driverToSource?.polyline || "N/A"}
                               </span>
                             </div>
+                            <button
+                              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                              onClick={() => {
+                                navigator.clipboard
+                                  .writeText(currentRide.driverToSource?.polyline)
+                                  .then(() => {
+                                    alert("Polyline copied to clipboard!");
+                                  })
+                                  .catch((err) => {
+                                    alert("Failed to copy polyline.");
+                                    console.error(err);
+                                  });
+                              }}
+                            >
+                              Copy Polyline
+                            </button>
                           </p>}
                         </div>
                       </div>
@@ -390,7 +438,8 @@ const RideTable = () => {
                     </div> */}
 
                       {/* Timestamps */}
-                      <div className="space-y-2">
+
+                      {/* <div className="space-y-2">
                         <p>
                           <strong className="text-gray-600">Created At:</strong>{" "}
                           <span className="text-gray-800">{new Date(currentRide.createdAt).toLocaleString()}</span>
@@ -399,7 +448,7 @@ const RideTable = () => {
                           <strong className="text-gray-600">Updated At:</strong>{" "}
                           <span className="text-gray-800">{new Date(currentRide.updatedAt).toLocaleString()}</span>
                         </p>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="flex justify-end mt-6 gap-4">
