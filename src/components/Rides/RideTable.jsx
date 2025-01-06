@@ -249,9 +249,15 @@ const RideTable = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.passengerId?.name || "N/A"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
-                          {ride.acceptedBy?.name || "N/A"}
-                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-left text-sm">
+                        <span className={ride.acceptedBy?.name ? "text-black" : "text-red-600"}>
+                          {ride.acceptedBy?.name || "Not Accepted"}
+                        </span>
+                      </td>
+
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
+                          {ride.acceptedBy?.name || "Not Aceepted"}
+                        </td> */}
                         <td className="px-6 py-4 text-left text-sm text-black break-words">
                           {ride.sourceToDestination?.source?.address || "N/A"}
                         </td>
@@ -280,190 +286,197 @@ const RideTable = () => {
               </motion.div>
 
               {ShowDetails && (
-                <div className="fixed inset-0 text-black flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-                  <div className="bg-white p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] border border-gray-300 overflow-y-auto">
-                    <h1 className="text-2xl font-extrabold text-gray-800 mb-6">Ride Details</h1>
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] border border-gray-200 overflow-y-auto relative">
+      {/* Cross button */}
+      <button
+        className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800"
+        onClick={() => setShowDetails(false)}
+      >
+        &times;
+      </button>
 
-                    <div className="space-y-6">
-                      {/* Status */}
-                      <div className="flex items-center">
-                        <span className="font-semibold text-gray-600">Status:</span>
-                        <span className="ml-2 text-gray-800">{currentRide.status}</span>
-                      </div>
+      <div className="mb-8 text-center">
+        <h1 className="inline-block bg-gray-200 px-4 py-2 text-3xl font-bold text-gray-800 tracking-wide border-b border-gray-300">Ride Details</h1>
+      </div>
 
-                      {/* Accepted By */}
-                      <div className="flex items-center">
-                        <span className="font-semibold text-gray-600">Accepted By:</span>
-                        <span className="ml-2 text-gray-800">{currentRide.acceptedBy?.name || "N/A"}</span>
-                      </div>
+      <div className="divide-y divide-gray-300 space-y-8">
+        {/* Ride Status */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <h2 className="text-sm font-medium text-gray-500">Status</h2>
+            <p className="text-lg font-semibold text-gray-800">{currentRide.status}</p>
+          </div>
+          <div>
+            <h2 className="text-sm font-medium text-gray-500">Accepted By</h2>
+            {/* <p className="text-lg font-semibold text-gray-800">
+              {currentRide.acceptedBy?.name || "Not Accepted"}
+            </p> */}
+            <p className={`text-lg font-semibold ${!currentRide.acceptedBy?.name ? "text-red-600" : "text-gray-800"}`}>
+            {currentRide.acceptedBy?.name || "Not Accepted"}
+          </p>
 
-                      {/* Passenger */}
-                      <div className="flex items-center">
-                        <span className="font-semibold text-gray-600">Passenger:</span>
-                        <span className="ml-2 text-gray-800">{currentRide.passengerId?.name || "N/A"}</span>
-                      </div>
+          </div>
+          <div>
+            <h2 className="text-sm font-medium text-gray-500">Passenger</h2>
+            <p className="text-lg font-semibold text-gray-800">
+              {currentRide.passengerId?.name || "N/A"}
+            </p>
+          </div>
+          <div>
+            <h2 className="text-sm font-medium text-gray-500">Ride ID</h2>
+            <p className="text-lg font-semibold text-gray-800">{currentRide.rideId}</p>
+          </div>
+        </div>
 
-                      {/* Ride ID */}
-                      <div className="flex items-center">
-                        <span className="font-semibold text-gray-600">Ride ID:</span>
-                        <span className="ml-2 text-gray-800">{currentRide.rideId}</span>
-                      </div>
+        {/* Source to Destination */}
+        <div className="pt-8">
+ 
+  <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
+  <span className="relative z-10 border-b-2 border-green-600">
+  Source to Destination
+</span>
 
-                      {/* Source to Destination */}
-                      <div>
-                        <h2 className="font-bold text-lg text-gray-800 mb-2">Source to Destination</h2>
-                        <div className="space-y-2">
-                          <p>
-                            <strong className="text-gray-600">Source:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.sourceToDestination?.source?.address || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Destination:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.address || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">latitude: </strong>{" "}
-                            <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.location?.lat || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">longitude:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.sourceToDestination?.destination?.location?.lng || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Fare:</strong>{" "}
-                            <span className="text-gray-800">₹{currentRide.sourceToDestination?.fare?.cost || 0}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Distance:</strong>{" "}
-                            <span className="text-gray-800">
-                              {(currentRide.sourceToDestination?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
-                            </span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Duration:</strong>{" "}
-                            <span className="text-gray-800">
-                              {Math.floor((currentRide.sourceToDestination?.fare?.duration || 0) / 60)} mins
-                            </span>
-                          </p>
-                          {currentRide.sourceToDestination?.polyline && <p>
-                            <strong className="text-gray-600">Polyline:</strong>
-                            <div className=" flex flex-wrap overflow-x-scroll p-5 ">
-                              <span className="text-gray-800 flex flex-wrap ">
-                                {currentRide.sourceToDestination?.polyline || "N/A"}
-                              </span>
-                            </div>
-                            <button
-                              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                              onClick={() => {
-                                navigator.clipboard
-                                  .writeText(currentRide.sourceToDestination?.polyline)
-                                  .then(() => {
-                                    alert("Polyline copied to clipboard!");
-                                  })
-                                  .catch((err) => {
-                                    alert("Failed to copy polyline.");
-                                    console.error(err);
-                                  });
-                              }}
-                            >
-                              Copy Polyline
-                            </button>
-                          </p>}
-                        </div>
-                      </div>
+        <div className="absolute bottom-0 left-0 w-full "></div>
+        <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
+      </h2>
 
-                      {/* Driver to Source */}
-                      <div>
-                        <h2 className="font-bold text-lg text-gray-800 mb-2">Driver to Source</h2>
-                        <div className="space-y-2">
-                          <p>
-                            <strong className="text-gray-600">Source:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.driverToSource?.source?.address || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Destination:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">latitude: </strong>{" "}
-                            <span className="text-gray-800">{currentRide.driverToSource?.destination?.location?.lat || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">longitude:</strong>{" "}
-                            <span className="text-gray-800">{currentRide.driverToSource?.destination?.location?.lng || "N/A"}</span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Distance:</strong>{" "}
-                            <span className="text-gray-800">
-                              {(currentRide.driverToSource?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
-                            </span>
-                          </p>
-                          <p>
-                            <strong className="text-gray-600">Duration:</strong>{" "}
-                            <span className="text-gray-800">
-                              {Math.floor((currentRide.driverToSource?.fare?.duration || 0) / 60)} mins
-                            </span>
-                          </p>
-                          {currentRide.driverToSource?.polyline && <p>
-                            <strong className="text-gray-600">Polyline:</strong>
-                            <div className=" flex flex-wrap overflow-x-scroll p-5 ">
-                              <span className="text-gray-800 flex flex-wrap ">
-                                {currentRide.driverToSource?.polyline || "N/A"}
-                              </span>
-                            </div>
-                            <button
-                              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                              onClick={() => {
-                                navigator.clipboard
-                                  .writeText(currentRide.driverToSource?.polyline)
-                                  .then(() => {
-                                    alert("Polyline copied to clipboard!");
-                                  })
-                                  .catch((err) => {
-                                    alert("Failed to copy polyline.");
-                                    console.error(err);
-                                  });
-                              }}
-                            >
-                              Copy Polyline
-                            </button>
-                          </p>}
-                        </div>
-                      </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Source Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Source</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {currentRide.sourceToDestination?.source?.address || "N/A"}
+      </p>
+    </div>
 
-                      {/* Polyline */}
-                      {/* <div className="truncate">
-                      <strong className="text-gray-600">Route Polyline:</strong>{" "}
-                      <span className="text-gray-800">{currentRide.polyline}</span>
-                    </div> */}
+    {/* Destination Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Destination</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {currentRide.sourceToDestination?.destination?.address || "N/A"}
+      </p>
+    </div>
 
-                      {/* Timestamps */}
+    {/* Latitude Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Latitude</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {currentRide.sourceToDestination?.destination?.location?.lat || "N/A"}
+      </p>
+    </div>
 
-                      {/* <div className="space-y-2">
-                        <p>
-                          <strong className="text-gray-600">Created At:</strong>{" "}
-                          <span className="text-gray-800">{new Date(currentRide.createdAt).toLocaleString()}</span>
-                        </p>
-                        <p>
-                          <strong className="text-gray-600">Updated At:</strong>{" "}
-                          <span className="text-gray-800">{new Date(currentRide.updatedAt).toLocaleString()}</span>
-                        </p>
-                      </div> */}
-                    </div>
+    {/* Longitude Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Longitude</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {currentRide.sourceToDestination?.destination?.location?.lng || "N/A"}
+      </p>
+    </div>
 
-                    <div className="flex justify-end mt-6 gap-4">
-                      <button
-                        className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
-                        onClick={() => setShowDetails(false)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
+    {/* Fare Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Fare</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        ₹{currentRide.sourceToDestination?.fare?.cost || 0}
+      </p>
+    </div>
+
+    {/* Distance Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Distance</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {(currentRide.sourceToDestination?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
+      </p>
+    </div>
+
+    {/* Duration Section */}
+    <div>
+      <h3 className="text-sm font-medium text-gray-600">Duration</h3>
+      <p className="text-lg text-gray-800 mt-2">
+        {Math.floor((currentRide.sourceToDestination?.fare?.duration || 0) / 60)} mins
+      </p>
+    </div>
+  </div>
+
+  {/* Polyline Section */}
+  {currentRide.sourceToDestination?.polyline && (
+    <div className="mt-8">
+      <h3 className="text-sm font-medium text-gray-600">Polyline</h3>
+      <div className="p-4 bg-gray-100 rounded text-sm text-gray-800 overflow-x-auto mt-3">
+        {currentRide.sourceToDestination?.polyline}
+      </div>
+      <button
+        className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300"
+        onClick={() => {
+          navigator.clipboard
+            .writeText(currentRide.sourceToDestination?.polyline)
+            .then(() => alert("Polyline copied to clipboard!"))
+            .catch(() => alert("Failed to copy polyline."));
+        }}
+      >
+        Copy Polyline
+      </button>
+    </div>
+  )}
+</div>
 
 
-              )}
+        {/* Driver to Source */}
+        <div className="pt-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
+        <span className="relative z-10 border-b-2 border-green-600">
+        Driver to Source
+      </span>
+        <div className="absolute bottom-0 left-0 w-full "></div>
+        <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
+      </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Source</h3>
+              <p className="text-base text-gray-800">{currentRide.driverToSource?.source?.address || "N/A"}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Destination</h3>
+              <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Latitude</h3>
+              <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lat || "N/A"}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Longitude</h3>
+              <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lng || "N/A"}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Distance</h3>
+              <p className="text-base text-gray-800">
+                {(currentRide.driverToSource?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">Duration</h3>
+              <p className="text-base text-gray-800">
+                {Math.floor((currentRide.driverToSource?.fare?.duration || 0) / 60)} mins
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end mt-8 space-x-4">
+        <button
+          className="px-6 py-2 text-sm text-white bg-red-500 hover:bg-red-600 rounded-lg transition"
+          onClick={() => setShowDetails(false)}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
               {/* Pagination */}
 

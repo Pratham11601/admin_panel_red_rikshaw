@@ -11,6 +11,7 @@ import DriverRides from '../components/Drivers/DriverRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
+import ReviewRatings from '../components/Drivers/ReviewRatings';
 import axios from 'axios';
 import ApiConfig from '../Consants/ApiConfig';
 
@@ -742,6 +743,12 @@ const DriverProfile = (driverData) => {
                         >
                             Transaction History
                         </li>
+                        <li
+                            className={`cursor-pointer py-2 ${activeTab === 'reviewRatings' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                            onClick={() => setActiveTab('reviewRatings')}
+                        >
+                            Review & Ratings    
+                       </li>
                     </ul>
                 </div>
 
@@ -839,6 +846,22 @@ const DriverProfile = (driverData) => {
                     >
 
                         <DriverTransactionTable driverId={driver._id} />
+                    </motion.div>
+                )}
+
+
+
+{//reviewRatings
+}
+
+{activeTab === 'reviewRatings' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+
+                        <ReviewRatings driverId={driver._id} />
                     </motion.div>
                 )}
             </main>
