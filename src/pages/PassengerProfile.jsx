@@ -9,6 +9,7 @@ import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
 import ApiConfig from '../Consants/ApiConfig';
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
+import PassengerReviewRatings from '../components/Passengers/PassengerReviewRatings';
 import axios from 'axios';
 
 const PassengerProfile = () => {
@@ -495,6 +496,12 @@ const PassengerProfile = () => {
                             >
                                 Transaction History
                             </li>
+                            <li
+                               className={`cursor-pointer py-2 ${activeTab === 'reviewRatings' ? 'border-b-4 border-blue-500 text-blue-500' : 'text-gray-700'}`}
+                               onClick={() => setActiveTab('reviewRatings')}
+                            >
+                                  Review & Ratings    
+                           </li>
                         </ul>
                     </div>
                 )}
@@ -649,6 +656,19 @@ const PassengerProfile = () => {
 
                     </motion.div>
                 )}
+
+                {/*Rating & Review */}
+                {!showDeletePopup && activeTab === 'reviewRatings' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+
+                        <PassengerReviewRatings passengerId={passenger._id} />
+                    </motion.div>
+                )}
+                
             </main>
         </div>
     );

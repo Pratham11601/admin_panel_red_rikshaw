@@ -11,7 +11,7 @@ import DriverRides from '../components/Drivers/DriverRides';
 import defaultUser from "../assets/default_user.png"
 import blockedUser from "../assets/blocked_user.png"
 import DriverTransactionTable from '../components/Drivers/DriverTransactionTable';
-import ReviewRatings from '../components/Drivers/ReviewRatings';
+import DriverReviewRatings from '../components/Drivers/DriverReviewRatings';
 import axios from 'axios';
 import ApiConfig from '../Consants/ApiConfig';
 
@@ -861,7 +861,7 @@ const DriverProfile = (driverData) => {
                         transition={{ duration: 0.5 }}
                     >
 
-                        <ReviewRatings driverId={driver._id} />
+                        <DriverReviewRatings driverId={driver._id} />
                     </motion.div>
                 )}
             </main>
