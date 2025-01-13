@@ -582,7 +582,7 @@ const DriverProfile = (driverData) => {
                         {showVehicleEditPopup && (
                             <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50">
                                 <div className="bg-white p-6 rounded-lg shadow-md w-80">
-                                    <h2 className="text-xl font-semibold mb-4">Edit vehicle Details{vehicleData.vehicleNumber}{vehicleData.driverType}{vehicleData.licenseNumber}</h2>
+                                    <h2 className="text-xl font-semibold mb-4">Edit vehicle Details</h2>
                                     {/* <button
             onClick={() => setShowEditPopup(false)}
             className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
