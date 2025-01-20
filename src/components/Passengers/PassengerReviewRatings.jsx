@@ -163,10 +163,12 @@ const PassengerReviewAndRatings = () => {
                 <tr key={review.id} className="border-t">
                   <td className="py-3 px-6">{review.driverName}</td>
                   <td className="py-3 px-6">
+                  <div className="flex gap-1">
                     {Array.from({ length: review.rating }).map((_, index) => (
-                      <Star key={index} className="text-yellow-500 w-4 h-4 inline" />
+                      <Star key={index} className="text-yellow-500 w-4 h-4" />
                     ))}
-                  </td>
+                  </div>
+                </td>
                   <td className="py-3 px-6">{review.comments}</td>
                   <td className="py-3 px-6">{formatDateTime(review.date)}</td>
                 </tr>

@@ -338,16 +338,6 @@ const PassengerProfile = () => {
                         />
                     </motion.div>
 
-                    {/* <motion.div className="text-center md:text-left space-y-2">
-                        <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
-                        <p className="text-gray-600">📞 {passenger.phone}</p>
-                        <p className="text-gray-600">✉️ {passenger.email}</p>
-                        <p className="text-gray-600">⭐ {passenger.rating} Reviews</p>
-                        <p className="flex text-gray-600">
-                            <Car style={{ color: 'black', marginRight: '10px' }} /> {passengerRides || 0} Total Rides
-                        </p>
-                    </motion.div> */}
-
                     <motion.div className="text-center md:text-left space-y-2">
                         <h1 className="text-2xl font-semibold text-gray-800">{passenger.name}</h1>
                         <p className="text-gray-600">📞 {passenger.phone}</p>
@@ -511,12 +501,7 @@ const PassengerProfile = () => {
                     <div className="fixed inset-0 flex items-center justify-center text-black bg-gray-900 bg-opacity-50 z-50">
                         <div className="bg-white p-6 rounded-lg shadow-md w-80">
                             <h2 className="text-xl font-semibold mb-4">Edit Passenger Details</h2>
-                            {/* <button
-      onClick={() => setShowEditPopup(false)}
-      className="text-gray-500 hover:text-gray-800 text-xl focus:outline-none"
-    >
-      &times;
-    </button> */}
+                          
                             <form onSubmit={handleSubmit} className="space-y-2 max-h-[80vh] overflow-auto">
                                 <div className="mb-4">
                                     <label className="block text-gray-700">Name:</label>
@@ -580,8 +565,7 @@ const PassengerProfile = () => {
                                         required
                                         className="w-full p-2 border border-gray-300 rounded"
                                     >
-                                        {/* <option value="Driver">Driver</option>
-        <option value="Admin">Admin</option> */}
+                                       
                                         <option value="Manager">Passenger</option>
                                     </select>
                                 </div>
