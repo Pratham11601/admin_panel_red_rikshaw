@@ -22,7 +22,8 @@ const RideTable = () => {
   const itemsPerPage = 10;
   const [ShowDetails, setShowDetails] = useState(false)
   const [currentRide, setCurrentRide] = useState()
-
+  const [todaysRides, setTodaysRides] = useState(false)
+  const [todaysRidesCount, setTodaysRidesCount] = useState(0)
   // Enum for Ride Status
   const RideStatus = Object.freeze({
     SEARCHING: 'searching',
@@ -33,14 +34,14 @@ const RideTable = () => {
     NO_DRIVER_FOUND: 'nodriverFound',
     UNACCEPTED: 'unaccepted',
   });
-  const date = new Date();
+  const date = new Date(2025, 0, 11);
 
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
   const day = String(date.getDate()).padStart(2, '0');
-  
+
   const formattedDate = `${year}-${month}-${day}`;
-  
+
 
   // Fetch ride data
   useEffect(() => {
@@ -62,7 +63,14 @@ const RideTable = () => {
           const noOfRides = data.totalRides
           setTotalPages(Math.ceil(noOfRides / itemsPerPage));
           setRidesData(data.data);
-          console.log(data)
+          const count = data.data.reduce((sum, ride) => {
+            if (ride.createdAt.slice(0, 10) === formattedDate) {
+              return sum + 1; // Increment the counter
+            }
+            return sum; // Otherwise, keep the counter as is
+          }, 0);
+          setTodaysRidesCount(count)
+          
         } else {
           console.error("Unexpected API response format");
         }
@@ -76,8 +84,11 @@ const RideTable = () => {
     fetchRides();
   }, [currentPage]);
 
-  console.log("rides data")
-  ridesData.map((item) => console.log(item))
+  
+  // ridesData.map((item) => {
+  //   // console.log(item)
+  //   console.log(item.createdAt.slice(0, 10))
+  // })
 
   // Search functionality
   const handleSearch = (e) => {
@@ -97,7 +108,7 @@ const RideTable = () => {
   };
 
   // Filter and sort the ride data
-  const filteredRides = ridesData.filter((ride) => {
+  let filteredRides = ridesData.filter((ride) => {
     const passengerName = ride.passengerId?.name?.toLowerCase() || "";
     const pickupPlace = ride.sourceToDestination?.source?.address.toLowerCase() || "";
     const dropoffPlace = ride.sourceToDestination?.destination?.address?.toLowerCase() || "";
@@ -108,6 +119,13 @@ const RideTable = () => {
       dropoffPlace.includes(searchTerm)
     );
   });
+
+  if (todaysRides) {
+
+    filteredRides = filteredRides.filter((ride) => {
+      return ride.createdAt.slice(0, 10) === formattedDate
+    })
+  }
 
   const sortedRides = [...filteredRides].sort((a, b) => {
     if (sortBy === "createdAt") {
@@ -157,7 +175,7 @@ const RideTable = () => {
   // const year = date.getFullYear();
   // const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
   // const day = String(date.getDate()).padStart(2, '0');
-  
+
   // const formattedDate = `${year}-${month}-${day}`;
   // console.log(new Date())
   return (
@@ -174,18 +192,22 @@ const RideTable = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <StatCard
-          name='Total Rides'
-          icon={UsersIcon}
-          value={totalRides}
-          color='#6366F1'
-        />
-        {/* <StatCard
-          name='Todays Rides'
-          icon={UsersIcon}
-          value={totalRides}
-          color='#6366F1'
-        /> */}
+        <div onClick={() => setTodaysRides(false)}>
+          <StatCard
+            name='Total Rides'
+            icon={UsersIcon}
+            value={totalRides}
+            color='#6366F1'
+          />
+        </div>
+        <div onClick={() => setTodaysRides(true)}>
+          <StatCard
+            name={`Todays Rides`}
+            icon={UsersIcon}
+            value={todaysRidesCount || 0}
+            color='#6366F1'
+          />
+        </div>
 
       </motion.div>
 
@@ -195,7 +217,7 @@ const RideTable = () => {
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
-            placeholder="Search Rides..."
+            placeholder="Search by Place"
             className="bg-white text-black placeholder-black rounded-lg pl-10 pr-4 py-2 w-full border"
             onChange={handleSearch}
             value={searchTerm}
@@ -228,7 +250,7 @@ const RideTable = () => {
                       >
                         <span className="flex">Passenger
                           {/* <ArrowDownUp className="pl-2" /> */}
-                          </span>
+                        </span>
                       </th>
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
@@ -272,10 +294,10 @@ const RideTable = () => {
                           {ride.passengerId?.name || "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-left text-sm">
-                        <span className={ride.acceptedBy?.name ? "text-black" : "text-red-600"}>
-                          {ride.acceptedBy?.name || "Not Accepted"}
-                        </span>
-                      </td>
+                          <span className={ride.acceptedBy?.name ? "text-black" : "text-red-600"}>
+                            {ride.acceptedBy?.name || "Not Accepted"}
+                          </span>
+                        </td>
 
                         {/* <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-black">
                           {ride.acceptedBy?.name || "Not Aceepted"}
@@ -308,80 +330,80 @@ const RideTable = () => {
               </motion.div>
 
               {ShowDetails && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-    <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] border border-gray-200 overflow-y-auto relative">
-      {/* Cross button */}
-      <button
-        className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800"
-        onClick={() => setShowDetails(false)}
-      >
-        &times;
-      </button>
+                <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+                  <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] border border-gray-200 overflow-y-auto relative">
+                    {/* Cross button */}
+                    <button
+                      className="absolute top-4 right-4 text-2xl text-gray-600 hover:text-gray-800"
+                      onClick={() => setShowDetails(false)}
+                    >
+                      &times;
+                    </button>
 
-      <div className="mb-8 text-center">
-        <h1 className="inline-block bg-gray-200 px-4 py-2 text-3xl font-bold text-gray-800 tracking-wide border-b border-gray-300">Ride Details</h1>
-      </div>
+                    <div className="mb-8 text-center">
+                      <h1 className="inline-block bg-gray-200 px-4 py-2 text-3xl font-bold text-gray-800 tracking-wide border-b border-gray-300">Ride Details</h1>
+                    </div>
 
-      <div className="divide-y divide-gray-300 space-y-8">
-        {/* Ride Status */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Status</h2>
-            <p className="text-lg font-semibold text-gray-800">{currentRide.status}</p>
-          </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Accepted By</h2>
-            {/* <p className="text-lg font-semibold text-gray-800">
+                    <div className="divide-y divide-gray-300 space-y-8">
+                      {/* Ride Status */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500">Status</h2>
+                          <p className="text-lg font-semibold text-gray-800">{currentRide.status}</p>
+                        </div>
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500">Accepted By</h2>
+                          {/* <p className="text-lg font-semibold text-gray-800">
               {currentRide.acceptedBy?.name || "Not Accepted"}
             </p> */}
-            <p className={`text-lg font-semibold ${!currentRide.acceptedBy?.name ? "text-red-600" : "text-gray-800"}`}>
-            {currentRide.acceptedBy?.name || "Not Accepted"}
-          </p>
+                          <p className={`text-lg font-semibold ${!currentRide.acceptedBy?.name ? "text-red-600" : "text-gray-800"}`}>
+                            {currentRide.acceptedBy?.name || "Not Accepted"}
+                          </p>
 
-          </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Passenger</h2>
-            <p className="text-lg font-semibold text-gray-800">
-              {currentRide.passengerId?.name || "N/A"}
-            </p>
-          </div>
-          <div>
-            <h2 className="text-sm font-medium text-gray-500">Ride ID</h2>
-            <p className="text-lg font-semibold text-gray-800">{currentRide.rideId}</p>
-          </div>
-        </div>
+                        </div>
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500">Passenger</h2>
+                          <p className="text-lg font-semibold text-gray-800">
+                            {currentRide.passengerId?.name || "N/A"}
+                          </p>
+                        </div>
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500">Ride ID</h2>
+                          <p className="text-lg font-semibold text-gray-800">{currentRide.rideId}</p>
+                        </div>
+                      </div>
 
-        {/* Source to Destination */}
-        <div className="pt-8">
- 
-  <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
-  <span className="relative z-10 border-b-2 border-green-600">
-  Source to Destination
-</span>
+                      {/* Source to Destination */}
+                      <div className="pt-8">
 
-        <div className="absolute bottom-0 left-0 w-full "></div>
-        <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
-      </h2>
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
+                          <span className="relative z-10 border-b-2 border-green-600">
+                            Source to Destination
+                          </span>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {/* Source Section */}
-    <div>
-      <h3 className="text-sm font-medium text-gray-600">Source</h3>
-      <p className="text-lg text-gray-800 mt-2">
-        {currentRide.sourceToDestination?.source?.address || "N/A"}
-      </p>
-    </div>
+                          <div className="absolute bottom-0 left-0 w-full "></div>
+                          <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
+                        </h2>
 
-    {/* Destination Section */}
-    <div>
-      <h3 className="text-sm font-medium text-gray-600">Destination</h3>
-      <p className="text-lg text-gray-800 mt-2">
-        {currentRide.sourceToDestination?.destination?.address || "N/A"}
-      </p>
-    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {/* Source Section */}
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600">Source</h3>
+                            <p className="text-lg text-gray-800 mt-2">
+                              {currentRide.sourceToDestination?.source?.address || "N/A"}
+                            </p>
+                          </div>
 
-    {/* Latitude Section */}
-    {/* <div>
+                          {/* Destination Section */}
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600">Destination</h3>
+                            <p className="text-lg text-gray-800 mt-2">
+                              {currentRide.sourceToDestination?.destination?.address || "N/A"}
+                            </p>
+                          </div>
+
+                          {/* Latitude Section */}
+                          {/* <div>
       <h3 className="text-sm font-medium text-gray-600">Latitude</h3>
       <p className="text-lg text-gray-800 mt-2">
         {currentRide.sourceToDestination?.destination?.location?.lat || "N/A"}
@@ -396,33 +418,33 @@ const RideTable = () => {
       </p>
     </div> */}
 
-    {/* Fare Section */}
-    <div>
-      <h3 className="text-sm font-medium text-gray-600">Fare</h3>
-      <p className="text-lg text-gray-800 mt-2">
-        ₹{currentRide.sourceToDestination?.fare?.cost || 0}
-      </p>
-    </div>
+                          {/* Fare Section */}
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600">Fare</h3>
+                            <p className="text-lg text-gray-800 mt-2">
+                              ₹{currentRide.sourceToDestination?.fare?.cost || 0}
+                            </p>
+                          </div>
 
-    {/* Distance Section */}
-    <div>
-      <h3 className="text-sm font-medium text-gray-600">Distance</h3>
-      <p className="text-lg text-gray-800 mt-2">
-        {(currentRide.sourceToDestination?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
-      </p>
-    </div>
+                          {/* Distance Section */}
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600">Distance</h3>
+                            <p className="text-lg text-gray-800 mt-2">
+                              {(currentRide.sourceToDestination?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
+                            </p>
+                          </div>
 
-    {/* Duration Section */}
-    <div>
-      <h3 className="text-sm font-medium text-gray-600">Duration</h3>
-      <p className="text-lg text-gray-800 mt-2">
-        {Math.floor((currentRide.sourceToDestination?.fare?.duration || 0) / 60)} mins
-      </p>
-    </div>
-  </div>
+                          {/* Duration Section */}
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-600">Duration</h3>
+                            <p className="text-lg text-gray-800 mt-2">
+                              {Math.floor((currentRide.sourceToDestination?.fare?.duration || 0) / 60)} mins
+                            </p>
+                          </div>
+                        </div>
 
-  {/* Polyline Section */}
-  {/* {currentRide.sourceToDestination?.polyline && (
+                        {/* Polyline Section */}
+                        {/* {currentRide.sourceToDestination?.polyline && (
     <div className="mt-8">
       <h3 className="text-sm font-medium text-gray-600">Polyline</h3>
       <div className="p-4 bg-gray-100 rounded text-sm text-gray-800 overflow-x-auto mt-3">
@@ -441,28 +463,28 @@ const RideTable = () => {
       </button>
     </div>
   )} */}
-</div>
+                      </div>
 
 
-        {/* Driver to Source */}
-        <div className="pt-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
-        <span className="relative z-10 border-b-2 border-green-600">
-        Driver to Source
-      </span>
-        <div className="absolute bottom-0 left-0 w-full "></div>
-        <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
-      </h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Source</h3>
-              <p className="text-base text-gray-800">{currentRide.driverToSource?.source?.address || "N/A"}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Destination</h3>
-              <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</p>
-            </div>
-            {/* <div>
+                      {/* Driver to Source */}
+                      <div className="pt-8">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 relative">
+                          <span className="relative z-10 border-b-2 border-green-600">
+                            Driver to Source
+                          </span>
+                          <div className="absolute bottom-0 left-0 w-full "></div>
+                          <div className="absolute inset-0 bg-gray-100 opacity-25 rounded-lg"></div>
+                        </h2>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500">Source</h3>
+                            <p className="text-base text-gray-800">{currentRide.driverToSource?.source?.address || "N/A"}</p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500">Destination</h3>
+                            <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</p>
+                          </div>
+                          {/* <div>
               <h3 className="text-sm font-medium text-gray-500">Latitude</h3>
               <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lat || "N/A"}</p>
             </div>
@@ -470,34 +492,34 @@ const RideTable = () => {
               <h3 className="text-sm font-medium text-gray-500">Longitude</h3>
               <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lng || "N/A"}</p>
             </div> */}
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Distance</h3>
-              <p className="text-base text-gray-800">
-                {(currentRide.driverToSource?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-gray-500">Duration</h3>
-              <p className="text-base text-gray-800">
-                {Math.floor((currentRide.driverToSource?.fare?.duration || 0) / 60)} mins
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500">Distance</h3>
+                            <p className="text-base text-gray-800">
+                              {(currentRide.driverToSource?.fare?.distanceInMeters / 1000).toFixed(2) || 0} km
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500">Duration</h3>
+                            <p className="text-base text-gray-800">
+                              {Math.floor((currentRide.driverToSource?.fare?.duration || 0) / 60)} mins
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-end mt-8 space-x-4">
-        <button
-          className="px-6 py-2 text-sm text-white bg-red-500 hover:bg-red-600 rounded-lg transition"
-          onClick={() => setShowDetails(false)}
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                    {/* Action Buttons */}
+                    <div className="flex justify-end mt-8 space-x-4">
+                      <button
+                        className="px-6 py-2 text-sm text-white bg-red-500 hover:bg-red-600 rounded-lg transition"
+                        onClick={() => setShowDetails(false)}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
 
               {/* Pagination */}
