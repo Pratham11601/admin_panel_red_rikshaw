@@ -33,6 +33,14 @@ const RideTable = () => {
     NO_DRIVER_FOUND: 'nodriverFound',
     UNACCEPTED: 'unaccepted',
   });
+  const date = new Date();
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  const formattedDate = `${year}-${month}-${day}`;
+  
 
   // Fetch ride data
   useEffect(() => {
@@ -144,8 +152,14 @@ const RideTable = () => {
   // Dynamic Stat Calculations
   // const totalRides = ridesData.length;
   const totalFare = ridesData.reduce((total, ride) => total + ride.totalCost, 0);
+  // const date = new Date();
 
-
+  // const year = date.getFullYear();
+  // const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  // const day = String(date.getDate()).padStart(2, '0');
+  
+  // const formattedDate = `${year}-${month}-${day}`;
+  // console.log(new Date())
   return (
     <motion.div
       className="bg-white bg-opacity-50 backdrop-blur-md shadow-xl rounded-xl p-6 border-r border-red-400 mb-8"
@@ -166,6 +180,12 @@ const RideTable = () => {
           value={totalRides}
           color='#6366F1'
         />
+        {/* <StatCard
+          name='Todays Rides'
+          icon={UsersIcon}
+          value={totalRides}
+          color='#6366F1'
+        /> */}
 
       </motion.div>
 
@@ -206,34 +226,36 @@ const RideTable = () => {
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("passenger")}
                       >
-                        <span className="flex">Passenger<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">Passenger
+                          {/* <ArrowDownUp className="pl-2" /> */}
+                          </span>
                       </th>
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("driver")}
                       >
-                        <span className="flex">Driver<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">Driver</span>
                       </th>
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("pickupLocation")}
                       >
-                        <span className="flex">From Place<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">From Place</span>
                       </th>
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("dropoffLocation")}
                       >
-                        <span className="flex">To Place<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">To Place</span>
                       </th>
                       <th
                         className="py-3 px-6 text-left cursor-pointer"
                         onClick={() => handleSortChange("status")}
                       >
-                        <span className="flex">Status<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">Status</span>
                       </th>
                       <th className="py-3 px-6 text-left cursor-pointer">
-                        <span className="flex">Details<ArrowDownUp className="pl-2" /></span>
+                        <span className="flex">Details</span>
                       </th>
                     </tr>
                   </thead>
@@ -359,20 +381,20 @@ const RideTable = () => {
     </div>
 
     {/* Latitude Section */}
-    <div>
+    {/* <div>
       <h3 className="text-sm font-medium text-gray-600">Latitude</h3>
       <p className="text-lg text-gray-800 mt-2">
         {currentRide.sourceToDestination?.destination?.location?.lat || "N/A"}
       </p>
     </div>
 
-    {/* Longitude Section */}
+    
     <div>
       <h3 className="text-sm font-medium text-gray-600">Longitude</h3>
       <p className="text-lg text-gray-800 mt-2">
         {currentRide.sourceToDestination?.destination?.location?.lng || "N/A"}
       </p>
-    </div>
+    </div> */}
 
     {/* Fare Section */}
     <div>
@@ -400,7 +422,7 @@ const RideTable = () => {
   </div>
 
   {/* Polyline Section */}
-  {currentRide.sourceToDestination?.polyline && (
+  {/* {currentRide.sourceToDestination?.polyline && (
     <div className="mt-8">
       <h3 className="text-sm font-medium text-gray-600">Polyline</h3>
       <div className="p-4 bg-gray-100 rounded text-sm text-gray-800 overflow-x-auto mt-3">
@@ -418,7 +440,7 @@ const RideTable = () => {
         Copy Polyline
       </button>
     </div>
-  )}
+  )} */}
 </div>
 
 
@@ -440,14 +462,14 @@ const RideTable = () => {
               <h3 className="text-sm font-medium text-gray-500">Destination</h3>
               <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.address || "N/A"}</p>
             </div>
-            <div>
+            {/* <div>
               <h3 className="text-sm font-medium text-gray-500">Latitude</h3>
               <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lat || "N/A"}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Longitude</h3>
               <p className="text-base text-gray-800">{currentRide.driverToSource?.destination?.location?.lng || "N/A"}</p>
-            </div>
+            </div> */}
             <div>
               <h3 className="text-sm font-medium text-gray-500">Distance</h3>
               <p className="text-base text-gray-800">
